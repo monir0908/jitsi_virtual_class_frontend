@@ -1,2 +1,2 @@
-# PSC Dormitory Module -- Admin Panel
+# jitsi_virtual_class_frontend
 
