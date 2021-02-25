@@ -1,0 +1,88 @@
+<block-ui>
+    <section class="login p-fixed d-flex text-center bg-primary common-img-bg">
+        <!-- starts -->
+        <div class="auth-fluid">
+            <div class="row">
+                <div class="col-sm-12">
+                    <!-- Authentication card start -->
+                    <div class="login-card card-body auth-body">
+                        <form class="md-float-material" [formGroup]="RegistrerForm">
+                            <div class="text-center">
+                                <!-- <img src="assets/images/auth/logo.png" alt="logo.png"> -->
+                            </div>
+                            <div class="auth-box">
+                                <div class="row m-b-20">
+                                    <div class="col-md-12">
+                                        <h3 class="txt-primary">Register</h3>
+                                    </div>
+                                </div>
+
+                                <p class="text-inverse b-b-default text-left p-b-5">Register your account</p>
+
+                                <div class="input-group">
+                                    <input type="text" formControlName="FirstName" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.FirstName.errors }" placeholder="Your First Name " required>
+                                </div>
+                                <div *ngIf="submitted && f.FirstName.errors" class="error-text">
+                                    <span *ngIf="f.FirstName.errors.required" class="text-danger"> FirstName is required</span>
+                                    <span *ngIf="f.FirstName.errors.minlength" class="text-danger"> FirstName must be at least 6 characters</span>
+                                </div>
+
+                                <div class="input-group">
+                                    <input type="text" formControlName="LastName" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.LastName.errors }" placeholder="Your Last Name " required>
+                                </div>
+                                <div *ngIf="submitted && f.LastName.errors" class="error-text">
+                                    <span *ngIf="f.LastName.errors.required" class="text-danger"> LastName is required</span>
+                                    <span *ngIf="f.LastName.errors.minlength" class="text-danger"> LastName must be at least 6 characters</span>
+                                </div>
+
+                                <div class="input-group">
+                                    <input type="email" formControlName="Email" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.Email.errors }" placeholder="Your Email Address" required>
+                                </div>
+                                <div *ngIf="submitted && f.Email.errors" class="error-text">
+                                    <span *ngIf="f.Email.errors.email" class="text-danger"> Not a valid email format</span>
+                                    <span *ngIf="f.Email.errors.required" class="text-danger"> Email is required</span>
+                                </div>
+
+                                <div class="input-group">
+                                    <input type="password" formControlName="Password" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.Password.errors }" placeholder="Your Password" required>
+                                </div>
+                                <div *ngIf="submitted && f.Password.errors" class="error-text">
+                                    <span *ngIf="f.Password.errors.required" class="text-danger"> Password is required</span>
+                                </div>
+
+                                <div class="input-group">
+                                    <input type="password" formControlName="ConfirmPassword" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.ConfirmPassword.errors }" placeholder="Confirm Password" required>
+                                </div>
+                                <div *ngIf="submitted && f.ConfirmPassword.errors" class="error-text">
+                                    <span *ngIf="f.ConfirmPassword.errors.required" class="text-danger">Confirm Password is required</span>
+                                    <span *ngIf="f.ConfirmPassword.errors.mustMatch" class="text-danger">Passwords must match</span>
+                                </div>
+
+                                <!-- <div class="row m-t-25 text-left">
+                                <div class="col-sm-6 col-xs-12">
+                                    <div class="checkbox-fade fade-in-primary">
+                                        <label>
+                                        <input type="checkbox" value="">
+                                        <span class="cr"><i class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
+                                        <span class="text-inverse">Remember me</span>
+                                      </label>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 col-xs-12 forgot-phone text-right">
+                                    <a routerLink="/authentication/forgot" class="text-right f-w-600 text-inverse"> Forget
+                    Password?</a>
+                                </div>
+                            </div> -->
+                                <div class="row m-t-30">
+                                    <div class="col-md-12">
+                                        <button type="button" (click)="onRegisterSubmit()" class="btn btn-primary btn-md btn-block waves-effect text-center m-b-20">Register</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</block-ui>

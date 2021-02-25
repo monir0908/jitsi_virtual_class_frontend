@@ -1,0 +1,63 @@
+<block-ui>
+    <section class="login p-fixed d-flex text-center bg-primary common-img-bg">
+        <!-- starts -->
+        <div class="auth-fluid">
+            <div class="row">
+                <div class="col-sm-12">
+                    <!-- Authentication card start -->
+                    <div class="login-card card-body auth-body">
+                        <form class="md-float-material" [formGroup]="LoginForm">
+                            <div class="text-center">
+                                <!-- <img src="assets/images/auth/logo.png" alt="logo.png"> -->
+                            </div>
+                            <div class="auth-box">
+                                <div class="row m-b-20">
+                                    <div class="col-md-12">
+                                        <h3 class="text-left txt-primary">Sign In </h3>
+                                    </div>
+                                </div>
+
+                                <!-- <p class="text-inverse b-b-default text-left p-b-5">Sign in with your regular account</p> -->
+                                <div class="input-group">
+                                    <!-- <input type="text" formControlName="Email" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.Email.errors }" placeholder="Your Email" required> -->
+                                    <input type="text" formControlName="Email" class="form-control" placeholder="Your user ID (e.g. 2)" required>
+                                </div>
+                                <div *ngIf="submitted && f.Email.errors" class="error-text">
+                                    <!-- <span *ngIf="f.Email.errors.email" class="text-danger"> Not a valid email format</span> -->
+                                    <span *ngIf="f.Email.errors.required" class="text-danger"> Mobile is required</span>
+                                </div>
+                                <div class="input-group">
+                                    <input type="password" (keyup.enter)="focusableSubmit.click()" formControlName="Password" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.Password.errors }" placeholder="Your Password" required>
+                                </div>
+                                <div *ngIf="submitted && f.Password.errors" class="error-text">
+                                    <span *ngIf="f.Password.errors.required" class="text-danger"> Password is required</span>
+                                </div>
+                                <!-- <div class="row m-t-25 text-left">
+                                    <div class="col-sm-6 col-xs-12">
+                                        <div class="checkbox-fade fade-in-primary">
+                                            <label>
+                                        <input type="checkbox" value="">
+                                        <span class="cr"><i class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
+                                        <span class="text-inverse">Remember me</span>
+                                      </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-xs-12 forgot-phone text-right">
+                                        <a routerLink="/authentication/forgot" class="text-right f-w-600 text-inverse"> Forget
+                    Password?</a>
+                                    </div>
+                                </div> -->
+                            
+                                <div class="row m-t-30">
+                                    <div class="col-md-12">
+                                        <button #focusableSubmit type="button" (click)="onLoginSubmit()" class="btn btn-primary btn-md btn-block waves-effect text-center m-b-20">LOGIN</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</block-ui>

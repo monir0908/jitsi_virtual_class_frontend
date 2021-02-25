@@ -1,0 +1,172 @@
+<block-ui>
+    <div class="row">
+
+        <div class="col-lg-12">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card card-border-primary">
+                        <div class="card-header">
+                            <h5>User List </h5>
+                            <button class="btn btn-primary btn-sm float-right" (click)="openModal(template)"><i
+                                    class=" icofont icofont-plus "></i>Create User</button>
+                        </div>
+                        <div class="card-block ">
+                            <div class="row ">
+                                <div class="col-lg-12 ">
+
+                                    <ngx-datatable class="material table-bordered" [rows]="rows"
+                                        [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
+                                        [headerHeight]="30" [footerHeight]="50" [limit]="10" rowHeight="auto"
+                                        [externalPaging]="true" [count]="page.totalElements" [offset]="page.pageNumber"
+                                        [limit]="page.size" (page)="setPage($event)">
+
+                                        <ngx-datatable-column prop="UserName" [draggable]="false" [sortable]="false">
+                                            <ng-template let-value="value" ngx-datatable-cell-template>
+                                                <span title="{{ value }}"> {{ value }} </span>
+                                            </ng-template>
+                                        </ngx-datatable-column>
+
+                                        <ngx-datatable-column prop="FirstName" [draggable]="false" [sortable]="false">
+                                            <ng-template let-value="value" ngx-datatable-cell-template>
+                                                <span title="{{ value }}"> {{ value }} </span>
+                                            </ng-template>
+                                        </ngx-datatable-column>
+
+                                        <ngx-datatable-column prop="LastName" [draggable]="false" [sortable]="false">
+                                            <ng-template let-value="value" ngx-datatable-cell-template>
+                                                <span title="{{ value }}"> {{ value }} </span>
+                                            </ng-template>
+                                        </ngx-datatable-column>
+
+                                        <ngx-datatable-column [width]="60" name="Action" prop="Id" [draggable]="false"
+                                            [sortable]="false">
+                                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                                <button class="btn btn-info btn-mini mr-1"
+                                                    (click)="getItem(row.Id, template)">
+                                                    <i class="icofont-edit"></i> Edit
+                                                </button>
+                                            </ng-template>
+                                        </ngx-datatable-column>
+                                    </ngx-datatable>
+
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="card-footer ">
+
+                        </div>
+                        <!-- end of card-footer -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <ng-template #template>
+        <div class="modal-header ">
+            <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
+            <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+                <i class="icofont icofont-close"></i>
+            </button>
+        </div>
+        <div class="modal-body ">
+            <app-card>
+                <form [formGroup]="entryForm" class="col-sm-12" autocomplete="off">
+
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label font-weight-bold"> Email </label>
+                        <div class="col-sm-8">
+                            <label *ngIf="f.id.value" class="font-weight-bold required"> {{f.Email.value}} </label>
+                            <input *ngIf="!f.id.value" formControlName="Email" [ngClass]="{ 'is-invalid': submitted && f.Email.errors }"
+                                type="email" class="form-control" autocomplete="off">
+                            <div *ngIf="submitted && f.Email.errors" class="error-text">
+                                <span *ngIf="f.Email.errors.required" class="text-danger">Email is required</span>
+                                <span *ngIf="f.Email.errors.maxlength" class="text-danger">Email must be not then 50
+                                    characters</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label font-weight-bold required"> First Name </label>
+                        <div class="col-sm-8">
+                            <input formControlName="FirstName"
+                                [ngClass]="{ 'is-invalid': submitted && f.FirstName.errors }" type="text"
+                                class="form-control" autocomplete="off">
+                            <div *ngIf="submitted && f.FirstName.errors" class="error-text">
+                                <span *ngIf="f.FirstName.errors.required" class="text-danger">First Name is
+                                    required</span>
+                                <span *ngIf="f.FirstName.errors.maxlength" class="text-danger">First Name must be not
+                                    then 50
+                                    characters</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label font-weight-bold required"> Last Name </label>
+                        <div class="col-sm-8">
+                            <input formControlName="LastName"
+                                [ngClass]="{ 'is-invalid': submitted && f.LastName.errors }" type="text"
+                                class="form-control" autocomplete="off">
+                            <div *ngIf="submitted && f.LastName.errors" class="error-text">
+                                <span *ngIf="f.LastName.errors.required" class="text-danger">Last Name is
+                                    required</span>
+                                <span *ngIf="f.LastName.errors.maxlength" class="text-danger">Last Name must be not then
+                                    50
+                                    characters</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label font-weight-bold required"> Password </label>
+                        <div class="col-sm-8">
+                            <label *ngIf="f.id.value" class="font-weight-bold"> {{f.Password.value}} </label>
+                            <input *ngIf="!f.id.value" type="password" formControlName="Password" class="form-control"
+                                [ngClass]="{ 'is-invalid': submitted && f.Password.errors }" autocomplete="off" required>
+                            <div *ngIf="submitted && f.Password.errors" class="error-text">
+                                <span *ngIf="f.Password.errors.required" class="text-danger">Password is required</span>
+                                <span *ngIf="f.Password.errors.minlength" class="text-danger">Password must be 6
+                                    characters minimum</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label font-weight-bold required">Confirm Pass. </label>
+                        <div class="col-sm-8">
+                            <label *ngIf="f.id.value" class="font-weight-bold"> {{f.ConfirmPassword.value}} </label>
+                            <input *ngIf="!f.id.value" type="password" formControlName="ConfirmPassword"
+                                [ngClass]="{ 'is-invalid': submitted && f.ConfirmPassword.errors }"
+                                class="form-control" autocomplete="off">
+
+                            <div *ngIf="submitted && f.ConfirmPassword.errors " class="error-text ">
+                                <span *ngIf="f.ConfirmPassword.errors.required " class="text-danger ">Confirm Password
+                                    is required</span>
+                                <span *ngIf="f.ConfirmPassword.errors.mustMatch" class="text-danger">Passwords not
+                                    match</span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </app-card>
+        </div>
+        <div class="modal-footer">
+            <div class="pr-4">
+
+                <button class="btn btn-danger btn-outline-danger mr-2" (click)="modalHide()"> <i
+                        class="icofont icofont-close"></i>Close</button>
+
+                <button class="btn btn-success btn-outline-success" (click)="onFormSubmit()">
+                    <i class="icofont icofont-check-circled"></i> {{saveButtonText}}
+                </button>
+
+            </div>
+
+        </div>
+    </ng-template>
+
+</block-ui>
