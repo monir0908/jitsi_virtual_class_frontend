@@ -26,23 +26,27 @@ export class AuthenticationService {
 
 
   login(param) {
-    var data = "id=" + param.id + "&password=" + encodeURIComponent(param.password)  + "&grant_type=password";
+    console.log(param)
+    var data = "username=" + param.Email + "&password=" + encodeURIComponent(param.Password)  + "&grant_type=password";
+    console.log(data)
     var reqHeader = new HttpHeaders({ 'Content-Type': 'application/x-www-urlencoded', 'No-Auth': 'True' });
-    return this.http.post<any>(environment.baseUrl + 'tutor/login-with-password', param)
+    return this.http.post<any>(environment.baseUrl + 'token', data)
       .pipe(map(data => {
         console.log(data)
       
-        const user = {
-          Id: data.data.id,
-          Email: data.data.email,
-          FirstName: data.data.name,
-          Mobile_no_1: data.data.mobile_no_1,
-          Mobile_no_2: data.data.mobile_no_2,
-          Gender: data.data.gender,
-          role:"Admin",
-          Roles: data.Roles? JSON.parse(data.Roles) : [],
+        const user = {          
+
+          Id : data.Id,
+          userName : data.UserName,
+          FirstName: data.FirstName,
+          LastName: data.LastName,
+          ImagePath: data.ImagePath,
+          Email: data.Email,
+          PhoneNumber: data.PhoneNumber,
           UserType: data.UserType,
+
           access_token: data.access_token,
+
         }
         let expireDate = new Date(data[".expires"]);
         Cookie.set('.PSC.Dormitory.Admin.Cookie', JSON.stringify(user), expireDate, '/', window.location.hostname, false);

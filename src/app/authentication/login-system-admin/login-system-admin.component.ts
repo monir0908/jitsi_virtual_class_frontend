@@ -31,9 +31,11 @@ export class LoginSystemAdminComponent implements OnInit {
 
   ngOnInit() {
     this.LoginForm = this.formBuilder.group({
-      Email: [null, [Validators.required]],
+      Email: [null, [Validators.required, Validators.email]],
       Password: [null, [Validators.required]],
+      UserType: [null, [Validators.required]],
     });
+    this.LoginForm.controls['UserType'].setValue('Host');
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
   }
 
@@ -62,7 +64,7 @@ export class LoginSystemAdminComponent implements OnInit {
   
     // }
 
-    this.authService.login({ id: this.LoginForm.value.Email, password: this.LoginForm.value.Password}).subscribe(
+    this.authService.login({ Email: this.LoginForm.value.Email, Password: this.LoginForm.value.Password}).subscribe(
       data => {
         this.blockUI.stop();
         if (data) {
@@ -71,7 +73,7 @@ export class LoginSystemAdminComponent implements OnInit {
           this.router.navigate([this.returnUrl]);
           this.menuItems.refreshMenu();
         }else{
-          this.toastr.error(data.message, 'Error!', { timeOut: 3000 });
+          this.toastr.error(data, 'Error!', { timeOut: 3000 });
         }
       },
       error => {

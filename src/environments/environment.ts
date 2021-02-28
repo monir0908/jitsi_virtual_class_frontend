@@ -5,8 +5,8 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'https://api.bacbontutors.com/',
-  baseUrl: 'https://api.bacbontutors.com/',
+  apiUrl: 'http://localhost:15902/',
+  baseUrl: 'http://localhost:15902/',
   // apiUrl: 'http://psc-dormitory.bacbonltd.net/api/',
   // baseUrl: 'http://psc-dormitory.bacbonltd.net',
 };

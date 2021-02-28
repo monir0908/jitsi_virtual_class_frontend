@@ -19,11 +19,10 @@
 
                                 <!-- <p class="text-inverse b-b-default text-left p-b-5">Sign in with your regular account</p> -->
                                 <div class="input-group">
-                                    <!-- <input type="text" formControlName="Email" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.Email.errors }" placeholder="Your Email" required> -->
-                                    <input type="text" formControlName="Email" class="form-control" placeholder="Your user ID (e.g. 2)" required>
+                                    <input type="text" formControlName="Email" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.Email.errors }" placeholder="Your Email" required>                                    
                                 </div>
                                 <div *ngIf="submitted && f.Email.errors" class="error-text">
-                                    <!-- <span *ngIf="f.Email.errors.email" class="text-danger"> Not a valid email format</span> -->
+                                    <span *ngIf="f.Email.errors.email" class="text-danger"> Not a valid email format</span>
                                     <span *ngIf="f.Email.errors.required" class="text-danger"> Mobile is required</span>
                                 </div>
                                 <div class="input-group">
@@ -32,19 +31,34 @@
                                 <div *ngIf="submitted && f.Password.errors" class="error-text">
                                     <span *ngIf="f.Password.errors.required" class="text-danger"> Password is required</span>
                                 </div>
-                                <!-- <div class="row m-t-25 text-left">
-                                    <div class="col-sm-6 col-xs-12">
-                                        <div class="checkbox-fade fade-in-primary">
-                                            <label>
-                                        <input type="checkbox" value="">
-                                        <span class="cr"><i class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
-                                        <span class="text-inverse">Remember me</span>
-                                      </label>
+                                <!-- <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group ">
+
+                                            <div class="form-radio pt-1">
+                                                <div class="radio radio-inverse radio-inline" >
+                                                    <label class="pt-1">
+                                                        <input formControlName="UserType" type="radio" name="UserType"
+                                                             value="Trainer">
+                                                        <i class="helper"></i>Host
+                                                    </label>
+                                                </div>
+                                                <div class="radio radio-inverse radio-inline" >
+                                                    <label  class="pt-1">
+                                                        <input formControlName="UserType" type="radio" name="UserType"
+                                                             value="Participant">
+                                                        <i class="helper"></i>Participant
+                                                    </label>
+                                                </div>
+                                                <div class="radio radio-inverse radio-inline" >
+                                                    <label class="pt-1">
+                                                        <input formControlName="UserType" type="radio" name="UserType"
+                                                             value="Admin">
+                                                        <i class="helper"></i>Admin
+                                                    </label>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-sm-6 col-xs-12 forgot-phone text-right">
-                                        <a routerLink="/authentication/forgot" class="text-right f-w-600 text-inverse"> Forget
-                    Password?</a>
                                     </div>
                                 </div> -->
                             
