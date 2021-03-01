@@ -1,7 +1,7 @@
 <block-ui>
 
-  <div class="row" *ngIf="currentUser.role == 'Admin'">
-    <div class="col-lg-8 col-md-8 col-sm-12">
+  <div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12">
       <div class="card card-border-primary">
           <div class="card-header">
               <h5>Student List </h5>
@@ -20,29 +20,45 @@
                               </ng-template>
                           </ngx-datatable-column>
 
-                          <ngx-datatable-column name="Name" prop="name" [draggable]="false"
+                          <ngx-datatable-column name="First Name" prop="FirstName" [draggable]="false"
                               [sortable]="false">
                               <ng-template let-value="value" ngx-datatable-cell-template>
                                   <span title="{{ value }}"> {{ value }} </span>
                               </ng-template>
                           </ngx-datatable-column>
                          
-                          <ngx-datatable-column name="Mobile" prop="mobile_no" [draggable]="false"
+                          <ngx-datatable-column name="Last Name" prop="LastName" [draggable]="false"
                               [sortable]="false">
                               <ng-template let-value="value" ngx-datatable-cell-template>
                                   <span title="{{ value }}"> {{ value }} </span>
                               </ng-template>
                           </ngx-datatable-column>
-                          <ngx-datatable-column name="Photo" prop="profile_pic" [draggable]="false"
+                         
+                          <ngx-datatable-column name="Batch Name" prop="BatchName" [draggable]="false"
+                              [sortable]="false">
+                              <ng-template let-value="value" ngx-datatable-cell-template>
+                                  <span title="{{ value }}"> {{ value }} </span>
+                              </ng-template>
+                          </ngx-datatable-column>
+                         
+                          <ngx-datatable-column name="Project Name" prop="ProjectName" [draggable]="false"
+                              [sortable]="false">
+                              <ng-template let-value="value" ngx-datatable-cell-template>
+                                  <span title="{{ value }}"> {{ value }} </span>
+                              </ng-template>
+                          </ngx-datatable-column>
+
+                          <!-- <ngx-datatable-column name="Photo" prop="profile_pic" [draggable]="false"
                               [sortable]="false">
                               <ng-template let-value="value" ngx-datatable-cell-template>
                                   <span title="{{ value }}"> <img class="img-thumbnail" alt="Cinque Terre" style="width:65px; height:65px;" src={{value}}/></span>
                               </ng-template>
-                          </ngx-datatable-column>
+                          </ngx-datatable-column> -->
+
                           <ngx-datatable-column [width]="50" name="Action" prop="Id" [draggable]="false"
                               [sortable]="false">
                               <ng-template let-row="row" ngx-datatable-cell-template>
-                                  <button class="btn btn-info btn-mini" (click)="getItem(row.id)"><i
+                                  <button class="btn btn-info btn-mini" (click)="getItem(row.Id)"><i
                                           class="icofont icofont-edit"></i>Start Class</button>
                               </ng-template>
                           </ngx-datatable-column>

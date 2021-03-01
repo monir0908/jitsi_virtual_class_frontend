@@ -84,9 +84,10 @@ export class HomeComponent implements OnInit {
         return this.searchForm.controls;
     }
 
-    getMyStudentList(userId, projectId){
-        this._service.get('V2/getEduDynamicStudentListByTutor/' + userId + '/' + projectId).subscribe(res => {
-            this.studentList = res;
+    getMyStudentList(userId, batchId){
+        this._service.get('api/conference/GetParticipantListByHostId/' + userId ).subscribe(res => {
+            this.studentList = res.Records;
+            console.log(this.studentList)
         }, err => { }
         );
 
