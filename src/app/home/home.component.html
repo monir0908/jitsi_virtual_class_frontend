@@ -1,6 +1,6 @@
 <block-ui>
 
-  <div class="row">
+  <div class="row" *ngIf="currentUser.UserType == 'Host'">
     <div class="col-lg-12 col-md-12 col-sm-12">
       <div class="card card-border-primary">
           <div class="card-header">
@@ -55,11 +55,21 @@
                               </ng-template>
                           </ngx-datatable-column> -->
 
-                          <ngx-datatable-column [width]="50" name="Action" prop="Id" [draggable]="false"
+                          <ngx-datatable-column [width]="50" name="Action" prop="IsAnyExistingConferenceBetweenThem" [draggable]="false"
                               [sortable]="false">
                               <ng-template let-row="row" ngx-datatable-cell-template>
-                                  <button class="btn btn-info btn-mini" (click)="getItem(row.Id)"><i
-                                          class="icofont icofont-edit"></i>Start Class</button>
+                                    <button class="btn btn-info btn-mini" 
+                                            (click)="startConference(row)"  
+                                            *ngIf="row.IsAnyExistingConferenceBetweenThem==false"><i
+                                            class="icofont icofont-external"></i  >
+                                            Start Class
+                                    </button>
+                                    <button class="btn btn-success btn-mini"
+                                            (click)="joinConference(row)"  
+                                            *ngIf="row.IsAnyExistingConferenceBetweenThem"><i
+                                            class="icofont icofont-ui-lock"></i  >
+                                            On-Going | Click To Join
+                                    </button>
                               </ng-template>
                           </ngx-datatable-column>
                       </ngx-datatable>
@@ -70,4 +80,89 @@
   </div>
   </div>
 
+  <div class="row"  *ngIf="currentUser.UserType == 'Participant'">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+      <div class="card card-border-primary">
+          <div class="card-header">
+              <h5>Host List </h5>
+          </div>
+          <div class="card-block ">
+              <div class="row ">
+                  <div class="col-lg-12 ">
+                      <ngx-datatable class="material table-bordered" [rows]="HostList"
+                          [columnMode]="ColumnMode.force"
+                          [headerHeight]="40" [footerHeight]="50" rowHeight="auto" [limit]="10">
+
+                          <ngx-datatable-column [width]="10" name="Sl" prop="id" [draggable]="false"
+                              [sortable]="false">
+                              <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
+                                  <span > {{ rowIndex + 1 }} </span>
+                              </ng-template>
+                          </ngx-datatable-column>
+
+                          <ngx-datatable-column name="Host First Name" prop="FirstName" [draggable]="false"
+                              [sortable]="false">
+                              <ng-template let-value="value" ngx-datatable-cell-template>
+                                  <span title="{{ value }}"> {{ value }} </span>
+                              </ng-template>
+                          </ngx-datatable-column>
+                         
+                          <ngx-datatable-column name="Host Last Name" prop="LastName" [draggable]="false"
+                              [sortable]="false">
+                              <ng-template let-value="value" ngx-datatable-cell-template>
+                                  <span title="{{ value }}"> {{ value }} </span>
+                              </ng-template>
+                          </ngx-datatable-column>
+                         
+                          <ngx-datatable-column name="Batch Name" prop="BatchName" [draggable]="false"
+                              [sortable]="false">
+                              <ng-template let-value="value" ngx-datatable-cell-template>
+                                  <span title="{{ value }}"> {{ value }} </span>
+                              </ng-template>
+                          </ngx-datatable-column>
+                         
+                          <ngx-datatable-column name="Project Name" prop="ProjectName" [draggable]="false"
+                              [sortable]="false">
+                              <ng-template let-value="value" ngx-datatable-cell-template>
+                                  <span title="{{ value }}"> {{ value }} </span>
+                              </ng-template>
+                          </ngx-datatable-column>
+
+                          <!-- <ngx-datatable-column name="Photo" prop="profile_pic" [draggable]="false"
+                              [sortable]="false">
+                              <ng-template let-value="value" ngx-datatable-cell-template>
+                                  <span title="{{ value }}"> <img class="img-thumbnail" alt="Cinque Terre" style="width:65px; height:65px;" src={{value}}/></span>
+                              </ng-template>
+                          </ngx-datatable-column> -->
+
+                          <ngx-datatable-column [width]="50" name="Action" prop="IsAnyExistingConferenceBetweenThem" [draggable]="false"
+                              [sortable]="false">
+                              <ng-template let-row="row" ngx-datatable-cell-template>
+                                    <button class="btn btn-info btn-mini" 
+                                            (click)="startConference(row)"  
+                                            *ngIf="row.IsAnyExistingConferenceBetweenThem==false"><i
+                                            class="icofont icofont-external"></i  >
+                                            Join Class
+                                    </button>
+                                    <button class="btn btn-success btn-mini"
+                                            (click)="joinConference(row)"  
+                                            *ngIf="row.IsAnyExistingConferenceBetweenThem"><i
+                                            class="icofont icofont-ui-lock"></i  >
+                                            On-Going | Click To Join
+                                    </button>
+                              </ng-template>
+                          </ngx-datatable-column>
+                      </ngx-datatable>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+  </div>
+  <button class="btn btn-success btn-mini"
+        (click)="btnHangup()" ><i
+        class="icofont icofont-ui-lock"></i  >
+        Hang Up
+</button>
+  <div #jitsi></div>
 </block-ui>

@@ -1,4 +1,4 @@
-import { Component, TemplateRef, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, TemplateRef, OnInit, ViewEncapsulation, ViewChild } from '@angular/core';
 import { AuthenticationService } from './../_services/authentication.service';
 import { CommonService } from './../_services/common.service';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
@@ -13,6 +13,18 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { environment } from '../../environments/environment';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { ColumnMode } from '@swimlane/ngx-datatable';
+import { connectableObservableDescriptor } from 'rxjs/internal/observable/ConnectableObservable';
+import { env } from 'process';
+
+
+import {ElementRef} from '@angular/core';
+
+// JISTI RELATED
+import './../../assets/data/external_api.js';
+
+declare var JitsiMeetExternalAPI: any;
+
+
 HC_exporting(Highcharts);
 
 @Component({
@@ -25,6 +37,7 @@ HC_exporting(Highcharts);
 export class HomeComponent implements OnInit {
 
     public studentList : Array<any> = []
+    public HostList : Array<any> = []
 
     
 
@@ -55,6 +68,17 @@ export class HomeComponent implements OnInit {
     highcharts = Highcharts;
     @BlockUI() blockUI: NgBlockUI;
     printableCollections = 0;
+
+    // JISTI RELATED
+    apiObj = null;
+    domain = 'live-class.joogle.xyz';   
+    options;
+    @ViewChild('jitsi') el:ElementRef;
+
+
+
+
+
     constructor(
         private authService: AuthenticationService,
         private modalService: BsModalService,
@@ -75,16 +99,57 @@ export class HomeComponent implements OnInit {
             minDate: new Date()
         }
 
-        this.getMyStudentList(this.currentUser.Id, 5);
-        // this.getMonthlyIncome();
-        // this.getBuildingWiseRooms();
+        this.getMyStudentList(this.currentUser.Id);
+        this.getMyHostList(this.currentUser.Id);
+        
     }
 
     get f() {
         return this.searchForm.controls;
     }
 
-    getMyStudentList(userId, batchId){
+
+    
+    // JISTI RELATED
+    joinConference(obj){
+        this.el.nativeElement.focus();
+
+        this.options = {
+            roomName: obj.RoomId,
+            width: '100%',
+            height: '800px',
+            parentNode: this.el.nativeElement,
+            userInfo: {
+                displayName: this.currentUser.FirstName
+            },
+            
+        
+        };
+        this.apiObj = new JitsiMeetExternalAPI(this.domain, this.options);
+        this.apiObj.addEventListeners({
+            readyToClose: function () {
+                
+                console.log("hello");
+                // this.jitsiElement.nativeElement.remove();
+            },
+            participantJoined: function(data){
+                console.log('participantJoined', data);
+                
+                alert(data.displayName + " has joined and id is '" + data.id + "'")
+            },
+            participantLeft: function(data){
+                console.log('participantLeft', data);
+            }
+        });
+    }
+
+
+    btnHangup(){
+        this.apiObj.executeCommand('hangup');
+    }
+    
+
+    getMyStudentList(userId){
         this._service.get('api/conference/GetParticipantListByHostId/' + userId ).subscribe(res => {
             this.studentList = res.Records;
             console.log(this.studentList)
@@ -93,13 +158,44 @@ export class HomeComponent implements OnInit {
 
     }
 
-    getItem(userId){
+    getMyHostList(userId){
+        this._service.get('api/conference/GetHostListByParticipantId/' + userId ).subscribe(res => {
+            this.HostList = res.Records;
+            console.log(this.HostList)
+        }, err => { }
+        );
 
-        alert(userId)
-        // this._service.get('V2/getEduDynamicStudentListByTutor/' + userId + '/' + projectId).subscribe(res => {
-        //     this.studentList = res;
-        // }, err => { }
-        // );
+    }
+
+    startConference(obj){
+
+        console.log(obj)
+
+        const confObj = {
+            HostId: obj.HostId,
+            ParticipantId: obj.ParticipantId,
+            BatchId: obj.BatchId
+        }
+
+        console.log(confObj);
+
+        this._service.post('/api/conference/CreateConference', confObj).subscribe(data => {
+            this.blockUI.stop();
+            if (data.Success) {
+                this.toastr.success(data.Message, 'Success!', { timeOut: 2000 });
+                this.getMyStudentList(this.currentUser.Id);
+            } else {
+                this.toastr.error(data.Message, 'Error!', { closeButton: true, disableTimeOut: true });
+            }
+        },
+        err => {
+            this.blockUI.stop();
+            this.toastr.error(err.Message || err, 'Error!', { closeButton: true, disableTimeOut: true });
+        }
+        );
+        
+
+        
 
     }
 
@@ -355,4 +451,7 @@ export class HomeComponent implements OnInit {
     openModal(room, template: TemplateRef<any>) {
         this.modalRef = this.modalService.show(template, this.modalConfig);
     }
+    
+
+    
 }
