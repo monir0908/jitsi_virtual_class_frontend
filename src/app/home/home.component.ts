@@ -1,4 +1,4 @@
-import { Component, TemplateRef, OnInit, ViewEncapsulation, ViewChild } from '@angular/core';
+import { Component, TemplateRef, OnInit, ViewEncapsulation, ViewChild, HostListener } from '@angular/core';
 import { AuthenticationService } from './../_services/authentication.service';
 import { CommonService } from './../_services/common.service';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
@@ -21,8 +21,13 @@ import {ElementRef} from '@angular/core';
 
 // JISTI RELATED
 import './../../assets/data/external_api.js';
-
 declare var JitsiMeetExternalAPI: any;
+//SignalR RELATED
+
+
+
+import { HubConnection } from '@aspnet/signalr';
+import * as signalR from '@aspnet/signalr';
 
 
 HC_exporting(Highcharts);
@@ -34,7 +39,11 @@ HC_exporting(Highcharts);
     encapsulation: ViewEncapsulation.None
 })
 
+
+
 export class HomeComponent implements OnInit {
+
+    
 
     public studentList : Array<any> = []
     public HostList : Array<any> = []
@@ -75,9 +84,13 @@ export class HomeComponent implements OnInit {
     options;
     @ViewChild('jitsi') el:ElementRef;
 
+    currentConf = {
+        "RoomId": null
+    }
+    currentSocketId = null;
 
-
-
+    // SIGNALR RELATED
+    private hubConnection: HubConnection;
 
     constructor(
         private authService: AuthenticationService,
@@ -88,7 +101,22 @@ export class HomeComponent implements OnInit {
         private _service: CommonService
     ) {
         this.currentUser = this.authService.currentUserDetails.value;
+        
     }
+
+
+
+    @HostListener('window:beforeunload', ['$event'])
+   onWindowClose(event: any): void {
+
+    if (this.currentConf.RoomId != null)
+        this.btnHangup(this.currentConf)  
+
+
+     event.preventDefault();
+     event.returnValue = false;
+
+  }
 
     ngOnInit() {
         this.searchForm = this.formBuilder.group({
@@ -99,8 +127,95 @@ export class HomeComponent implements OnInit {
             minDate: new Date()
         }
 
+
         this.getMyStudentList(this.currentUser.Id);
         this.getMyHostList(this.currentUser.Id);
+
+        if(this.currentConf.RoomId !=null)
+            this.getOnGoingConferenceByHostId(this.currentUser.Id);
+
+
+
+        // SIGNALR RELATED
+        this.hubConnection = new signalR.HubConnectionBuilder()
+      .withUrl('http://localhost:5000/pushNotification').build();
+
+        this.hubConnection.start().then(() => {
+        console.log('connection started');
+        }).catch(err => console.log(err));
+
+        this.hubConnection.onclose(() => {
+        // debugger;
+        setTimeout(() => {
+            console.log('try to re start connection');
+            // debugger;
+            this.hubConnection.start().then(() => {
+            // debugger;
+            console.log('connection re started');
+            }).catch(err => console.log(err));
+        }, 5000);
+        });
+
+        this.hubConnection.on('privateMessageMethodName', (data) => {
+        // debugger;
+        console.log('private Message:' + data);
+        alert('private msg is : ' + data);
+        });
+
+        this.hubConnection.on('publicMessageMethodName', (data) => {
+        // debugger;
+        console.log('public Message:' + data);
+        alert('public msg is : ' + data);
+        });
+
+        this.hubConnection.on('clientMethodName', (data) => {
+        // debugger;
+        console.log('server message:' + data);
+        });
+
+        this.hubConnection.on('XYZMethodTobeListenedTo', (data) => {
+            // debugger;
+            console.log('XYZMethodTobeListenedTo message:' + data);
+            });
+
+        this.hubConnection.on('WelcomeMethodName', (data) => {
+        // debugger;
+        console.log('client Id:' + data);
+        this.currentSocketId = data;
+
+        this.hubConnection.invoke('GetDataFromClient', 'abc@abc.com', data).catch(err => console.log(err));
+        });
+
+
+
+        // my custom
+        // this.hubConnection.on('Created', (participantId) => {            
+        //     if(participantId == this.currentUser.Id){
+        //         alert("Your teacher has started a conference. Please join.")
+        //     }
+        // });
+
+        this.hubConnection.on('Ended', (participantId) => {    
+                   
+            if(participantId == this.currentUser.Id){ 
+                this.apiObj.executeCommand('hangup');       
+                this.apiObj.dispose();      
+                
+                //window.location.reload();
+                this.getMyHostList(this.currentUser.Id)
+                alert("You teacher either ended the conference or lost internet connection, conference has ended.")
+            }
+        });
+
+        this.hubConnection.on('Joined', (participantId) => {    
+                   
+            if(participantId == this.currentUser.Id){    
+                
+                //window.location.reload();
+                this.getMyHostList(this.currentUser.Id)
+                alert("You teacher has joined the conference, what are you waiting for? Please join in.")
+            }
+        });
         
     }
 
@@ -108,10 +223,55 @@ export class HomeComponent implements OnInit {
         return this.searchForm.controls;
     }
 
+    getOnGoingConferenceByHostId(userId){
+        this._service.get('api/conference/GetOnGoingConferenceByHostId/' + userId ).subscribe(res => {
+            this.currentConf.RoomId = res.CurrentConfRoomId;
+            
+        }, err => {
+            this.blockUI.stop();
+            this.toastr.error(err.Message || err, 'Error!', { closeButton: true, disableTimeOut: true });
+        }
+        );
 
+    }
     
     // JISTI RELATED
+    startConference(obj){        
+        
+        const confObj = {
+            HostId: obj.HostId,
+            ParticipantId: obj.ParticipantId,
+            BatchId: obj.BatchId
+        }
+
+        console.log(confObj);
+
+        this._service.post('api/conference/CreateConference', confObj).subscribe(data => {
+            this.blockUI.stop();
+            if (data.Success) {
+                this.toastr.success(data.Message, 'Success!', { timeOut: 2000 });
+                
+                
+                this.getMyStudentList(this.currentUser.Id);                
+                this.currentConf.RoomId = data.CurrentConfRoomId
+
+
+            } else {
+                this.toastr.error(data.Message, 'Error!', { closeButton: true, disableTimeOut: true });
+            }
+        },
+        err => {
+            this.blockUI.stop();
+            this.toastr.error(err.Message || err, 'Error!', { closeButton: true, disableTimeOut: true });
+        }
+        );        
+
+    }
+
     joinConference(obj){
+
+
+        
         this.el.nativeElement.focus();
 
         this.options = {
@@ -126,26 +286,92 @@ export class HomeComponent implements OnInit {
         
         };
         this.apiObj = new JitsiMeetExternalAPI(this.domain, this.options);
+
+        
         this.apiObj.addEventListeners({
             readyToClose: function () {
-                
-                console.log("hello");
-                // this.jitsiElement.nativeElement.remove();
+                console.log("hello")
+            },
+            videoConferenceLeft: function (data) {
+                console.log(data.roomName + "hello")
             },
             participantJoined: function(data){
-                console.log('participantJoined', data);
-                
-                alert(data.displayName + " has joined and id is '" + data.id + "'")
+                console.log('participantJoined', data);                
+                // alert(data.displayName + " has joined and id is '" + data.id + "'")
             },
             participantLeft: function(data){
                 console.log('participantLeft', data);
+                // alert("left")
             }
         });
+
+        const confObj = {
+            HostId: obj.HostId,
+            ParticipantId: obj.ParticipantId,
+            BatchId: obj.BatchId,
+            RoomId: obj.RoomId
+        }
+
+        console.log(confObj);
+
+        this._service.post('api/conference/JoinConferenceByHost', confObj).subscribe(data => {
+            this.blockUI.stop();
+            if (data.Success) {
+                //this.toastr.success(data.Message, 'Success!', { timeOut: 2000 });
+            } else {
+                this.toastr.error(data.Message, 'Error!', { closeButton: true, disableTimeOut: true });
+            }
+        },
+        err => {
+            this.blockUI.stop();
+            this.toastr.error(err.Message || err, 'Error!', { closeButton: true, disableTimeOut: true });
+        }
+        );
     }
 
+    
+    btnHangup(obj){
 
-    btnHangup(){
-        this.apiObj.executeCommand('hangup');
+        console.log(obj)
+
+        const confObj = {
+            RoomId: obj.RoomId
+        }
+
+        this._service.post('api/conference/EndConference', confObj).subscribe(data => {
+            this.blockUI.stop();
+            if (data.Success) {
+                this.toastr.success(data.Message, 'Success!', { timeOut: 2000 });
+                this.getMyStudentList(this.currentUser.Id);
+
+                
+            } else {
+                this.toastr.error(data.Message, 'Error!', { closeButton: true, disableTimeOut: true });
+            }
+        },
+        err => {
+            this.blockUI.stop();
+            this.toastr.error(err.Message || err, 'Error!', { closeButton: true, disableTimeOut: true });
+        }
+        );
+
+
+
+        this.apiObj.executeCommand('hangup');       
+        this.apiObj.dispose();
+        this.currentConf.RoomId = null
+        
+        
+
+
+        // alert(this.currentUser.FirstName + " has closed meeting")
+        // this.apiObj.executeCommand('hangup');
+        // this.apiObj.dispose();
+        
+    }
+
+    getParticipantInfo(){
+        this.apiObj.getParticipantsInfo();
     }
     
 
@@ -167,36 +393,11 @@ export class HomeComponent implements OnInit {
 
     }
 
-    startConference(obj){
+    
 
-        console.log(obj)
 
-        const confObj = {
-            HostId: obj.HostId,
-            ParticipantId: obj.ParticipantId,
-            BatchId: obj.BatchId
-        }
-
-        console.log(confObj);
-
-        this._service.post('/api/conference/CreateConference', confObj).subscribe(data => {
-            this.blockUI.stop();
-            if (data.Success) {
-                this.toastr.success(data.Message, 'Success!', { timeOut: 2000 });
-                this.getMyStudentList(this.currentUser.Id);
-            } else {
-                this.toastr.error(data.Message, 'Error!', { closeButton: true, disableTimeOut: true });
-            }
-        },
-        err => {
-            this.blockUI.stop();
-            this.toastr.error(err.Message || err, 'Error!', { closeButton: true, disableTimeOut: true });
-        }
-        );
-        
-
-        
-
+    currentConfDetail(){
+        alert(this.currentConf.RoomId)
     }
 
     getAllCount() {
@@ -448,7 +649,7 @@ export class HomeComponent implements OnInit {
         this.modalRef.hide();
     }
     
-    openModal(room, template: TemplateRef<any>) {
+    openModal(template: TemplateRef<any>) {
         this.modalRef = this.modalService.show(template, this.modalConfig);
     }
     

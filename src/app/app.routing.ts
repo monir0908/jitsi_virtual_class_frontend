@@ -27,7 +27,11 @@ export const AppRoutes: Routes = [
   {
     path: '',
     component: AdminLayoutComponent,
-    children: [
+    children: [ 
+      {
+        path: 'signalr',
+        loadChildren: () => import('./signalr/signalr.module').then(m => m.SignalrModule),
+      },     
       {
         path: 'dashboard',
         loadChildren: () => import('./home/home.module').then(m => m.HomeModule),

@@ -1,0 +1,236 @@
+<block-ui>
+    <div class="row">
+
+        <div class="col-lg-12">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card card-border-primary">
+                        <div class="card-header">
+                            <h5>Allocated List </h5>
+                        </div>
+                        <div class="card-block ">
+                            <div class="row">
+                                <form [formGroup]="searchFrom" class="col-lg-12">
+                                    <div class="row col-sm-1 float-right">
+                                        <button class="btn btn-warning input-group-addon" *ngIf="expanded" (click)="searchAllocation()">Search</button>
+                                    </div>
+                                    <div class="row col-sm-4 float-right">
+                                        <ng-select placeholder="Select user" formControlName="visitorId" [items]="userList" [clearable]='false'
+                                        [clearOnBackspace]='false' bindLabel="Name" bindValue="Id" [ngClass]="{ 'is-invalid': submitted && f.visitorId.errors }"></ng-select>
+                                    </div>
+                                </form>
+                                
+                                <div class="col-lg-12 ">
+                                    <hr>
+                                    <ngx-datatable #dataTable class="material table-bordered expandable" [rows]="rows"
+                                    [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
+                                    [headerHeight]="40" [footerHeight]="50" rowHeight="auto" [limit]="10"
+                                    (page)="setPage($event)">
+
+                                    <!-- Row Detail Template -->
+                                    <ngx-datatable-row-detail rowHeight="auto">
+                                        <ng-template let-row="row" let-expanded="expanded"
+                                            ngx-datatable-row-detail-template>
+                                            <div class="w-100">
+                                                <table 
+                                                    class="table table-xs table-hover table-bordered table-striped">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col">#</th>
+                                                            <th scope="col">Room</th>
+                                                            <th scope="col">Building</th>
+                                                            <th scope="col">Check In</th>
+                                                            <th scope="col">Check Out</th>
+                                                            <th scope="col">Price</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr *ngFor="let item of row.details; let i=index">
+                                                            <td>{{i+1}}</td>
+                                                            <td>{{item.Room}}</td>
+                                                            <td>
+                                                                {{item.Building? item.Building : ''}}
+                                                            </td>
+                                                            <td *ngIf="item.CheckIn"><button class="btn btn-info btn-mini">{{ getDateTimeFormat(item.CheckIn) }}</button></td>
+                                                            <td *ngIf="item.CheckOut"><button class="btn btn-info btn-mini">{{ getDateTimeFormat(item.CheckOut) }}</button></td>
+                                                            <td *ngIf="!item.CheckIn">Not Checked In</td>
+                                                            <td *ngIf="!item.CheckOut">Not Checked Out</td>
+                                                            <td>{{ allocationDetails.NoOfDays }} x {{ item.Price}} = <strong>{{ allocationDetails.NoOfDays * item.Price}}</strong> /- </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </ng-template>
+                                    </ngx-datatable-row-detail>
+                                    <!-- Column Templates -->
+
+                                    <ngx-datatable-column [width]="120" name="Details" [resizeable]="false"
+                                        [sortable]="false" [draggable]="false" [canAutoResize]="false">
+                                        <ng-template let-row="row" let-expanded="expanded"
+                                            ngx-datatable-cell-template>
+                                            <button class="btn btn-info btn-mini" *ngIf="!expanded" (click)="toggleExpandRow(row)">View Details</button>
+                                            <button class="btn btn-secondary btn-mini" *ngIf="expanded" (click)="toggleExpandRow(row)">Hide Details</button>
+                                        </ng-template>
+                                    </ngx-datatable-column>
+
+                                    <ngx-datatable-column [width]="100" name="Allocated To" prop="Visitor" [draggable]="false"
+                                        [sortable]="false">
+                                        <ng-template let-value="value" ngx-datatable-cell-template>
+                                            <span *ngIf="value" title="{{ value }}"> <strong>{{ value }}</strong> </span>
+                                        </ng-template>
+                                    </ngx-datatable-column>
+                                    
+                                    <ngx-datatable-column [width]="100" name="Allocation No" prop="AllocationNo" [draggable]="false"
+                                        [sortable]="false">
+                                        <ng-template let-value="value" ngx-datatable-cell-template>
+                                            <span *ngIf="value" title="{{ value }}"> <strong>{{ value }}</strong> </span>
+                                        </ng-template>
+                                    </ngx-datatable-column>
+
+                                    <ngx-datatable-column [width]="80" name="No of Rooms" prop="NoOfRooms" [draggable]="false"
+                                        [sortable]="false">
+                                        <ng-template let-value="value" ngx-datatable-cell-template>
+                                            <span title="{{ value }}"> <strong>{{ value }}</strong> </span>
+                                        </ng-template>
+                                    </ngx-datatable-column>
+                                    
+                                    <ngx-datatable-column [width]="100" name="From" prop="FromDate" [draggable]="false"
+                                        [sortable]="false">
+                                        <ng-template let-value="value" ngx-datatable-cell-template>
+                                            <span title="{{ value | amDateFormat:'DD MMM YYYY' }}"> {{ value | amDateFormat:'DD MMM YYYY' }} </span>
+                                        </ng-template>
+                                    </ngx-datatable-column>
+
+                                    <ngx-datatable-column [width]="100" name="To" prop="ToDate" [draggable]="false"
+                                        [sortable]="false">
+                                        <ng-template let-value="value" ngx-datatable-cell-template>
+                                            <span title="{{ value | amDateFormat:'DD MMM YYYY' }}"> {{ value | amDateFormat:'DD MMM YYYY'}} </span>
+                                        </ng-template>
+                                    </ngx-datatable-column>
+
+                                    <ngx-datatable-column [width]="100" name="Payment" prop="SubTotal" [draggable]="false"
+                                        [sortable]="false">
+                                        <ng-template let-row="row" ngx-datatable-cell-template>
+                                            <span title="{{ row.SubTotal }}"> <strong class="text-danger">Payble: </strong> <strong> {{ row.SubTotal }}</strong> &#2547;<br/> <strong class="text-danger">Paid: </strong> <strong> {{ row.Paid }}</strong> &#2547; <strong class="text-danger"> Discount:</strong> <strong> {{ row.Discount }}</strong> &#2547; </span>
+                                        </ng-template>
+                                    </ngx-datatable-column>
+
+
+                                    <ngx-datatable-column [width]="200" name="Action" prop="Id" [draggable]="false"
+                                        [sortable]="false">
+                                        <ng-template let-row="row" ngx-datatable-cell-template>
+                                            <button class="btn btn-info btn-mini" (click)="getBookingRooms(row, PaymentTemplate)"><i class="icofont-check"></i> Make Payment</button>
+                                        </ng-template>
+                                    </ngx-datatable-column>
+
+                                </ngx-datatable>
+                                </div>
+                            
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <ng-template #PaymentTemplate>
+        <div class="modal-header ">
+            <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
+            <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+                <i class="icofont icofont-close"></i>
+            </button>
+        </div>
+        <div class="modal-body ">
+            <app-card>
+                <form>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <table class="table table-xs table-hover table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Room</th>
+                                        <th scope="col">Building</th>
+                                        <th scope="col text-right">Check In/Out</th>
+                                        <th scope="col">Price</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let item of bookingRooms; let i=index">
+                                        <th>{{i+1}}</th>
+                                        <td>{{item.Room}}</td>
+                                        <td>
+                                            {{item.Building? item.Building : ''}}
+                                        </td>
+                                        <th class="text-right">
+                                            <button *ngIf="item.CheckIn && item.CheckOut" class="btn btn-secondary btn-mini"><i class="icofont-check"></i> Closed</button>
+                                            <button *ngIf="!item.CheckIn" class="btn btn-success btn-mini"><i class="icofont-check"></i> Check In</button>
+                                            <button *ngIf="item.CheckIn && !item.CheckOut" class="btn btn-warning btn-mini"><i class="icofont-check"></i> Check Out</button>
+                                        </th>
+                                        <td>
+                                            {{ allocationDetails.NoOfDays }} x {{ item.Price}} = <strong>{{ allocationDetails.NoOfDays * item.Price}}</strong> /-
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="row col-md-5 float-right">
+                                <table class="table table-xs table-hover table-striped">
+                                    <tbody>
+                                    <tr>
+                                        <th>Sub-Total</th>
+                                        <th class="text-right pr-4">= {{subTotal}} /-</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Advance</th>
+                                        <th class="text-right pr-4">= {{previousPaidAmount}} /-</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Previous Discount</th>
+                                        <th class="text-right pr-4">= {{previousDiscount}} /-</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Paid Amount</th>
+                                        <td>
+                                        <input type="text" class=" ml-3  form-control form-control-sm text-right" numeric
+                                            numericType="decimal" [ngModelOptions]="{standalone: true}" (change)="onChangePaid(paidAmount)" [(ngModel)]="paidAmount">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Discount</th>
+                                        <td>
+                                        <input type="text" class=" ml-3 form-control form-control-sm text-right" numeric
+                                            numericType="decimal" [ngModelOptions]="{standalone: true}" (change)="onChangeDiscount(discount)" [(ngModel)]="discount">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Due Amount</th>
+                                        <th class="text-right pr-4">= {{paybleAmount - previousDiscount - previousPaidAmount - discount - paidAmount}} /-</th>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+            </app-card>
+        </div>
+        <div class="modal-footer">
+            <div class="pr-4">
+
+                <button class="btn btn-danger btn-outline-danger mr-2" (click)="modalHide()"> <i
+                        class="icofont icofont-close"></i> Close</button>
+
+                <button class="btn btn-success btn-outline-success" (click)="makePayment()"><i
+                        class="icofont icofont-check-circled"></i> {{btnSaveText}}</button>
+
+            </div>
+
+        </div>
+    </ng-template>
+
+</block-ui>

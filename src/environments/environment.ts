@@ -5,8 +5,9 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:15902/',
-  baseUrl: 'http://localhost:15902/',
+  apiUrl: 'http://localhost:5000/',
+  baseUrl: 'http://localhost:5000/',
+  loginUrl: 'http://localhost:5000/api/authenticate/',
   liveClassUrl: 'https://live-class.joogle.xyz/',
   // apiUrl: 'http://psc-dormitory.bacbonltd.net/api/',
   // baseUrl: 'http://psc-dormitory.bacbonltd.net',

@@ -26,18 +26,18 @@ export class AuthenticationService {
 
 
   login(param) {
-    console.log(param)
-    var data = "username=" + param.Email + "&password=" + encodeURIComponent(param.Password)  + "&grant_type=password";
-    console.log(data)
-    var reqHeader = new HttpHeaders({ 'Content-Type': 'application/x-www-urlencoded', 'No-Auth': 'True' });
-    return this.http.post<any>(environment.baseUrl + 'token', data)
+    console.log(param)   
+
+    var data = {username: param.Email,password:param.Password};
+
+    return this.http.post<any>(environment.loginUrl + 'login', data)
       .pipe(map(data => {
         console.log(data)
       
         const user = {          
 
           Id : data.Id,
-          userName : data.UserName,
+          UserName : data.UserName,
           FirstName: data.FirstName,
           LastName: data.LastName,
           ImagePath: data.ImagePath,
@@ -45,7 +45,7 @@ export class AuthenticationService {
           PhoneNumber: data.PhoneNumber,
           UserType: data.UserType,
 
-          access_token: data.access_token,
+          access_token: data.token,
 
         }
         let expireDate = new Date(data[".expires"]);
