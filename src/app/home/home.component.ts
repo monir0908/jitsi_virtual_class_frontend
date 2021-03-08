@@ -85,8 +85,19 @@ export class HomeComponent implements OnInit {
     @ViewChild('jitsi') el:ElementRef;
 
     currentConf = {
-        "RoomId": null
+        // Id : null,
+        // RoomId : null,
+        // HostId : null,
+        // ParticipantId : null,
+        // BatchId : null,
+        // CreatedDateTime : null,
+        // Status : null
+        // SocketId : null
     }
+
+    hasJoined = false;
+
+
     currentSocketId = null;
 
     // SIGNALR RELATED
@@ -106,17 +117,27 @@ export class HomeComponent implements OnInit {
 
 
 
-    @HostListener('window:beforeunload', ['$event'])
-   onWindowClose(event: any): void {
+//     @HostListener('window:beforeunload', ['$event'])
+//    onWindowClose(event: any): void {
 
-    if (this.currentConf.RoomId != null)
-        this.btnHangup(this.currentConf)  
+    
 
 
-     event.preventDefault();
-     event.returnValue = false;
+//     // console.log(this.currentConf)
 
-  }
+//     // if(this.currentConf !=null || this.currentConf !== undefined){
+//     //     this.btnHangup(this.currentConf); }
+
+
+//     // if(false){
+//     //     this.btnHangup(this.currentConf); }
+    
+
+
+//      event.preventDefault();
+//      event.returnValue = false;
+
+//   }
 
     ngOnInit() {
         this.searchForm = this.formBuilder.group({
@@ -131,8 +152,9 @@ export class HomeComponent implements OnInit {
         this.getMyStudentList(this.currentUser.Id);
         this.getMyHostList(this.currentUser.Id);
 
-        if(this.currentConf.RoomId !=null)
-            this.getOnGoingConferenceByHostId(this.currentUser.Id);
+
+        // if(this.currentConf.Id !=null)
+        //     this.getOnGoingConferenceByHostId(this.currentUser.Id);
 
 
 
@@ -189,13 +211,20 @@ export class HomeComponent implements OnInit {
 
 
         // my custom
-        // this.hubConnection.on('Created', (participantId) => {            
-        //     if(participantId == this.currentUser.Id){
-        //         alert("Your teacher has started a conference. Please join.")
-        //     }
-        // });
+        this.hubConnection.on('BrowserRefreshedOrInternetInteruption', (participantId) => {            
+            if(participantId == this.currentUser.Id){
+                this.apiObj.executeCommand('hangup');       
+                this.apiObj.dispose();      
+                
+                //window.location.reload();
+                this.getMyHostList(this.currentUser.Id)
+                alert("Your teacher lost internet connection. Conference ended.")
+            }
+        });
 
         this.hubConnection.on('Ended', (participantId) => {    
+
+            // alert(participantId)
                    
             if(participantId == this.currentUser.Id){ 
                 this.apiObj.executeCommand('hangup');       
@@ -203,7 +232,7 @@ export class HomeComponent implements OnInit {
                 
                 //window.location.reload();
                 this.getMyHostList(this.currentUser.Id)
-                alert("You teacher either ended the conference or lost internet connection, conference has ended.")
+                alert("You teacher ended the conference.")
             }
         });
 
@@ -224,8 +253,16 @@ export class HomeComponent implements OnInit {
     }
 
     getOnGoingConferenceByHostId(userId){
-        this._service.get('api/conference/GetOnGoingConferenceByHostId/' + userId ).subscribe(res => {
-            this.currentConf.RoomId = res.CurrentConfRoomId;
+        this._service.get('api/conference/GetOnGoingConferenceByHostId/' + userId ).subscribe(data => {
+            this.currentConf = {
+                Id : data.CurrentConference.Id,
+                RoomId : data.CurrentConference.RoomId,
+                HostId : data.CurrentConference.HostId,
+                ParticipantId : data.CurrentConference.ParticipantId,
+                BatchId : data.CurrentConference.BatchId,
+                CreatedDateTime : data.CurrentConference.CreatedDateTime,
+                Status : data.CurrentConference.Status
+            }
             
         }, err => {
             this.blockUI.stop();
@@ -252,8 +289,17 @@ export class HomeComponent implements OnInit {
                 this.toastr.success(data.Message, 'Success!', { timeOut: 2000 });
                 
                 
-                this.getMyStudentList(this.currentUser.Id);                
-                this.currentConf.RoomId = data.CurrentConfRoomId
+                this.getMyStudentList(this.currentUser.Id);
+                
+                this.currentConf = {
+                    Id : data.CurrentConference.Id,
+                    RoomId : data.CurrentConference.RoomId,
+                    HostId : data.CurrentConference.HostId,
+                    ParticipantId : data.CurrentConference.ParticipantId,
+                    BatchId : data.CurrentConference.BatchId,
+                    CreatedDateTime : data.CurrentConference.CreatedDateTime,
+                    Status : data.CurrentConference.Status
+                }
 
 
             } else {
@@ -269,6 +315,9 @@ export class HomeComponent implements OnInit {
     }
 
     joinConference(obj){
+
+        
+        this.hasJoined = true;
 
 
         
@@ -309,57 +358,119 @@ export class HomeComponent implements OnInit {
             HostId: obj.HostId,
             ParticipantId: obj.ParticipantId,
             BatchId: obj.BatchId,
-            RoomId: obj.RoomId
+            RoomId: obj.RoomId,
+            ConnectionId : this.currentSocketId,
         }
 
-        console.log(confObj);
+        // console.log(confObj);
+        // alert(this.currentUser.UserType)
 
-        this._service.post('api/conference/JoinConferenceByHost', confObj).subscribe(data => {
-            this.blockUI.stop();
-            if (data.Success) {
-                //this.toastr.success(data.Message, 'Success!', { timeOut: 2000 });
-            } else {
-                this.toastr.error(data.Message, 'Error!', { closeButton: true, disableTimeOut: true });
+        if(this.currentUser.UserType == 'Host'){
+            this._service.post('api/conference/JoinConferenceByHost', confObj).subscribe(data => {
+                this.blockUI.stop();
+                if (data.Success) {
+                    //this.toastr.success(data.Message, 'Success!', { timeOut: 2000 });
+                } else {
+                    this.toastr.error(data.Message, 'Error!', { closeButton: true, disableTimeOut: true });
+                }
+            },
+            err => {
+                this.blockUI.stop();
+                this.toastr.error(err.Message || err, 'Error!', { closeButton: true, disableTimeOut: true });
             }
-        },
-        err => {
-            this.blockUI.stop();
-            this.toastr.error(err.Message || err, 'Error!', { closeButton: true, disableTimeOut: true });
+            );
         }
-        );
+        else{
+            this._service.post('api/conference/JoinConferenceByParticipant', confObj).subscribe(data => {
+                this.blockUI.stop();
+                if (data.Success) {
+                    //this.toastr.success(data.Message, 'Success!', { timeOut: 2000 });
+                } else {
+                    this.toastr.error(data.Message, 'Error!', { closeButton: true, disableTimeOut: true });
+                }
+            },
+            err => {
+                this.blockUI.stop();
+                this.toastr.error(err.Message || err, 'Error!', { closeButton: true, disableTimeOut: true });
+            }
+            );
+
+        }
+
+        
     }
 
     
     btnHangup(obj){
 
-        console.log(obj)
+               
+
+        console.log(this.currentUser.UserType)
 
         const confObj = {
-            RoomId: obj.RoomId
+            HostId: obj.HostId,
+            ParticipantId: obj.ParticipantId,
+            BatchId: obj.BatchId,
+            RoomId: obj.RoomId,
+            ConnectionId : this.currentSocketId,
         }
 
-        this._service.post('api/conference/EndConference', confObj).subscribe(data => {
-            this.blockUI.stop();
-            if (data.Success) {
-                this.toastr.success(data.Message, 'Success!', { timeOut: 2000 });
-                this.getMyStudentList(this.currentUser.Id);
 
-                
-            } else {
-                this.toastr.error(data.Message, 'Error!', { closeButton: true, disableTimeOut: true });
+        // alert(confObj.ConnectionId)
+
+        
+
+        
+
+        if(this.currentUser.UserType == 'Host'){
+            this._service.post('api/conference/EndConference', confObj).subscribe(data => {
+                this.blockUI.stop();
+                if (data.Success) {
+                    this.toastr.success(data.Message, 'Success!', { timeOut: 2000 });
+                    this.getMyStudentList(this.currentUser.Id);
+                    this.hasJoined = false;
+    
+                    
+                } else {
+                    this.toastr.error(data.Message, 'Error!', { closeButton: true, disableTimeOut: true });
+                }
+            },
+            err => {
+                this.blockUI.stop();
+                this.toastr.error(err.Message || err, 'Error!', { closeButton: true, disableTimeOut: true });
             }
-        },
-        err => {
-            this.blockUI.stop();
-            this.toastr.error(err.Message || err, 'Error!', { closeButton: true, disableTimeOut: true });
+            );
         }
-        );
+        if(this.currentUser.UserType == 'Participant'){
+            this._service.post('api/conference/EndConferenceByParticipant', confObj).subscribe(data => {
+                this.blockUI.stop();
+                if (data.Success) {
+                    this.toastr.success(data.Message, 'Success!', { timeOut: 2000 });
+                    this.getMyHostList(this.currentUser.Id);
+                    this.hasJoined = false;
+    
+                    
+                } else {
+                    this.toastr.error(data.Message, 'Error!', { closeButton: true, disableTimeOut: true });
+                }
+            },
+            err => {
+                this.blockUI.stop();
+                this.toastr.error(err.Message || err, 'Error!', { closeButton: true, disableTimeOut: true });
+            }
+            );
+
+        }
+
+        
 
 
-
-        this.apiObj.executeCommand('hangup');       
-        this.apiObj.dispose();
-        this.currentConf.RoomId = null
+        if(this.apiObj != null){
+            this.apiObj.executeCommand('hangup');       
+            this.apiObj.dispose();
+        }
+        
+        this.currentConf = {}
         
         
 
@@ -397,7 +508,7 @@ export class HomeComponent implements OnInit {
 
 
     currentConfDetail(){
-        alert(this.currentConf.RoomId)
+        console.log(this.currentConf)
     }
 
     getAllCount() {

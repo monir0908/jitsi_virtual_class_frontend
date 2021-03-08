@@ -64,20 +64,23 @@
                                             class="icofont icofont-external"></i  >
                                             Start Class
                                     </button>
+                                    <span class="badge badge-success" *ngIf="row.IsAnyExistingConferenceBetweenThem && hasJoined ==false && row.RoomId !=null">Coference Created</span>
+                                    <span class="badge badge-success" *ngIf="(hasJoined ==true && row.RoomId !=null)">Coference Joined</span>
                                     <button class="btn btn-info btn-mini"
                                             (click)="joinConference(row)"  
-                                            *ngIf="row.IsAnyExistingConferenceBetweenThem"><i
+                                            *ngIf="hasJoined == false && row.RoomId !=null"><i
                                             class="icofont icofont-ui-lock"></i  >
-                                            On-Going | Click To Join
+                                            Click To Join Conference
                                     </button>
-                                    <button class="btn btn-success btn-mini"
+                                    <!-- <button class="btn btn-success btn-mini"
                                             *ngIf="row.IsAnyExistingConferenceBetweenThem"><i
                                             class="icofont icofont-ui-lock"></i  >
                                             Live Class On Going
-                                    </button>
+                                    </button> -->
+                                    <br>
                                     <button class="btn btn-danger btn-mini"
                                             (click)="btnHangup(row)"  
-                                            *ngIf="row.IsAnyExistingConferenceBetweenThem"><i
+                                            *ngIf="hasJoined && row.RoomId !=null"><i
                                             class="icofont icofont-ui-lock"></i  >
                                             Hang Up
                                     </button>
@@ -149,12 +152,13 @@
                           <ngx-datatable-column [width]="50" name="Action" prop="IsAnyExistingConferenceBetweenThem" [draggable]="false"
                               [sortable]="false">
                               <ng-template let-row="row" ngx-datatable-cell-template>
-                                    <button class="btn btn-info btn-mini" 
+                                    <!-- <button class="btn btn-info btn-mini" 
                                             (click)="startConference(row)"  
                                             *ngIf="row.IsAnyExistingConferenceBetweenThem==false"><i
                                             class="icofont icofont-external"></i  >
                                             Join Class
-                                    </button>
+                                    </button> -->
+                                    <span class="badge badge-secondary" *ngIf="row.IsAnyExistingConferenceBetweenThem==false">No Live Class Yet</span>
                                     <button class="btn btn-success btn-mini"
                                             (click)="joinConference(row)"  
                                             *ngIf="row.IsAnyExistingConferenceBetweenThem"><i
