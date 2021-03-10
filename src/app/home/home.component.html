@@ -159,15 +159,17 @@
                                             Join Class
                                     </button> -->
                                     <span class="badge badge-secondary" *ngIf="row.IsAnyExistingConferenceBetweenThem==false">No Live Class Yet</span>
+                                    <span class="badge badge-success" *ngIf="(hasJoined ==true && row.RoomId !=null)">Coference Joined</span>
+                                    <br>
                                     <button class="btn btn-success btn-mini"
                                             (click)="joinConference(row)"  
-                                            *ngIf="row.IsAnyExistingConferenceBetweenThem"><i
+                                            *ngIf="hasJoined == false && row.RoomId !=null"><i
                                             class="icofont icofont-ui-lock"></i  >
                                             On-Going | Click To Join
                                     </button>
                                     <button class="btn btn-danger btn-mini"
                                             (click)="btnHangup(row)"  
-                                            *ngIf="row.IsAnyExistingConferenceBetweenThem"><i
+                                            *ngIf="hasJoined && row.RoomId !=null"><i
                                             class="icofont icofont-ui-lock"></i  >
                                             Hang Up
                                     </button>
