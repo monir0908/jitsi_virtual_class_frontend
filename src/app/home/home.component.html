@@ -64,11 +64,11 @@
                                             class="icofont icofont-external"></i  >
                                             Start Class
                                     </button>
-                                    <span class="badge badge-success" *ngIf="row.IsAnyExistingConferenceBetweenThem && hasJoined ==false && row.RoomId !=null">Coference Created</span>
-                                    <span class="badge badge-success" *ngIf="(hasJoined ==true && row.RoomId !=null)">Coference Joined</span>
+                                    <span class="badge badge-success" *ngIf="row.IsAnyExistingConferenceBetweenThem && row.HasJoinedByHost ==false && row.RoomId !=null">Coference Created</span>
+                                    <span class="badge badge-success" *ngIf="(row.HasJoinedByHost ==true && row.RoomId !=null)">Coference Joined</span>
                                     <button class="btn btn-info btn-mini"
                                             (click)="joinConference(row)"  
-                                            *ngIf="hasJoined == false && row.RoomId !=null"><i
+                                            *ngIf="row.HasJoinedByHost == false && row.RoomId !=null"><i
                                             class="icofont icofont-ui-lock"></i  >
                                             Click To Join Conference
                                     </button>
@@ -80,7 +80,7 @@
                                     <br>
                                     <button class="btn btn-danger btn-mini"
                                             (click)="btnHangup(row)"  
-                                            *ngIf="hasJoined && row.RoomId !=null"><i
+                                            *ngIf="row.HasJoinedByHost && row.RoomId !=null"><i
                                             class="icofont icofont-ui-lock"></i  >
                                             Hang Up
                                     </button>
@@ -159,17 +159,17 @@
                                             Join Class
                                     </button> -->
                                     <span class="badge badge-secondary" *ngIf="row.IsAnyExistingConferenceBetweenThem==false">No Live Class Yet</span>
-                                    <span class="badge badge-success" *ngIf="(hasJoined ==true && row.RoomId !=null)">Coference Joined</span>
+                                    <span class="badge badge-success" *ngIf="(row.HasJoinedByParticipant ==true && row.RoomId !=null)">Coference Joined</span>
                                     <br>
                                     <button class="btn btn-success btn-mini"
                                             (click)="joinConference(row)"  
-                                            *ngIf="hasJoined == false && row.RoomId !=null"><i
+                                            *ngIf="row.HasJoinedByParticipant == false && row.RoomId !=null"><i
                                             class="icofont icofont-ui-lock"></i  >
                                             On-Going | Click To Join
                                     </button>
                                     <button class="btn btn-danger btn-mini"
                                             (click)="btnHangup(row)"  
-                                            *ngIf="hasJoined && row.RoomId !=null"><i
+                                            *ngIf="row.HasJoinedByParticipant && row.RoomId !=null"><i
                                             class="icofont icofont-ui-lock"></i  >
                                             Hang Up
                                     </button>

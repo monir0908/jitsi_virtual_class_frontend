@@ -245,6 +245,29 @@ export class HomeComponent implements OnInit {
                 alert("You teacher has joined the conference, what are you waiting for? Please join in.")
             }
         });
+
+
+        this.hubConnection.on('LetHostKnowConferenceEnded', (hostId) => {            
+            if(hostId == this.currentUser.Id){
+                this.apiObj.executeCommand('hangup');       
+                this.apiObj.dispose();      
+                
+                //window.location.reload();
+                this.getMyStudentList(this.currentUser.Id)
+            }
+        });
+
+
+        this.hubConnection.on('LetParticipantKnowConferenceEnded', (participantId) => {            
+            if(participantId == this.currentUser.Id){
+                this.apiObj.executeCommand('hangup');       
+                this.apiObj.dispose();      
+                
+                //window.location.reload();
+                this.getMyHostList(this.currentUser.Id)
+            }
+        });
+
         
     }
 
@@ -316,44 +339,8 @@ export class HomeComponent implements OnInit {
 
     joinConference(obj){
 
-        
-        this.hasJoined = true;
-
-
-        
-        this.el.nativeElement.focus();
-
-        this.options = {
-            roomName: obj.RoomId,
-            width: '100%',
-            height: '800px',
-            parentNode: this.el.nativeElement,
-            userInfo: {
-                displayName: this.currentUser.FirstName
-            },
-            
-        
-        };
-        this.apiObj = new JitsiMeetExternalAPI(this.domain, this.options);
-
-        
-        this.apiObj.addEventListeners({
-            readyToClose: function () {
-                console.log("hello")
-            },
-            videoConferenceLeft: function (data) {
-                console.log(data.roomName + "hello")
-            },
-            participantJoined: function(data){
-                console.log('participantJoined', data);                
-                // alert(data.displayName + " has joined and id is '" + data.id + "'")
-            },
-            participantLeft: function(data){
-                console.log('participantLeft', data);
-                // alert("left")
-            }
-        });
-
+        // alert(obj.HasJoinedByHost);  
+        // alert(obj.HasJoinedByParticipant);  
         const confObj = {
             HostId: obj.HostId,
             ParticipantId: obj.ParticipantId,
@@ -370,6 +357,45 @@ export class HomeComponent implements OnInit {
                 this.blockUI.stop();
                 if (data.Success) {
                     //this.toastr.success(data.Message, 'Success!', { timeOut: 2000 });
+
+                    this.el.nativeElement.focus();
+
+                    this.options = {
+                        roomName: obj.RoomId,
+                        width: '100%',
+                        height: '800px',
+                        parentNode: this.el.nativeElement,
+                        userInfo: {
+                            displayName: this.currentUser.FirstName
+                        },
+                        
+                    
+                    };
+                    this.apiObj = new JitsiMeetExternalAPI(this.domain, this.options);
+
+                    
+                    this.apiObj.addEventListeners({
+                        readyToClose: function () {
+                            console.log("hello")
+                        },
+                        videoConferenceLeft: function (data) {
+                            console.log(data.roomName + "hello")
+                        },
+                        participantJoined: function(data){
+                            console.log('participantJoined', data);                
+                            // alert(data.displayName + " has joined and id is '" + data.id + "'")
+                        },
+                        participantLeft: function(data){
+                            console.log('participantLeft', data);
+                            // alert("left")
+                        }
+                    });
+
+
+                    this.getMyStudentList(this.currentUser.Id)
+
+
+
                 } else {
                     this.toastr.error(data.Message, 'Error!', { closeButton: true, disableTimeOut: true });
                 }
@@ -385,6 +411,42 @@ export class HomeComponent implements OnInit {
                 this.blockUI.stop();
                 if (data.Success) {
                     //this.toastr.success(data.Message, 'Success!', { timeOut: 2000 });
+
+                    this.el.nativeElement.focus();
+
+                    this.options = {
+                        roomName: obj.RoomId,
+                        width: '100%',
+                        height: '800px',
+                        parentNode: this.el.nativeElement,
+                        userInfo: {
+                            displayName: this.currentUser.FirstName
+                        },
+                        
+                    
+                    };
+                    this.apiObj = new JitsiMeetExternalAPI(this.domain, this.options);
+
+                    
+                    this.apiObj.addEventListeners({
+                        readyToClose: function () {
+                            console.log("hello")
+                        },
+                        videoConferenceLeft: function (data) {
+                            console.log(data.roomName + "hello")
+                        },
+                        participantJoined: function(data){
+                            console.log('participantJoined', data);                
+                            // alert(data.displayName + " has joined and id is '" + data.id + "'")
+                        },
+                        participantLeft: function(data){
+                            console.log('participantLeft', data);
+                            // alert("left")
+                        }
+                    });
+
+                    this.getMyHostList(this.currentUser.Id)
+
                 } else {
                     this.toastr.error(data.Message, 'Error!', { closeButton: true, disableTimeOut: true });
                 }
