@@ -31,7 +31,11 @@ export const AppRoutes: Routes = [
       {
         path: 'signalr',
         loadChildren: () => import('./signalr/signalr.module').then(m => m.SignalrModule),
-      },     
+      },
+      {
+        path: 'vclass',
+        loadChildren: () => import('./vclass/enroll-student.module').then(m => m.EnrollStudentModule),
+      },      
       {
         path: 'dashboard',
         loadChildren: () => import('./home/home.module').then(m => m.HomeModule),
