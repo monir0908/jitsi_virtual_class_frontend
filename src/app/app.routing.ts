@@ -33,8 +33,12 @@ export const AppRoutes: Routes = [
         loadChildren: () => import('./signalr/signalr.module').then(m => m.SignalrModule),
       },
       {
-        path: 'vclass',
+        path: 'host-vclass',
         loadChildren: () => import('./vclass/enroll-student.module').then(m => m.EnrollStudentModule),
+      },
+      {
+        path: 'participant-vclass',
+        loadChildren: () => import('./vclass-student/vclass-student.module').then(m => m.VClassStudentModule),
       },      
       {
         path: 'dashboard',

@@ -1,5 +1,5 @@
 import { Component, TemplateRef, ViewChild, ViewEncapsulation, OnInit } from '@angular/core';
-import { AuthenticationService } from './../_services/authentication.service';
+import { AuthenticationService } from '../_services/authentication.service';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { ColumnMode,  SelectionType, DatatableComponent} from '@swimlane/ngx-datatable';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -14,7 +14,7 @@ import { trigger, transition, style, animate } from '@angular/animations';
 import {ElementRef} from '@angular/core';
 
 // JISTI RELATED
-import './../../assets/data/external_api.js';
+import '../../assets/data/external_api.js';
 declare var JitsiMeetExternalAPI: any;
 //SignalR RELATED
 
@@ -26,8 +26,8 @@ import * as signalR from '@aspnet/signalr';
 
 
 @Component({
-    selector: 'app-enroll-student',
-    templateUrl: './enroll-student.component.html',
+    selector: 'app-vclass-student',
+    templateUrl: './vclass-student.component.html',
     encapsulation: ViewEncapsulation.None,
     animations: [
         trigger(
@@ -54,7 +54,7 @@ import * as signalR from '@aspnet/signalr';
       ]
 })
 
-export class EnrollStudentComponent implements OnInit {
+export class VClassStudentComponent implements OnInit {
 
 
     // JISTI RELATED
@@ -69,7 +69,7 @@ export class EnrollStudentComponent implements OnInit {
     private hubConnection: HubConnection;
 
 
-    public ParticipantList: [];
+    public HostList: [];
     public OnGoingClassList: [];
     OnGoingClassListLength =0;
     public currentUser: any;
@@ -228,92 +228,24 @@ export class EnrollStudentComponent implements OnInit {
 
 
         //CUSTOM
-        this.hubConnection.on('LetHostKnowClassEnded', (hostId) => {            
-            if(hostId == this.currentUser.Id){
+        this.hubConnection.on('LetParticipantKnowClassEnded', (participantId) => {            
+            if(participantId == this.currentUser.Id){
                 this.apiObj.executeCommand('hangup');       
                 this.apiObj.dispose();                
                 this.iframeOpened = false; 
-                this.getCurrentOnGoingVirtualClassListByHostId();
+                this.getCurrentOnGoingVirtualClassListByParticipantId();
             }
-        });
+        });    
 
-        
-
-
-
-
-
-
-
-
-
-
-        this.entryForm = this.formBuilder.group({
-            Id: [null],
-            AcademicProjectId: [null, [Validators.required]],
-            AcademicBatchId: [null, [Validators.required]],
-            AcademicTermId: [null, [Validators.required]],
-        });
-
-        this.syllabusForm = this.formBuilder.group({
-            AcademicTermId: [null, [Validators.required]],
-            disciplineCourseList: [, [Validators.required]]
-        });
-
-
-        this.getProjectList(this.currentUser.Id);
-        this.getCurrentOnGoingVirtualClassListByHostId();
-    }
-
-    get f() {
-        return this.entryForm.controls;
-    }
-
-    get sf() {
-        return this.syllabusForm.controls;
+        this.getCurrentOnGoingVirtualClassListByParticipantId();
     }
 
 
 
-    getProjectList(hostId){
-        this._service.get('api/conference/GetProjectListByHostId/' + hostId ).subscribe(res => {
-            this.ProjectList = res.Records;
-            console.log(this.ProjectList)
-        }, err => { }
-        );
+    
 
-    }
-
-    chnageProject() {       
-
-        this.projectId = this.entryForm.value.AcademicProjectId;
-        this.getBatchList(this.projectId);
-    }
-
-    getBatchList(projectId){
-        this._service.get('api/conference/GetBatchListByProjectId/' + projectId ).subscribe(res => {
-            this.BatchList = res.Records;
-            console.log(this.BatchList)
-        }, err => { }
-        );
-
-    }
-
-    chnageBatch(){
-        this.batchId = this.entryForm.value.AcademicBatchId;
-        this.getParticipantListbyBatchAndHostId(this.batchId, this.currentUser.Id);
-    }
-
-    getParticipantListbyBatchAndHostId(batchId, hostId){
-        this._service.get('api/conference/GetParticipantListByBatchAndHostId/' + batchId + '/' + hostId ).subscribe(res => {
-            this.ParticipantList = res.Records;
-            console.log(this.ParticipantList)
-        }, err => { }
-        );
-    }
-
-    getCurrentOnGoingVirtualClassListByHostId(){
-        this._service.get('api/conference/GetCurrentOnGoingVirtualClassListByHostId/' + this.currentUser.Id).subscribe(res => {
+    getCurrentOnGoingVirtualClassListByParticipantId(){
+        this._service.get('api/conference/GetCurrentOnGoingVirtualClassListByParticipantId/' + this.currentUser.Id).subscribe(res => {
             this.OnGoingClassList = res.Records;
             this.OnGoingClassListLength = res.Total;
             console.log(this.OnGoingClassList);
@@ -322,89 +254,12 @@ export class EnrollStudentComponent implements OnInit {
         );
     }
 
-    createVirtualClass(){
-        // this.blockUI.start('Starting...');
-        console.log(this.entryForm.value.AcademicProjectId)
-        console.log(this.entryForm.value.AcademicBatchId)
-        //console.log(this.selected)
-        const allStudent = this.selected;
-
-        const participantList = [];
-        const createConfObj = {
-            HostId: this.currentUser.Id,
-            BatchId: this.batchId,
-            ConnectionId : this.currentSocketId,
-        }
-
-        console.log("HostId: " + createConfObj.HostId);
-        console.log("BatchId: " + createConfObj.BatchId);
-        console.log("ConnectionId: " + createConfObj.ConnectionId);
-
-        if (allStudent.length > 0 ) {
-            allStudent.forEach(function (value) {
-                participantList.push({
-                    Id: value.ParticipantId
-                });
-            });
-        }
-
-        console.log(participantList);
-
-
-        if (participantList.length > 0 ) {
-            const request = this._service.post('api/conference/CreateVirtualClass', createConfObj);
-            request.subscribe(
-                data => {
-                    this.blockUI.stop();
-                    if (data.Success) {
-                        this.toastr.success(data.Message, 'Success!', { timeOut: 2000 });
-                        this.selected = [];
-                        const result = data.Records;
-
-                        const joinConfObj = {
-                            "vClassDetail":{
-                                "VClassId":result.Id,
-                                "RoomId":result.RoomId,
-                                "HostId":result.HostId,
-                                "BatchId":result.BatchId,
-                                "ConnectionId":this.currentSocketId
-                            },
-                            "participantList": participantList
-                        }
-
-                        
-                        //NOW JOINING THE MEETING
-                        this.joinConferenceByHost(joinConfObj);
-
-
-                        
-                        } 
-                        else 
-                        {
-                            this.toastr.error(data.Message, 'Error!', { closeButton: true, disableTimeOut: false });
-                        }
-                    },
-                err => {
-                    this.blockUI.stop();
-                    this.toastr.error(err.Message || err, 'Error!', { closeButton: true, disableTimeOut: false });
-                }
-            );
-        }
-        else
-        {
-            this.blockUI.stop();
-            this.toastr.error('Please Select Your Student (s) first and then start live class !', 'Error!', { closeButton: true, disableTimeOut: false });
-        }
-        
-    }
+    
 
     btnHangup(obj){
-
-               
-
         console.log(this.currentUser.UserType)
 
-        const vclassObj = {
+        const vclassDetailObj = {
             Id: obj.Id,
             HostId: obj.HostId,
             BatchId: obj.BatchId,
@@ -412,37 +267,11 @@ export class EnrollStudentComponent implements OnInit {
             ConnectionId : this.currentSocketId,
         }
 
-        console.log(vclassObj)
+        console.log(vclassDetailObj)
 
-        if(this.currentUser.UserType == 'Host'){
-            this._service.post('api/conference/EndVirtualClassByHost', vclassObj).subscribe(data => {
-                this.blockUI.stop();
-                if (data.Success) {
-                    this.toastr.success(data.Message, 'Success!', { timeOut: 2000 });
-                    
-                    //DESTROYING JISI IFRAME
-                    if(this.apiObj != null){
-                        this.apiObj.executeCommand('hangup');       
-                        this.apiObj.dispose();
-                        this.iframeOpened = false;
-                    }
-
-                    // RE-CALLING ONGOING CLASS LIST
-                    this.getCurrentOnGoingVirtualClassListByHostId();
-    
-                    
-                } else {
-                    this.toastr.error(data.Message, 'Error!', { closeButton: true, disableTimeOut: true });
-                }
-            },
-            err => {
-                this.blockUI.stop();
-                this.toastr.error(err.Message || err, 'Error!', { closeButton: true, disableTimeOut: true });
-            }
-            );
-        }
+        
         if(this.currentUser.UserType == 'Participant'){
-            this._service.post('api/conference/EndVirtualClassByParticipant', vclassObj).subscribe(data => {
+            this._service.post('api/conference/EndVirtualClassByParticipant', vclassDetailObj).subscribe(data => {
                 this.blockUI.stop();
                 if (data.Success) {
                     this.toastr.success(data.Message, 'Success!', { timeOut: 2000 }); 
@@ -453,7 +282,7 @@ export class EnrollStudentComponent implements OnInit {
                     }
 
                     // RE-CALLING ONGOING CLASS LIST
-                    this.getCurrentOnGoingVirtualClassListByHostId();                  
+                    this.getCurrentOnGoingVirtualClassListByParticipantId();                  
     
                     
                 } else {
@@ -470,18 +299,14 @@ export class EnrollStudentComponent implements OnInit {
 
         
         
-    }
+    }    
 
-
-
-    //Private Methods
-
-    joinConferenceByHost(param){
+    joinConferenceByParticipant(param){
 
         console.log("======================");
         console.log(param);
-        //Adter successful conference creation, we will let the host join the conference.
-        const request = this._service.post('api/conference/JoinVirtualClassByHost', param);
+        
+        const request = this._service.post('api/conference/JoinVirtualClassByParticipant', param);
         request.subscribe(
             data => {
                 this.blockUI.stop();
@@ -491,7 +316,7 @@ export class EnrollStudentComponent implements OnInit {
                     //NOW INITIATING JITSI IFRAME
                     this.initiateJitsi(data.Records.RoomId);
 
-                    this.getCurrentOnGoingVirtualClassListByHostId();
+                    this.getCurrentOnGoingVirtualClassListByParticipantId();
                 } 
                 else 
                 {
@@ -567,10 +392,7 @@ export class EnrollStudentComponent implements OnInit {
         // console.log('Select List', this.selected);
     }
 
-    updateFilter(e){
-
-    }
-
+    
     
 
     modalHide() {
@@ -586,8 +408,5 @@ export class EnrollStudentComponent implements OnInit {
         this.modalRef = this.modalService.show(template, this.modalConfig);
     }
 
-    fixDate(d: Date): Date {
-        d.setHours(d.getHours() - d.getTimezoneOffset() / 60);
-        return d;
-    }
+    
 }

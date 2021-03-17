@@ -4,22 +4,22 @@
   <div class="row">
     <div class="col-lg-12">
       <div class="row">
+        
         <div class="col-lg-12">
-
           <div class="card card-border-primary">
             <div class="card-header">
-              <h5>Select Project and Batch Below </h5>
+              <h5>Select The Followings </h5>
             </div>
             <div class="card-block ">
               <div class="row ">
                 <div class="col-lg-12 ">
                   <form [formGroup]="entryForm">
                     <div class="row">
-                      <div class="col-sm-4">
+                      <div class="col-sm-6">
                         <div class="form-group row">
-                          <label class="col-sm-3 col-form-label required">Project</label>
-                          <div class="col-sm-9">
-                            <ng-select placeholder="Select Project" formControlName="AcademicProjectId"
+                          <label class="col-sm-6 col-form-label required">Project / Organization</label>
+                          <div class="col-sm-6">
+                            <ng-select placeholder="Select Project or Organization Name" formControlName="AcademicProjectId"
                               (change)="chnageProject()" [items]="ProjectList" [clearable]='false'
                               [clearOnBackspace]='false' bindLabel="ProjectName" bindValue="Id"
                               [ngClass]="{ 'is-invalid': submitted && f.AcademicProjectId.errors }">
@@ -28,15 +28,15 @@
                               </ng-template>
                             </ng-select>
                             <div *ngIf="submitted && f.AcademicProjectId.errors" class="error-text">
-                              <span *ngIf="f.AcademicProjectId.errors.required" class="text-danger"> Program is required</span>
+                              <span *ngIf="f.AcademicProjectId.errors.required" class="text-danger"> Project / Organization Name is required</span>
                             </div>
                           </div>
                         </div>
                       </div>
-                      <div class="col-sm-4">
+                      <div class="col-sm-6">
                         <div class="form-group row">
-                          <label class="col-sm-3 col-form-label required">Batch </label>
-                          <div class="col-sm-9">
+                          <label class="col-sm-6 col-form-label required">Which Batch ?</label>
+                          <div class="col-sm-6">
                             <ng-select placeholder="Select Batch" formControlName="AcademicBatchId"
                               (change)="chnageBatch()" [items]="BatchList" [clearable]='false'
                               [clearOnBackspace]='false' bindLabel="BatchName" bindValue="Id"
@@ -51,66 +51,20 @@
                           </div>
                         </div>
                       </div>
-                      <div class="col-sm-2">
-                        <div class="form-group row">
-                          <button class="btn btn-success btn-sm" *ngIf="addSyllabusBtn" (click)="openModal(template)"><i
-                              class="icofont icofont-check-circled"></i> {{btnAddText}}</button>
-                        </div>
-                      </div>
                     </div>
                   </form>
                 </div>
               </div>
             </div>
-            <div class="card-footer">
-            </div>
           </div>
         </div>
-
-        <hr>
-        <!--<div class="col-lg-12 mt-4" *ngFor="let item of items" [@inOutAnimation]>
-            <div class="card card-border-primary">
-                <div class="card-header">
-                    <h5 class="text-center"> {{item.AcademicTermName}}</h5>
-
-                    <button class="btn btn-info btn-sm ng-star-inserted float-right" (click)="editAcademicTerm(item,template)"><i class="icofont icofont-edit"></i>Edit</button>
-                </div>
-                <div class="card-block ">
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <div class="table-responsive">
-                                <table class="table table-sm">
-                                    <thead>
-                                        <tr>
-                                            <th width="10%">Course Code</th>
-                                            <th width="50%">Course Name</th>
-                                            <th width="20%">Credit</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr *ngFor="let course of item.Courses">
-                                            <th scope="row">{{course.Code}}</th>
-                                            <td>{{course.Name}} </td>
-                                            <td>{{course.Credit}}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-                <div class="card-footer ">
-                </div>
-            </div>
-
-        </div>-->
+        
 
       </div>
     </div>
   </div>
 
-  <div class="row" *ngIf="batchId !=null">
+  <div class="row" *ngIf="batchId !=''">
         <div class="col-lg-12">
             <div class="row">
                 <div class="col-lg-12">
@@ -162,51 +116,40 @@
                                             </ng-template>
                                         </ngx-datatable-column>
 
-
-                                        <ngx-datatable-column name="Student ID" prop="ParticipantId"
-                                            [draggable]="false" [sortable]="false">
-                                            <ng-template let-value="value" ngx-datatable-cell-template>
-                                                <span title="{{ ParticipantId }}">{{ value }}</span> 
-                                            </ng-template>
-                                        </ngx-datatable-column>
-
                                         <ngx-datatable-column [width]="250" name="Student First Name" prop="FirstName"
                                             [draggable]="false" [sortable]="false">
                                             <ng-template let-value="value" ngx-datatable-cell-template>
-                                                <span title="{{ FirstName }}">{{ value }}</span> 
+                                                <span title="{{ value }}">{{ value }}</span> 
                                             </ng-template>
                                         </ngx-datatable-column>
 
                                         <ngx-datatable-column name="Student Last Name" prop="LastName" [draggable]="false" [sortable]="false">
                                             <ng-template let-value="value" ngx-datatable-cell-template>
-                                                <span title="{{ LastName }}">{{ value }}</span> 
+                                                <span title="{{ value }}">{{ value }}</span> 
                                             </ng-template>
                                         </ngx-datatable-column>
 
-                                        <!--<ngx-datatable-column prop="CGPA" name="CGPA" [draggable]="false" [sortable]="false">
-                                            <ng-template let-value="value" class="text-center"  ngx-datatable-cell-template>
-                                                <span title="{{ value | number:'1.2-2' }}">{{ value | number:'1.2-2' }}</span> 
-                                            </ng-template>
-                                        </ngx-datatable-column>
 
-                                        <ngx-datatable-column prop="LetterGrade" name="Grade" [draggable]="false" [sortable]="false">
+                                        <ngx-datatable-column name="Student ID" prop="ParticipantId"
+                                            [draggable]="false" [sortable]="false">
                                             <ng-template let-value="value" ngx-datatable-cell-template>
                                                 <span title="{{ value }}">{{ value }}</span> 
                                             </ng-template>
-                                        </ngx-datatable-column>-->
+                                        </ngx-datatable-column>
 
 
                                     </ngx-datatable>
                                 </div>
                             </div>
                         </div>
-                        <div class="card-footer ">
+                        <div class="card-footer">
                             <div class="text-center">
                                 <!-- <button class="btn btn-danger btn-sm mr-2" (click)="btnHangup()">
                                   <i class="icofont-rounded-double-left"></i> End Class</button> -->
                               
-                                <button class="btn btn-primary btn-sm mr-2" (click)="createVirtualClass(obj)">
-                                  <i class="icofont-rounded-double-left"></i> Start Class With Selected Student (s)</button>
+                                <button class="btn btn-primary btn-md mr-2" (click)="createVirtualClass()" *ngIf="iframeOpened ==false">
+                                  <i class="icofont-rounded-double-right"></i> Start Class With Selected Students</button>
+                                <h2><span class="badge badge-success" *ngIf="iframeOpened == true">Live Class Started | Check Below</span></h2>
 
                                 <!-- <button class="btn btn-primary btn-sm mr-2" [routerLink]="['/enrolled-student-list']">
                                     <i class="icofont-rounded-double-left"></i> Back To List</button> -->
@@ -223,11 +166,11 @@
         </div>
     </div>
 
-  <div class="row" *ngIf="currentUser.UserType == 'Host'">
+  <div class="row" *ngIf="currentUser.UserType == 'Host' &&  OnGoingClassListLength>0">
     <div class="col-lg-12 col-md-12 col-sm-12">
       <div class="card card-border-primary">
           <div class="card-header">
-              <h5>Student List </h5>
+              <h5>Your Current Live Class List</h5>
           </div>
           <div class="card-block ">
               <div class="row ">
@@ -235,13 +178,26 @@
                       <ngx-datatable class="material table-bordered" [rows]="OnGoingClassList"
                           [columnMode]="ColumnMode.force"
                           [headerHeight]="40" [footerHeight]="50" rowHeight="auto" [limit]="10">
+                          <ngx-datatable-column [width]="120" name="Action" prop="IsAnyExistingConferenceBetweenThem" [draggable]="false"
+                              [sortable]="false">
+                              <ng-template let-row="row" ngx-datatable-cell-template>
+                                    <span class="badge badge-success" *ngIf="row.HasJoinedByHost ==true && row.RoomId !=null">Coference Joined</span>
+                                    <br>
+                                    <button class="btn btn-danger btn-mini"
+                                            (click)="btnHangup(row)"  
+                                            *ngIf="row.HasJoinedByHost && row.RoomId !=null"><i
+                                            class="icofont icofont-ui-lock"></i  >
+                                            Hang Up
+                                    </button>
+                              </ng-template>
+                          </ngx-datatable-column>
 
-                          <ngx-datatable-column [width]="10" name="Sl" prop="id" [draggable]="false"
+                          <!-- <ngx-datatable-column [width]="10" name="Sl" prop="id" [draggable]="false"
                               [sortable]="false">
                               <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
                                   <span > {{ rowIndex + 1 }} </span>
                               </ng-template>
-                          </ngx-datatable-column>
+                          </ngx-datatable-column> -->
                          
                           <ngx-datatable-column name="Batch Name" prop="BatchName" [draggable]="false"
                               [sortable]="false">
@@ -256,37 +212,7 @@
                               </ng-template>
                           </ngx-datatable-column>
 
-                          <ngx-datatable-column [width]="50" name="Action" prop="IsAnyExistingConferenceBetweenThem" [draggable]="false"
-                              [sortable]="false">
-                              <ng-template let-row="row" ngx-datatable-cell-template>
-                                    <!-- <button class="btn btn-info btn-mini" 
-                                            (click)="startConference(row)"  
-                                            *ngIf="row.IsAnyExistingConferenceBetweenThem==false"><i
-                                            class="icofont icofont-external"></i  >
-                                            Start Class
-                                    </button> -->
-                                    <!-- <span class="badge badge-success" *ngIf="row.HasJoinedByHost ==false && row.RoomId !=null">Coference Created</span> -->
-                                    <span class="badge badge-success" *ngIf="row.HasJoinedByHost ==true && row.RoomId !=null">Coference Joined</span>
-                                    <!-- <button class="btn btn-info btn-mini"
-                                            (click)="joinConference(row)"  
-                                            *ngIf="row.HasJoinedByHost == false && row.RoomId !=null"><i
-                                            class="icofont icofont-ui-lock"></i  >
-                                            Click To Join Conference
-                                    </button> -->
-                                    <!-- <button class="btn btn-success btn-mini"
-                                            *ngIf="row.IsAnyExistingConferenceBetweenThem"><i
-                                            class="icofont icofont-ui-lock"></i  >
-                                            Live Class On Going
-                                    </button> -->
-                                    <br>
-                                    <button class="btn btn-danger btn-mini"
-                                            (click)="btnHangup(row)"  
-                                            *ngIf="row.HasJoinedByHost && row.RoomId !=null"><i
-                                            class="icofont icofont-ui-lock"></i  >
-                                            Hang Up
-                                    </button>
-                              </ng-template>
-                          </ngx-datatable-column>
+                          
                       </ngx-datatable>
                   </div>
               </div>
@@ -351,11 +277,7 @@
     <div class="modal-footer">
       <div class="pr-4">
         <button class="btn btn-danger btn-outline-danger mr-2" (click)="modalHide()"> <i
-            class="icofont icofont-close"></i>Close</button>
-        <button *ngIf="isUpdate" class="btn btn-success btn-outline-success" (click)="onSyllabusFormSubmit()"><i
-            class="icofont icofont-check-circled"></i>Update</button>
-        <button *ngIf="!isUpdate" class="btn btn-success btn-outline-success" (click)="onSyllabusFormSubmit()"><i
-            class="icofont icofont-check-circled"></i>Save</button>
+            class="icofont icofont-close"></i>Close</button>        
       </div>
     </div>
   </ng-template>
