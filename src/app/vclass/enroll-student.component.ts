@@ -74,7 +74,7 @@ export class EnrollStudentComponent implements OnInit {
     OnGoingClassListLength =0;
     public currentUser: any;
     public ProjectList: any;
-    public BatchList: any;
+    BatchList: [];
     projectId = '';
     batchId = '';
     iframeOpened = false;
@@ -284,14 +284,20 @@ export class EnrollStudentComponent implements OnInit {
 
     }
 
-    chnageProject() {       
+    changeProject(e) {
+        if(e)       {
+            this.entryForm.controls['AcademicBatchId'].setValue(null);
+        }
 
         this.projectId = this.entryForm.value.AcademicProjectId;
         this.getBatchList(this.projectId);
+        this.ParticipantList = []
+        
     }
 
     getBatchList(projectId){
-        this._service.get('api/conference/GetBatchListByProjectId/' + projectId ).subscribe(res => {
+        
+        this._service.get('api/conference/GetBatchListByProjectIdAndHostId/' + projectId + "/" + this.currentUser.Id).subscribe(res => {
             this.BatchList = res.Records;
             console.log(this.BatchList)
         }, err => { }
@@ -299,13 +305,18 @@ export class EnrollStudentComponent implements OnInit {
 
     }
 
-    chnageBatch(){
+    changeBatch(){
         this.batchId = this.entryForm.value.AcademicBatchId;
-        this.getParticipantListbyBatchAndHostId(this.batchId, this.currentUser.Id);
+        this.getParticipantListByProjectIdBatchIdAndHostId(this.projectId, this.batchId, this.currentUser.Id);
     }
 
-    getParticipantListbyBatchAndHostId(batchId, hostId){
-        this._service.get('api/conference/GetParticipantListByBatchAndHostId/' + batchId + '/' + hostId ).subscribe(res => {
+    getParticipantListByProjectIdBatchIdAndHostId(projectId, batchId, hostId){
+        console.log(projectId);
+        console.log(batchId);
+        console.log(hostId);
+
+        
+        this._service.get('api/conference/GetParticipantListByProjectIdBatchIdAndHostId/' + projectId + "/" + batchId + '/' + hostId ).subscribe(res => {
             this.ParticipantList = res.Records;
             console.log(this.ParticipantList)
         }, err => { }

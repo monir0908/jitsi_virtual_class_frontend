@@ -20,7 +20,7 @@
                           <label class="col-sm-6 col-form-label required">Project / Organization</label>
                           <div class="col-sm-6">
                             <ng-select placeholder="Select Project or Organization Name" formControlName="AcademicProjectId"
-                              (change)="chnageProject()" [items]="ProjectList" [clearable]='false'
+                              (change)="changeProject($event)" [items]="ProjectList" [clearable]='false'
                               [clearOnBackspace]='false' bindLabel="ProjectName" bindValue="Id"
                               [ngClass]="{ 'is-invalid': submitted && f.AcademicProjectId.errors }">
                               <ng-template ng-option-tmp let-item="item">
@@ -38,7 +38,7 @@
                           <label class="col-sm-6 col-form-label required">Which Batch ?</label>
                           <div class="col-sm-6">
                             <ng-select placeholder="Select Batch" formControlName="AcademicBatchId"
-                              (change)="chnageBatch()" [items]="BatchList" [clearable]='false'
+                              (change)="changeBatch()" [items]="BatchList" [clearable]='false'
                               [clearOnBackspace]='false' bindLabel="BatchName" bindValue="Id"
                               [ngClass]="{ 'is-invalid': submitted && f.AcademicBatchId.errors }">
                               <ng-template ng-option-tmp let-item="item">

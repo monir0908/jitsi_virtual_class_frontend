@@ -10,20 +10,24 @@
           <div class="card-block ">
               <div class="row ">
                   <div class="col-lg-12 ">
-                      <ngx-datatable class="material table-bordered" [rows]="OnGoingClassList"
+                      <ngx-datatable class="material table-bordered" [rows]="InvitationList"
                           [columnMode]="ColumnMode.force"
                           [headerHeight]="40" [footerHeight]="50" rowHeight="auto" [limit]="10">
                           <ngx-datatable-column [width]="120" name="Action" prop="IsAnyExistingConferenceBetweenThem" [draggable]="false"
                               [sortable]="false">
                               <ng-template let-row="row" ngx-datatable-cell-template>
-                                    <span class="badge badge-success" *ngIf="row.HasJoinedByHost ==true && row.RoomId !=null">Coference Joined</span>
-                                    <br>
-                                    <button class="btn btn-danger btn-mini"
-                                            (click)="btnHangup(row)"  
-                                            *ngIf="row.HasJoinedByHost && row.RoomId !=null"><i
-                                            class="icofont icofont-ui-lock"></i  >
-                                            Hang Up
+                                    <span class="badge badge-success" *ngIf="row.HasJoinedByParticipant ==true">Coference Joined</span><br>
+                                    <button class="btn btn-success btn-mini" *ngIf="row.HasJoinedByParticipant ==false"
+                                            (click)="joinConferenceByParticipant(row)">
+                                            <i class="icofont icofont-ui-lock"></i  >
+                                            Join Class
                                     </button>
+                                    <button class="btn btn-danger btn-mini" 
+                                    (click)="btnHangupByParticipant(row)">
+                                    <i class="icofont icofont-ui-lock"></i  >
+                                    Hang Up
+                                    </button>
+                                    
                               </ng-template>
                           </ngx-datatable-column>
                          

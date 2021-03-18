@@ -69,17 +69,14 @@ export class VClassStudentComponent implements OnInit {
     private hubConnection: HubConnection;
 
 
-    public HostList: [];
-    public OnGoingClassList: [];
-    OnGoingClassListLength =0;
+    
+    public InvitationList: [];
     public currentUser: any;
-    public ProjectList: any;
-    public BatchList: any;
-    projectId = '';
-    batchId = '';
     iframeOpened = false;
 
     joinConfObj={};
+    
+    currentRoomNo = '';
 
 
     entryForm: FormGroup;
@@ -96,25 +93,7 @@ export class VClassStudentComponent implements OnInit {
     modalRef: BsModalRef;
 
     page = new Page();
-
-    addSyllabusBtn = false;
-
-    student_id = '';
-    programId = '';
-    sessionId = '';
-    semesterId = '';
-    isUpdate = false;
     selected: any = [];
-
-    studentImage: any;
-
-    sessionDropDownList = [];
-    semesterDropDownList = [];
-    programDropDownList = [];
-    rows = [];
-    items = [];
-    courseList = [];
-    studentList = [];
     loadingIndicator = false;
     ColumnMode = ColumnMode;
 
@@ -122,28 +101,7 @@ export class VClassStudentComponent implements OnInit {
 
     scrollBarHorizontal = (window.innerWidth < 1200);
 
-    SelectionType = SelectionType;
-
-    blood_group_types = [
-        { Id: 'A+', Name: 'A+' },
-        { Id: 'A-', Name: 'A-' },
-        { Id: 'B+', Name: 'B+' },
-        { Id: 'B-', Name: 'B-' },
-        { Id: 'AB+', Name: 'AB+' },
-        { Id: 'AB-', Name: 'AB-' },
-        { Id: 'O+', Name: 'O+' },
-        { Id: 'O-', Name: 'O-' }
-    ];
-
-    religions = [
-        { Id: 'Islam', Name: 'Islam' },
-        { Id: 'Hinduism', Name: 'Hinduism' },
-        { Id: 'Christianity', Name: 'Christianity' },
-        { Id: 'Buddhism', Name: 'Buddhism' },
-        { Id: 'Myth', Name: 'Myth' },
-        { Id: 'Daoism', Name: 'Daoism' },
-        { Id: 'Judaism', Name: 'Judaism' },
-    ];
+    
 
     constructor(
         private authService: AuthenticationService,
@@ -165,10 +123,6 @@ export class VClassStudentComponent implements OnInit {
             adaptivePosition: true,
             maxDate: new Date()
         });
-
-        if (this.route.snapshot.paramMap.has("Id")) {
-            this.student_id = this.route.snapshot.paramMap.get("Id");
-        }
 
         this.currentUser = this.authService.currentUserDetails.value;
     }
@@ -230,41 +184,62 @@ export class VClassStudentComponent implements OnInit {
         //CUSTOM
         this.hubConnection.on('LetParticipantKnowClassEnded', (participantId) => {            
             if(participantId == this.currentUser.Id){
+                alert("You ended the class !")
                 this.apiObj.executeCommand('hangup');       
                 this.apiObj.dispose();                
                 this.iframeOpened = false; 
-                this.getCurrentOnGoingVirtualClassListByParticipantId();
+                this.getInvitationListByParticipantId();
             }
         });    
+        
+        this.hubConnection.on('JoinedByHost', (participantId, roomId, hostName) => {            
+            if(participantId == this.currentUser.Id){
+                alert(hostName + " has started a live class, Room No : " + roomId)                
+                this.getInvitationListByParticipantId();
+            }
+        });    
+        this.hubConnection.on('EndedByHost', (participantId, roomId, hostName) => { 
+            console.log(participantId);
+            
+            if(participantId == this.currentUser.Id){
+                
+                this.getInvitationListByParticipantId();
+                if(this.apiObj != null && this.currentRoomNo == roomId){
+                    alert(hostName + " has ended the class !")
+                    this.apiObj.executeCommand('hangup');       
+                    this.apiObj.dispose();                
+                    this.iframeOpened = false; 
+                }
+            }
+        });
 
-        this.getCurrentOnGoingVirtualClassListByParticipantId();
+        this.getInvitationListByParticipantId();
     }
 
 
 
     
 
-    getCurrentOnGoingVirtualClassListByParticipantId(){
-        this._service.get('api/conference/GetCurrentOnGoingVirtualClassListByParticipantId/' + this.currentUser.Id).subscribe(res => {
-            this.OnGoingClassList = res.Records;
-            this.OnGoingClassListLength = res.Total;
-            console.log(this.OnGoingClassList);
-            console.log(this.OnGoingClassListLength);
+    getInvitationListByParticipantId(){
+        this._service.get('api/conference/GetInvitationListByParticipantId/' + this.currentUser.Id).subscribe(res => {
+            this.InvitationList = res.Records;
+            console.log(this.InvitationList);
         }, err => { }
         );
     }
 
     
 
-    btnHangup(obj){
+    btnHangupByParticipant(obj){
         console.log(this.currentUser.UserType)
 
         const vclassDetailObj = {
-            Id: obj.Id,
+            Id: obj.VClassId,
             HostId: obj.HostId,
             BatchId: obj.BatchId,
             RoomId: obj.RoomId,
             ConnectionId : this.currentSocketId,
+            ParticipantId : this.currentUser.Id,
         }
 
         console.log(vclassDetailObj)
@@ -278,11 +253,12 @@ export class VClassStudentComponent implements OnInit {
                     //DESTROYING JISI IFRAME
                     if(this.apiObj != null){
                         this.apiObj.executeCommand('hangup');       
-                        this.apiObj.dispose();
+                        this.apiObj.dispose();                
+                        this.iframeOpened = false; 
                     }
 
                     // RE-CALLING ONGOING CLASS LIST
-                    this.getCurrentOnGoingVirtualClassListByParticipantId();                  
+                    this.getInvitationListByParticipantId();                  
     
                     
                 } else {
@@ -305,8 +281,18 @@ export class VClassStudentComponent implements OnInit {
 
         console.log("======================");
         console.log(param);
+
+        const vClassDetail = {
+            VClassId : param.VClassId,
+            RoomId : param.RoomId,
+            ParticipantId : this.currentUser.Id,
+            BatchId : param.BatchId,
+            ConnectionId : this.currentSocketId,
+            
+
+        }
         
-        const request = this._service.post('api/conference/JoinVirtualClassByParticipant', param);
+        const request = this._service.post('api/conference/JoinVirtualClassByParticipant', vClassDetail);
         request.subscribe(
             data => {
                 this.blockUI.stop();
@@ -315,12 +301,14 @@ export class VClassStudentComponent implements OnInit {
                     
                     //NOW INITIATING JITSI IFRAME
                     this.initiateJitsi(data.Records.RoomId);
+                    this.currentRoomNo = data.Records.RoomId;
 
-                    this.getCurrentOnGoingVirtualClassListByParticipantId();
+                    this.getInvitationListByParticipantId();
                 } 
                 else 
                 {
                     this.toastr.error(data.Message, 'Error!', { closeButton: true, disableTimeOut: false });
+                    this.getInvitationListByParticipantId();
                 }
                 },
                     err => {
