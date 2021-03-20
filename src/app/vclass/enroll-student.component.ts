@@ -228,7 +228,8 @@ export class EnrollStudentComponent implements OnInit {
 
 
         //CUSTOM
-        this.hubConnection.on('LetHostKnowClassEnded', (hostId) => {            
+        this.hubConnection.on('LetHostKnowClassEnded', (hostId) => {
+            this.getCurrentOnGoingVirtualClassListByHostId();            
             if(hostId == this.currentUser.Id){
                 this.apiObj.executeCommand('hangup');       
                 this.apiObj.dispose();                

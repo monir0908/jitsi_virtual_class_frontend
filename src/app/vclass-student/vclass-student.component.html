@@ -22,7 +22,7 @@
                                             <i class="icofont icofont-ui-lock"></i  >
                                             Join Class
                                     </button>
-                                    <button class="btn btn-danger btn-mini" 
+                                    <button class="btn btn-danger btn-mini" *ngIf="row.HasJoinedByParticipant ==true"
                                     (click)="btnHangupByParticipant(row)">
                                     <i class="icofont icofont-ui-lock"></i  >
                                     Hang Up

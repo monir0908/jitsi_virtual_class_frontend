@@ -213,6 +213,26 @@ export class VClassStudentComponent implements OnInit {
             }
         });
 
+        this.hubConnection.on('ConnectionLostFromHost', (participantId, roomId, hostName) => {
+            
+            console.log("participantId");
+            console.log(participantId);
+            console.log("this.currentRoomNo");
+            console.log(this.currentRoomNo);
+            
+            if(participantId == this.currentUser.Id){
+                
+                this.getInvitationListByParticipantId();
+                if(this.apiObj != null && this.currentRoomNo == roomId){
+                    alert("Connection lost from host : " + hostName)
+                    this.apiObj.executeCommand('hangup');       
+                    this.apiObj.dispose();                
+                    this.iframeOpened = false;
+                    this.getInvitationListByParticipantId(); 
+                }
+            }
+        });
+
         this.getInvitationListByParticipantId();
     }
 
