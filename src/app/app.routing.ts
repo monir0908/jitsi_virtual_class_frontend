@@ -34,11 +34,11 @@ export const AppRoutes: Routes = [
       },
       {
         path: 'host-vclass',
-        loadChildren: () => import('./vclass/enroll-student.module').then(m => m.EnrollStudentModule),
+        loadChildren: () => import('./vclass-host/vclass-host.module').then(m => m.VClassHostModule),
       },
       {
         path: 'participant-vclass',
-        loadChildren: () => import('./vclass-student/vclass-student.module').then(m => m.VClassStudentModule),
+        loadChildren: () => import('./vclass-participant/vclass-participant.module').then(m => m.VClassParticipantModule),
       },      
       {
         path: 'dashboard',

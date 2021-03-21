@@ -26,8 +26,8 @@ import * as signalR from '@aspnet/signalr';
 
 
 @Component({
-    selector: 'app-vclass-student',
-    templateUrl: './vclass-student.component.html',
+    selector: 'app-vclass-participant',
+    templateUrl: './vclass-participant.component.html',
     encapsulation: ViewEncapsulation.None,
     animations: [
         trigger(
@@ -54,7 +54,7 @@ import * as signalR from '@aspnet/signalr';
       ]
 })
 
-export class VClassStudentComponent implements OnInit {
+export class VClassParticipantComponent implements OnInit {
 
 
     // JISTI RELATED
@@ -83,9 +83,9 @@ export class VClassStudentComponent implements OnInit {
     syllabusForm: FormGroup;
     submitted = false;
     @BlockUI() blockUI: NgBlockUI;
-    modalTitle = 'Student Enrollment Information';
+    modalTitle = 'participant Enrollment Information';
     btnSaveText = 'Save';
-    btnAddText = 'Add Student Enrollment';
+    btnAddText = 'Add participant Enrollment';
 
     emptyGuid = '00000000-0000-0000-0000-000000000000';
 
@@ -408,7 +408,7 @@ export class VClassStudentComponent implements OnInit {
         this.syllabusForm.reset();
         this.modalRef.hide();
         this.submitted = false;
-        this.modalTitle = 'Add Student Enrollment Information';
+        this.modalTitle = 'Add participant Enrollment Information';
         this.btnSaveText = 'Save';
     }
 

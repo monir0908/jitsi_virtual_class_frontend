@@ -1,5 +1,5 @@
 import { Component, TemplateRef, ViewChild, ViewEncapsulation, OnInit } from '@angular/core';
-import { AuthenticationService } from './../_services/authentication.service';
+import { AuthenticationService } from '../_services/authentication.service';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { ColumnMode,  SelectionType, DatatableComponent} from '@swimlane/ngx-datatable';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -14,20 +14,19 @@ import { trigger, transition, style, animate } from '@angular/animations';
 import {ElementRef} from '@angular/core';
 
 // JISTI RELATED
-import './../../assets/data/external_api.js';
+import '../../assets/data/external_api.js';
 declare var JitsiMeetExternalAPI: any;
+
+
 //SignalR RELATED
-
-
-
 import { HubConnection } from '@aspnet/signalr';
 import * as signalR from '@aspnet/signalr';
 
 
 
 @Component({
-    selector: 'app-enroll-student',
-    templateUrl: './enroll-student.component.html',
+    selector: 'app-vclass-host',
+    templateUrl: './vclass-host.component.html',
     encapsulation: ViewEncapsulation.None,
     animations: [
         trigger(
@@ -54,7 +53,7 @@ import * as signalR from '@aspnet/signalr';
       ]
 })
 
-export class EnrollStudentComponent implements OnInit {
+export class VClassHostComponent implements OnInit {
 
 
     // JISTI RELATED
@@ -63,12 +62,13 @@ export class EnrollStudentComponent implements OnInit {
     options;
     @ViewChild('jitsi') el:ElementRef;
 
-    currentSocketId = null;
+    
 
     // SIGNALR RELATED
     private hubConnection: HubConnection;
 
-
+    
+    // COMPONENT RELATED
     public ParticipantList: [];
     public OnGoingClassList: [];
     OnGoingClassListLength =0;
@@ -77,73 +77,34 @@ export class EnrollStudentComponent implements OnInit {
     BatchList: [];
     projectId = '';
     batchId = '';
+    currentSocketId = null;
     iframeOpened = false;
-
     joinConfObj={};
 
 
     entryForm: FormGroup;
-    syllabusForm: FormGroup;
     submitted = false;
     @BlockUI() blockUI: NgBlockUI;
-    modalTitle = 'Student Enrollment Information';
-    btnSaveText = 'Save';
-    btnAddText = 'Add Student Enrollment';
 
-    emptyGuid = '00000000-0000-0000-0000-000000000000';
 
+    // MODAL RELATED
+    modalTitle = 'Virtual Class | Host';
     modalConfig: any = { class: 'gray modal-lg', backdrop: 'static' };
     modalRef: BsModalRef;
 
-    page = new Page();
 
-    addSyllabusBtn = false;
-
-    student_id = '';
-    programId = '';
-    sessionId = '';
-    semesterId = '';
-    isUpdate = false;
-    selected: any = [];
-
-    studentImage: any;
-
-    sessionDropDownList = [];
-    semesterDropDownList = [];
-    programDropDownList = [];
+    // FORM, PAGE, DATATABLE, DATE RELATED
+    page = new Page();    
+    selected: any = [];    
     rows = [];
     items = [];
-    courseList = [];
-    studentList = [];
     loadingIndicator = false;
     ColumnMode = ColumnMode;
-
     bsConfig: Partial<BsDatepickerConfig>;
-
     scrollBarHorizontal = (window.innerWidth < 1200);
-
     SelectionType = SelectionType;
 
-    blood_group_types = [
-        { Id: 'A+', Name: 'A+' },
-        { Id: 'A-', Name: 'A-' },
-        { Id: 'B+', Name: 'B+' },
-        { Id: 'B-', Name: 'B-' },
-        { Id: 'AB+', Name: 'AB+' },
-        { Id: 'AB-', Name: 'AB-' },
-        { Id: 'O+', Name: 'O+' },
-        { Id: 'O-', Name: 'O-' }
-    ];
-
-    religions = [
-        { Id: 'Islam', Name: 'Islam' },
-        { Id: 'Hinduism', Name: 'Hinduism' },
-        { Id: 'Christianity', Name: 'Christianity' },
-        { Id: 'Buddhism', Name: 'Buddhism' },
-        { Id: 'Myth', Name: 'Myth' },
-        { Id: 'Daoism', Name: 'Daoism' },
-        { Id: 'Judaism', Name: 'Judaism' },
-    ];
+    
 
     constructor(
         private authService: AuthenticationService,
@@ -165,10 +126,6 @@ export class EnrollStudentComponent implements OnInit {
             adaptivePosition: true,
             maxDate: new Date()
         });
-
-        if (this.route.snapshot.paramMap.has("Id")) {
-            this.student_id = this.route.snapshot.paramMap.get("Id");
-        }
 
         this.currentUser = this.authService.currentUserDetails.value;
     }
@@ -238,43 +195,21 @@ export class EnrollStudentComponent implements OnInit {
             }
         });
 
-        
-
-
-
-
-
-
-
-
-
-
+        // FORM RELATED
         this.entryForm = this.formBuilder.group({
             Id: [null],
             AcademicProjectId: [null, [Validators.required]],
             AcademicBatchId: [null, [Validators.required]],
-            AcademicTermId: [null, [Validators.required]],
         });
 
-        this.syllabusForm = this.formBuilder.group({
-            AcademicTermId: [null, [Validators.required]],
-            disciplineCourseList: [, [Validators.required]]
-        });
-
-
+        // PAGE ON LOAD RELATED
         this.getProjectList(this.currentUser.Id);
         this.getCurrentOnGoingVirtualClassListByHostId();
     }
 
-    get f() {
-        return this.entryForm.controls;
-    }
+   
 
-    get sf() {
-        return this.syllabusForm.controls;
-    }
-
-
+    // COMPONENTS METHODS
 
     getProjectList(hostId){
         this._service.get('api/conference/GetProjectListByHostId/' + hostId ).subscribe(res => {
@@ -484,9 +419,7 @@ export class EnrollStudentComponent implements OnInit {
         
     }
 
-
-
-    //Private Methods
+    //PRIVATE METHODS
 
     joinConferenceByHost(param){
 
@@ -557,41 +490,28 @@ export class EnrollStudentComponent implements OnInit {
 
 
 
-
-
-
-
-
-
-
-
-
-
+    // FORM, MODAL, DATE, PAGE RELATED
     setPage(pageInfo) {
         this.page.pageNumber = pageInfo.offset;
-    }
-
-    
+    }   
 
     onSelect({ selected }) {
         this.selected.splice(0, this.selected.length);
         this.selected.push(...selected);
         // console.log('Select List', this.selected);
     }
-
     updateFilter(e){
 
     }
-
-    
+    get f() {
+        return this.entryForm.controls;
+    }
 
     modalHide() {
         this.entryForm.controls['Id'].setValue(0);
-        this.syllabusForm.reset();
         this.modalRef.hide();
         this.submitted = false;
-        this.modalTitle = 'Add Student Enrollment Information';
-        this.btnSaveText = 'Save';
+        this.modalTitle = 'Host | Virtual Class';
     }
 
     openModal(template: TemplateRef<any>) {
