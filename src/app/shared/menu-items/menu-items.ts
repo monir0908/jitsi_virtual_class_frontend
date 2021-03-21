@@ -36,7 +36,7 @@ const MENUITEMS = [
 
       {
         state: 'dashboard',
-        name: 'Dashboard',
+        name: 'Home',
         type: 'link',
         icon: 'icofont-dashboard'
       },
@@ -44,21 +44,97 @@ const MENUITEMS = [
 
     ]
   },
-
   {
-    label: 'Configurations',
-    //permission: 'Admin',
+    label: 'Virtual Class',
     main: [
+
       {
-        state: 'dormitory',
-        name: 'Dormitory',
+        state: 'host-vclass',
+        name: 'Start Virutal Class',
         type: 'link',
-        icon: 'ti-control-forward',
-        //permission: 'Admin'
+        icon: 'icofont-host-vclass'
       },
-    
+      {
+        state: 'bparticipant-vclassatch',
+        name: 'Join Virtual Class',
+        type: 'link',
+        icon: 'icofont-host-vclass'
+      },
+
+
     ]
   },
+  {
+    label: 'Virtual Class History',
+    main: [
+
+      {
+        state: 'host-vclass-history',
+        name: 'Teacher Call History',
+        type: 'link',
+        icon: 'icofont-host-vclass-history'
+      },
+      {
+        state: 'participant-vclass-history',
+        name: 'Student Call History',
+        type: 'link',
+        icon: 'icofont-participant-vclass-history'
+      },
+      {
+        state: 'individual-host-vclass-history',
+        name: 'My Call History (Teacher)',
+        type: 'link',
+        icon: 'icofont-individual-host-vclass-histor'
+      },
+      {
+        state: 'indicidual-participant-vclass-history',
+        name: 'My Call History (Student)',
+        type: 'link',
+        icon: 'icofont-indicidual-participant-vclass-history'
+      },
+
+
+    ]
+  },
+  {
+    label: 'Master Settings',
+    main: [
+
+      {
+        state: 'project',
+        name: 'Create Project',
+        type: 'link',
+        icon: 'icofont-project'
+      },
+      {
+        state: 'batch',
+        name: 'Create Batch',
+        type: 'link',
+        icon: 'icofont-batch'
+      },
+      {
+        state: 'project-batch',
+        name: 'Merge Project & Batch',
+        type: 'link',
+        icon: 'icofont-project-batch'
+      },
+      {
+        state: 'project-batch-host',
+        name: 'Merge Project Host & Batch',
+        type: 'link',
+        icon: 'icofont-project-batch-host'
+      },
+      {
+        state: 'project-batch-host-participant',
+        name: 'Connect Teacher - Student',
+        type: 'link',
+        icon: 'icofont-project-batch-host-participant'
+      },
+
+
+    ]
+  },
+  
 ];
 
 @Injectable()

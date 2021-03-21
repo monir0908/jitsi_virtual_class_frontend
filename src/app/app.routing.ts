@@ -28,10 +28,7 @@ export const AppRoutes: Routes = [
     path: '',
     component: AdminLayoutComponent,
     children: [ 
-      {
-        path: 'signalr',
-        loadChildren: () => import('./signalr/signalr.module').then(m => m.SignalrModule),
-      },
+      
       {
         path: 'host-vclass',
         loadChildren: () => import('./vclass-host/vclass-host.module').then(m => m.VClassHostModule),
@@ -46,13 +43,23 @@ export const AppRoutes: Routes = [
          //canActivate: [AuthGuard]
       },
       {
-        path: 'user-list',
-        loadChildren: () => import('./user-list/user-list.module').then(m => m.UserListModule),
+        path: 'project',
+        loadChildren: () => import('./project/project.module').then(m => m.ProjectModule),
         // canActivate: [AuthGuard]
       },
       {
-        path: 'dormitory',
-        loadChildren: () => import('./dormitory/dormitory.module').then(m => m.DormitoryModule),
+        path: 'batch',
+        loadChildren: () => import('./batch/batch.module').then(m => m.BatchModule),
+        // canActivate: [AuthGuard]
+      },
+      {
+        path: 'project-batch',
+        loadChildren: () => import('./project-batch/project-batch.module').then(m => m.ProjectBatchModule),
+        // canActivate: [AuthGuard]
+      },
+      {
+        path: 'project-batch-host',
+        loadChildren: () => import('./project-batch-host/project-batch-host.module').then(m => m.ProjectBatchHostModule),
         // canActivate: [AuthGuard]
       },
     ]

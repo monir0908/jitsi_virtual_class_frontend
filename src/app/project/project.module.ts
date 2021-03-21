@@ -2,17 +2,17 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
-import { UserListComponent } from './user-list.component';
-import { UserListRoutes } from './user-list.routing';
+import { ProjectComponent } from './project.component';
+import { ProjectRoutes } from './project.routing';
 import {SharedModule} from '../shared/shared.module';
 
 @NgModule({
   imports: [
       CommonModule,
-      RouterModule.forChild(UserListRoutes),
+      RouterModule.forChild(ProjectRoutes),
       SharedModule
   ],
-  declarations: [UserListComponent]
+  declarations: [ProjectComponent]
 })
 
-export class UserListModule {}
+export class ProjectModule {}

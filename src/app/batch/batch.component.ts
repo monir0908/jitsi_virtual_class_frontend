@@ -1,6 +1,7 @@
 import { Component, TemplateRef, ViewChild, ElementRef, ViewEncapsulation, OnInit } from '@angular/core';
 import { ColumnMode } from '@swimlane/ngx-datatable';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { CommonService } from '../_services/common.service';
 import { ToastrService } from 'ngx-toastr';
@@ -10,17 +11,17 @@ import { Page } from '../_models/page';
 
 
 @Component({
-  selector: 'app-dormitory',
-  templateUrl: './dormitory.component.html',
+  selector: 'app-batch',
+  templateUrl: './batch.component.html',
   encapsulation: ViewEncapsulation.None
 })
 
-export class DormitoryComponent implements OnInit {  
+export class BatchComponent implements OnInit {  
 
   entryForm: FormGroup;
   submitted = false;
   @BlockUI() blockUI: NgBlockUI;
-  formTitle = 'Add Dormitory';
+  formTitle = 'Add Batch';
   btnSaveText = 'Save';
 
   page = new Page();
@@ -49,11 +50,9 @@ export class DormitoryComponent implements OnInit {
   ngOnInit() {
     this.entryForm = this.formBuilder.group({
       Id: [null],
-      Name: [null, [Validators.required, Validators.maxLength(250)]],
-      Address: [null],
-      IsActive: [true]
+      BatchName: [null, [Validators.required, Validators.maxLength(250)]]
     });
-    //this.getList();
+    this.getList();
   }
 
   get f() {
@@ -66,12 +65,15 @@ export class DormitoryComponent implements OnInit {
   }
 
   getList() {
+    console.log("CALLED")
     this.loadingIndicator = true;
     const obj = {
       size: this.page.size,
       pageNumber: this.page.pageNumber
     };
-    this._service.get('dormitory/list', obj).subscribe(res => {
+
+    
+    this._service.get('api/mastersetting/GetBatchList', obj).subscribe(res => {
 
       if (!res.Success) {
         this.toastr.error(res.Message, 'Error!', { closeButton: true, disableTimeOut: true });
@@ -94,7 +96,7 @@ export class DormitoryComponent implements OnInit {
 
   getItem(id) {
     this.blockUI.start('Getting data...');
-    this._service.get('dormitory/get/' + id).subscribe(res => {
+    this._service.get('api/mastersetting/GetBatchDetailById/' + id).subscribe(res => {
 
       this.blockUI.stop();
 
@@ -102,12 +104,11 @@ export class DormitoryComponent implements OnInit {
         this.toastr.error(res.Message, 'Error!', { timeOut: 2000 });
         return;
       }
-      this.formTitle = 'Update Dormitory';
+      console.log(res.Record);
+      this.formTitle = 'Update Batch';
       this.btnSaveText = 'Update';
       this.entryForm.controls['Id'].setValue(res.Record.Id);
-      this.entryForm.controls['Name'].setValue(res.Record.Name);
-      this.entryForm.controls['Address'].setValue(res.Record.Address);
-      this.entryForm.controls['IsActive'].setValue(res.Record.IsActive);
+      this.entryForm.controls['BatchName'].setValue(res.Record.BatchName);
     }, err => {
       this.blockUI.stop();
       this.toastr.error(err.Message || err, 'Error!', { closeButton: true, disableTimeOut: true });
@@ -124,12 +125,10 @@ export class DormitoryComponent implements OnInit {
 
     const obj = {
       Id: this.entryForm.value.Id ? this.entryForm.value.Id : 0,
-      Name: this.entryForm.value.Name.trim(),
-      Address: this.entryForm.value.Address.trim(),
-      IsActive: this.entryForm.value.IsActive
+      BatchName: this.entryForm.value.BatchName.trim()
     };
     
-    const request = this._service.post('dormitory/create-or-update', obj);
+    const request = this._service.post('api/mastersetting/CreateOrUpdateBatch', obj);
 
     request.subscribe(
       data => {
@@ -137,7 +136,10 @@ export class DormitoryComponent implements OnInit {
         if (data.Success) {
           this.toastr.success(data.Message, 'Success!', { timeOut: 2000 });
           this.clearForm();
+
+
           this.getList();
+
         } else {
           this.toastr.error(data.Message, 'Error!', { closeButton: true, disableTimeOut: true });
         }
@@ -153,8 +155,8 @@ export class DormitoryComponent implements OnInit {
   clearForm() {
     this.entryForm.reset();
     this.submitted = false;
-    this.formTitle = 'Add Dormitory';
+    this.formTitle = 'Add Batch';
     this.btnSaveText = 'Save';
-    this.entryForm.controls['IsActive'].setValue(true);
+    // this.entryForm.controls['IsActive'].setValue(true);
   }
 }

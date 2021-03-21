@@ -9,22 +9,22 @@
                         <div class="card-body">
                             <form [formGroup]="entryForm">
                                 <div class="form-group">
-                                    <label class="col-form-label required">Name </label> 
-                                    <input type="text" formControlName="Name" [ngClass]="{ 'is-invalid': submitted && f.Name.errors }" type="text" class="form-control" />
-                                    <div *ngIf="submitted && f.Name.errors" class="error-text">
-                                        <span *ngIf="f.Name.errors.required" class="text-danger"> Dormitory name is required</span>
-                                        <span *ngIf="f.Name.errors.maxlength" class="text-danger">Dormitory name must be not then 250 characters</span>  
+                                    <label class="col-form-label required">Project / Organization Name </label> 
+                                    <input type="text" formControlName="ProjectName" [ngClass]="{ 'is-invalid': submitted && f.ProjectName.errors }" type="text" class="form-control" />
+                                    <div *ngIf="submitted && f.ProjectName.errors" class="error-text">
+                                        <span *ngIf="f.ProjectName.errors.required" class="text-danger"> Project / Organization name is required</span>
+                                        <span *ngIf="f.ProjectName.errors.maxlength" class="text-danger">Project / Organization name must be not then 250 characters</span>  
                                     </div>
                                 </div>
 
-                                <div class="form-group">
+                                <!-- <div class="form-group">
                                     <label class="col-form-label required">Address </label> 
                                     <textarea formControlName="Address"
                                         [ngClass]="{ 'is-invalid': submitted && f.Address.errors }" type="text"
                                         class="form-control" cols="10" rows="5"></textarea>
-                                </div>
+                                </div> -->
 
-                                <div class="form-group text-left">
+                                <!-- <div class="form-group text-left">
                                     <div class="checkbox-fade fade-in-primary">
                                         <label>
                                             <input type="checkbox" formControlName="IsActive">
@@ -33,7 +33,7 @@
                                             </span> IsActive
                                         </label>
                                     </div>
-                                </div>
+                                </div> -->
 
                                 <button class="btn btn-success btn-sm" (click)="onFormSubmit()"><i
                                         class="icofont icofont-check-circled"></i> {{btnSaveText}}</button>
@@ -48,7 +48,7 @@
                 <div class="col-lg-8 col-md-8 col-sm-12">
                     <div class="card card-border-primary">
                         <div class="card-header">
-                            <h5>Dormitory List </h5>
+                            <h5>Project | Organization List </h5>
                         </div>
                         <div class="card-block ">
                             <div class="row ">
@@ -65,14 +65,14 @@
                                             </ng-template>
                                         </ngx-datatable-column>
 
-                                        <ngx-datatable-column name="Name" prop="Name" [draggable]="false"
+                                        <ngx-datatable-column name="Project | Organization Name" prop="ProjectName" [draggable]="false"
                                             [sortable]="false">
                                             <ng-template let-value="value" ngx-datatable-cell-template>
                                                 <span title="{{ value }}"> {{ value }} </span>
                                             </ng-template>
                                         </ngx-datatable-column>
                                        
-                                        <ngx-datatable-column name="Address" prop="Address" [draggable]="false"
+                                        <!-- <ngx-datatable-column name="Address" prop="Address" [draggable]="false"
                                             [sortable]="false">
                                             <ng-template let-value="value" ngx-datatable-cell-template>
                                                 <span title="{{ value }}"> {{ value }} </span>
@@ -85,7 +85,7 @@
                                                 <span title="{{value === true? 'Yes':'No'}}">
                                                     {{value === true? 'Yes':'No'}} </span>
                                             </ng-template>
-                                        </ngx-datatable-column>
+                                        </ngx-datatable-column> -->
 
                                         <ngx-datatable-column [width]="50" name="Action" prop="Id" [draggable]="false"
                                             [sortable]="false">

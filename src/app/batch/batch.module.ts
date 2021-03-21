@@ -2,17 +2,17 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
-import { DormitoryComponent } from './dormitory.component';
-import { DormitoryRoutes } from './dormitory.routing';
+import { BatchComponent } from './batch.component';
+import { BatchRoutes } from './batch.routing';
 import {SharedModule} from '../shared/shared.module';
 
 @NgModule({
   imports: [
       CommonModule,
-      RouterModule.forChild(DormitoryRoutes),
+      RouterModule.forChild(BatchRoutes),
       SharedModule
   ],
-  declarations: [DormitoryComponent]
+  declarations: [BatchComponent]
 })
 
-export class DormitoryModule {}
+export class BatchModule {}
