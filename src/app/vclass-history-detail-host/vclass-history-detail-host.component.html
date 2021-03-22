@@ -1,0 +1,141 @@
+<block-ui>
+   <div class="row" *ngIf="CallDetail">
+      <div class="col-md-4">
+         <div class="row" >
+            <div class="col-md-12 mb-3">
+               <div class="card client-blocks dark-primary-border">
+                  <div class="card-block">
+                     <h5 class="custom-title">Teacher Record</h5>                    
+
+                     <table class="table">
+                        <!-- <thead>
+                          <tr>                            
+                            <th scope="col">First</th>
+                            <th scope="col">Last</th>
+                          </tr>
+                        </thead> -->
+                        <tbody>
+                          <tr>                            
+                            <td>Room No.</td>
+                            <td><strong class="label label-warning">{{ CallDetail.RoomId }}</strong></td>
+                          </tr>
+                          <tr>                            
+                            <td>Teacher First Name</td>
+                            <td>{{ CallDetail.HostFirstName }}</td>
+                          </tr>
+                          <tr>                            
+                           <td>Teacher First Name</td>
+                           <td>{{ CallDetail.HostLastName }}</td>
+                         </tr>
+                         <tr>                            
+                           <td>Teacher Email</td>
+                           <td>{{ CallDetail.HostEmail }}</td>
+                         </tr>
+                         <tr>                            
+                           <td>Teacher Call Duration</td>
+                           <td>{{ CallDetail.HostCallDuration }}</td>
+                         </tr>
+                         <tr>                            
+                           <td>Student(s) Call Duration</td>
+                           <td>{{ CallDetail.ParticipantsCallDuration }}</td>
+                         </tr>
+                         <tr>                            
+                           <td>Empty Slot Duration</td>
+                           <td>{{ CallDetail.EmptySlotDuration }}</td>
+                         </tr>
+                         <tr>                            
+                           <td>Actual Call Duration</td>
+                           <td><strong class="label label-success">{{ CallDetail.ActualCallDuration }} </strong></td>
+                         </tr>
+                         <tr>                            
+                           <td>Student(s) In-Out Counts</td>
+                           <td>{{ CallDetail.ParticipantJoined }} <span *ngIf="CallDetail.ParticipantJoined >1">times</span> <span *ngIf="CallDetail.ParticipantJoined <2">time</span></td>
+                         </tr>
+                         <tr>                            
+                           <td>Unique Student(s) Counts</td>
+                           <td>{{ CallDetail.UniqueParticipantCounts }}</td>
+                         </tr>
+                        </tbody>
+                      </table>
+                     
+                     
+                     <ul>
+                        <!-- <li> <img class="text-danger icon-w-40" src="assets/icon/custom/available.png">
+                        </li>
+                        <li class="text-right text-success f-42">
+                           {{simStock.available_stock_qty}}
+                        </li> -->
+                     </ul>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div class="col-md-8">
+         <div class="row" >
+            <div class="col-lg-12">
+               <div class="card card-border-primary">
+                  <div class="card-header">
+                     <h5>Student Records </h5>
+                  </div>
+                  <div class="card-header">
+                     <!-- <div class="form-group">
+                        <input type="text" (keyup)="updateFilter($event)" class="form-control col-md-4"
+                           placeholder="Type room no ...">
+                     </div> -->
+                  </div>
+                  <div class="card-block ">
+                     <div class="row ">
+                        <div class="col-lg-12">
+                           <ngx-datatable #table class="material table-bordered" [selected]="selected"
+                           [selectionType]="SelectionType.checkbox" (select)="onSelect($event)"
+                           [rows]="StudentVirtualClassDetail" [scrollbarH]="scrollBarHorizontal"
+                           [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
+                           [headerHeight]="40" [footerHeight]="50" [limit]="10" rowHeight="auto">
+                           
+                           <ngx-datatable-column name="Student First Name" prop="value.ParticipantFirstName" [draggable]="false" [sortable]="false">
+                           <ng-template let-value="value" ngx-datatable-cell-template>
+                              <span title="{{ value }}">{{ value }}</span> 
+                           </ng-template>
+                           </ngx-datatable-column>
+
+                           <ngx-datatable-column name="Student Last Name" prop="value.ParticipantLastName" [draggable]="false" [sortable]="false">
+                              <ng-template let-value="value" ngx-datatable-cell-template>
+                                 <span title="{{ value }}">{{ value }}</span> 
+                              </ng-template>
+                           </ngx-datatable-column>
+
+                           <ngx-datatable-column name="Join Time" prop="value.JoinTime" [draggable]="false" [sortable]="false">
+                              <ng-template let-value="value" ngx-datatable-cell-template>
+                                 <span title="{{ value }}">{{ value | amFromUtc | amLocal | amDateFormat: 'DD-MM-YYYY hh:mm:ss a' }}</span> 
+                              </ng-template>
+                           </ngx-datatable-column>
+
+                           <ngx-datatable-column name="Leave Time" prop="value.LeaveTime" [draggable]="false" [sortable]="false">
+                              <ng-template let-value="value" ngx-datatable-cell-template>
+                                 <span title="{{ value }}">{{ value | amFromUtc | amLocal | amDateFormat: 'DD-MM-YYYY hh:mm:ss a' }}</span> 
+                              </ng-template>
+                           </ngx-datatable-column>
+                           </ngx-datatable>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="card-footer">
+                     <div class="text-center">
+                        <!-- <button class="btn btn-danger btn-sm mr-2" (click)="btnHangup()">
+                           <i class="icofont-rounded-double-left"></i> End Class</button> -->
+                        <!-- <button class="btn btn-primary btn-md mr-2" (click)="abc()">
+                           <i class="icofont-rounded-double-right"></i> Merge Project Batch Host</button> -->
+                        <!-- <button class="btn btn-primary btn-sm mr-2" [routerLink]="['/enrolled-student-list']">
+                           <i class="icofont-rounded-double-left"></i> Back To List</button> -->
+                        <!-- <button class="btn btn-primary btn-sm" *ngIf="rows.length > 0" (click)="enrollStudent()"><i
+                           class=" icofont icofont-save"></i>Enroll Students To Next Year/Semester</button> -->
+                     </div>
+                  </div>
+                  <!-- end of card-footer -->
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</block-ui>

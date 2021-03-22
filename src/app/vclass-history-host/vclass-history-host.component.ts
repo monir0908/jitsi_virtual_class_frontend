@@ -5,16 +5,16 @@ import { ColumnMode,  SelectionType, DatatableComponent} from '@swimlane/ngx-dat
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { CommonService } from '../_services/common.service';
-import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
+import { BsDatepickerConfig, BsDaterangepickerConfig } from 'ngx-bootstrap/datepicker';
 import { ToastrService } from 'ngx-toastr';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Page } from '../_models/page';
 import { trigger, transition, style, animate } from '@angular/animations';
-
+import * as moment from 'moment';
 
 @Component({
-    selector: 'app-project-batch-host',
-    templateUrl: './project-batch-host.component.html',
+    selector: 'app-vclass-history-host',
+    templateUrl: './vclass-history-host.component.html',
     encapsulation: ViewEncapsulation.None,
     animations: [
         trigger(
@@ -41,14 +41,16 @@ import { trigger, transition, style, animate } from '@angular/animations';
       ]
 })
 
-export class ProjectBatchHostComponent implements OnInit {
+export class VclassHistoryHostComponent implements OnInit {
 
 
     
     
     // COMPONENT RELATED
-    public MergeableHostList: [];
-    public AlreadyMergedHostList: [];
+    public CallRecords= [];
+    public CallDetail= [];
+    public AlreadyMergedHostList= [];
+    public AlreadyMergedParticipantList= [];
     public OnGoingClassList: [];
     OnGoingClassListLength =0;
     public currentUser: any;
@@ -56,6 +58,7 @@ export class ProjectBatchHostComponent implements OnInit {
     BatchList: [];
     projectId = '';
     batchId = '';
+    hostId = '';
     currentSocketId = null;
     iframeOpened = false;
     joinConfObj={};
@@ -67,7 +70,7 @@ export class ProjectBatchHostComponent implements OnInit {
 
 
     // MODAL RELATED
-    modalTitle = 'Project Batch Host';
+    modalTitle = 'Project Batch Host Participant';
     modalConfig: any = { class: 'gray modal-lg', backdrop: 'static' };
     modalRef: BsModalRef;
 
@@ -80,10 +83,14 @@ export class ProjectBatchHostComponent implements OnInit {
     loadingIndicator = false;
     ColumnMode = ColumnMode;
     bsConfig: Partial<BsDatepickerConfig>;
+    bsrConfig: Partial<BsDaterangepickerConfig>;
+    
     scrollBarHorizontal = (window.innerWidth < 1200);
     SelectionType = SelectionType;
 
-    
+    bsValue = new Date();
+    bsRangeValue: Date[];
+    maxDate = new Date();
 
     constructor(
         private authService: AuthenticationService,
@@ -100,11 +107,10 @@ export class ProjectBatchHostComponent implements OnInit {
             this.scrollBarHorizontal = (window.innerWidth < 1200);
         };
 
-        this.bsConfig = Object.assign({}, {
-            dateInputFormat: 'DD-MMM-YYYY ',
-            adaptivePosition: true,
-            maxDate: new Date()
-        });
+        
+
+        this.maxDate.setDate(this.maxDate.getDate() + 0);
+        this.bsRangeValue = [this.bsValue, this.maxDate];
 
         this.currentUser = this.authService.currentUserDetails.value;
     }
@@ -116,10 +122,13 @@ export class ProjectBatchHostComponent implements OnInit {
             Id: [null],
             AcademicProjectId: [null, [Validators.required]],
             AcademicBatchId: [null, [Validators.required]],
+            HostId: [null, [Validators.required]],
         });
 
         // PAGE ON LOAD RELATED
         this.getProjectList();
+        console.log(this.bsRangeValue[0]);
+        console.log(this.bsRangeValue[1]);
     }
 
    
@@ -143,32 +152,31 @@ export class ProjectBatchHostComponent implements OnInit {
     changeProject(e) {
         if(e)       {
             this.entryForm.controls['AcademicBatchId'].setValue(null);
+            this.entryForm.controls['HostId'].setValue(null);
         }
 
         this.projectId = this.entryForm.value.AcademicProjectId;
-        this.getBatchList(this.projectId);
-        this.MergeableHostList = []
-        this.AlreadyMergedHostList = []
-        
+       
+        this.getHostListByProjectId();
+        this.CallRecords = []
+        this.AlreadyMergedParticipantList = []
     }
 
-    getBatchList(projectId){
-        
-        this._service.get('api/conference/GetBatchListByProjectId/' + projectId).subscribe(res => {
-            this.BatchList = res.Records;
-            console.log(this.BatchList)
-        }, err => { }
-        );
 
+
+    onValueChange(e){ 
+        // if(e)       {
+        //     this.entryForm.controls['HostId'].setValue(null);
+        // }
+        console.log(this.bsRangeValue[0]);
+        console.log(this.bsRangeValue[1]);
     }
 
-    changeBatch(){
-        this.batchId = this.entryForm.value.AcademicBatchId;
-        this.getMergeableHostList();
-        this.getAlreadyMergedHostList();
-    }
+    
 
-    getMergeableHostList(){
+    
+
+    getHostListByProjectId(){
 
         const obj = {
         size: this.page.size,
@@ -176,87 +184,72 @@ export class ProjectBatchHostComponent implements OnInit {
         };
 
         
-        this._service.get('api/mastersetting/GetMergeableHostList/' + this.projectId + "/"+ this.batchId, obj).subscribe(res => {
-            this.MergeableHostList = res.Records;
-            console.log(this.MergeableHostList)
-        }, err => { }
-        );
-    }
-
-    getAlreadyMergedHostList(){
-
-        const obj = {
-        size: this.page.size,
-        pageNumber: this.page.pageNumber
-        };
-
-        
-        this._service.get('api/mastersetting/GetAlreadyMergedHostList/' + this.projectId + "/"+ this.batchId, obj).subscribe(res => {
+        this._service.get('api/mastersetting/GetHostListByProjectId/' + this.projectId).subscribe(res => {
             this.AlreadyMergedHostList = res.Records;
             console.log(this.AlreadyMergedHostList)
         }, err => { }
         );
     }
 
-    mergeProjectBatchHost(){
-        // this.blockUI.start('Starting...');
-        console.log(this.entryForm.value.AcademicProjectId)
-        console.log(this.entryForm.value.AcademicBatchId)
+    changeHost(){
+        this.projectId = this.entryForm.value.AcademicProjectId; 
+        this.batchId = this.entryForm.value.AcademicBatchId; 
+        this.hostId = this.entryForm.value.HostId; 
+        // this.getVirtualClassCallingDetailByHostId();
+
+    }
+
+    
+    search(){
+        this.projectId = this.entryForm.value.AcademicProjectId; 
+        this.batchId = this.entryForm.value.AcademicBatchId; 
+        this.hostId = this.entryForm.value.HostId;
+        this.getVirtualClassCallingDetailByHostId(); 
+
+    }
+
+
+    getVirtualClassCallingDetailByHostId(){
+
+        const obj = {
+        size: this.page.size,
+        pageNumber: this.page.pageNumber
+        };
+
+        const qObj = {
+            hostId: this.hostId,
+            startDate : moment(this.bsRangeValue[0]).format('DD-MMM-YYYY')  , 
+            endDate: moment(this.bsRangeValue[1]).format('DD-MMM-YYYY')
+        }
+
+        console.log(qObj);
+
+        this._service.get('api/conference/GetVirtualClassCallingDetailByHostIdAndDateRange/', qObj).subscribe(res => {
+            // alert(this.hostId);
+            this.CallRecords = res.Records;
+            console.log(this.CallRecords)
+        }, err => { }
+        );
+
         
-
-        const projectId = this.entryForm.value.AcademicProjectId;
-        const batchId = this.entryForm.value.AcademicBatchId;
-        const allHost = this.selected;
-
-        const obj = [];
-
-        if (allHost.length > 0 ) {
-            allHost.forEach(function (value) {
-                obj.push({
-                    HostId: value.Id,
-                    ProjectId: projectId,
-                    BatchId: batchId,
-
-                });
-            });
-        }
-
-        console.log(obj);
-
-
-        if (obj.length > 0 ) {
-            const request = this._service.post('api/mastersetting/MergeProjectBatchHost', obj);
-            request.subscribe(
-                data => {
-                    this.blockUI.stop();
-                    if (data.Success) {
-                        this.toastr.success(data.Message, 'Success!', { timeOut: 2000 });
-                        this.selected = [];
-                        this.getMergeableHostList();
-                        this.getAlreadyMergedHostList();
-                        
-                        } 
-                        else 
-                        {
-                            this.toastr.error(data.Message, 'Error!', { closeButton: true, disableTimeOut: false });
-                        }
-                    },
-                err => {
-                    this.blockUI.stop();
-                    this.toastr.error(err.Message || err, 'Error!', { closeButton: true, disableTimeOut: false });
-                }
-            );
-        }
-        else
-        {
-            this.blockUI.stop();
-            this.toastr.error('Please Select Teacher (s) first and try again !', 'Error!', { closeButton: true, disableTimeOut: false });
-        }
-        
+        // this._service.get('api/conference/GetVirtualClassCallingDetailByHostId/' + this.hostId).subscribe(res => {
+        //     // alert(this.hostId);
+        //     this.CallRecords = res.Records;
+        //     console.log(this.CallRecords)
+        // }, err => { }
+        // );
     }
 
     
 
+    getCallDetailById(classId){
+        // alert(classId);
+        // var url = this.router.navigate(['/vclass-history-detail-host/' + classId]);
+        const url = this.router.serializeUrl(this.router.createUrlTree(['/vclass-history-detail-host/' + classId]));
+        window.open(url, '_blank');      
+        
+
+    }
 
 
 

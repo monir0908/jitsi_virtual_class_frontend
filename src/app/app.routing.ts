@@ -62,6 +62,22 @@ export const AppRoutes: Routes = [
         loadChildren: () => import('./project-batch-host/project-batch-host.module').then(m => m.ProjectBatchHostModule),
         // canActivate: [AuthGuard]
       },
+      {
+        path: 'project-batch-host-participant',
+        loadChildren: () => import('./project-batch-host-participant/project-batch-host-participant.module').then(m => m.ProjectBatchHostParticipantModule),
+        // canActivate: [AuthGuard]
+      },
+      {
+        path: 'vclass-history-host',
+        loadChildren: () => import('./vclass-history-host/vclass-history-host.module').then(m => m.VclassHistoryHostModule),
+        // canActivate: [AuthGuard]
+      },
+      {
+        path: 'vclass-history-detail-host/:vclassId',
+        loadChildren: () => import('./vclass-history-detail-host/vclass-history-detail-host.module').then(m => m.VclassHistoryDetailHostModule),
+        // canActivate: [AuthGuard]
+      },
+      
     ]
   }, {
     path: '**',

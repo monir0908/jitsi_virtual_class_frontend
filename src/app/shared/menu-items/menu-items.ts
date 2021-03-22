@@ -69,26 +69,26 @@ const MENUITEMS = [
     main: [
 
       {
-        state: 'host-vclass-history',
-        name: 'Teacher Call History',
+        state: 'vclass-history-host',
+        name: 'Host Call History',
         type: 'link',
         icon: 'icofont-host-vclass-history'
       },
       {
-        state: 'participant-vclass-history',
-        name: 'Student Call History',
+        state: 'vclass-history-participant',
+        name: 'Participant Call History',
         type: 'link',
         icon: 'icofont-participant-vclass-history'
       },
       {
-        state: 'individual-host-vclass-history',
-        name: 'My Call History (Teacher)',
+        state: 'vclass-history-host-individual',
+        name: 'My Call History (Host)',
         type: 'link',
         icon: 'icofont-individual-host-vclass-histor'
       },
       {
-        state: 'indicidual-participant-vclass-history',
-        name: 'My Call History (Student)',
+        state: 'vclass-history-participant-individual',
+        name: 'My Call History (Participant)',
         type: 'link',
         icon: 'icofont-indicidual-participant-vclass-history'
       },
@@ -126,7 +126,7 @@ const MENUITEMS = [
       },
       {
         state: 'project-batch-host-participant',
-        name: 'Connect Teacher - Student',
+        name: 'Merge Host & Participant',
         type: 'link',
         icon: 'icofont-project-batch-host-participant'
       },

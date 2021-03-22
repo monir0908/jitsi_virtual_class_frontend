@@ -13,8 +13,8 @@ import { trigger, transition, style, animate } from '@angular/animations';
 
 
 @Component({
-    selector: 'app-project-batch-host',
-    templateUrl: './project-batch-host.component.html',
+    selector: 'app-project-batch-host-participant',
+    templateUrl: './project-batch-host-participant.component.html',
     encapsulation: ViewEncapsulation.None,
     animations: [
         trigger(
@@ -41,14 +41,15 @@ import { trigger, transition, style, animate } from '@angular/animations';
       ]
 })
 
-export class ProjectBatchHostComponent implements OnInit {
+export class ProjectBatchHostParticipantComponent implements OnInit {
 
 
     
     
     // COMPONENT RELATED
-    public MergeableHostList: [];
+    public MergeableParticipantList: [];
     public AlreadyMergedHostList: [];
+    public AlreadyMergedParticipantList: [];
     public OnGoingClassList: [];
     OnGoingClassListLength =0;
     public currentUser: any;
@@ -56,6 +57,7 @@ export class ProjectBatchHostComponent implements OnInit {
     BatchList: [];
     projectId = '';
     batchId = '';
+    hostId = '';
     currentSocketId = null;
     iframeOpened = false;
     joinConfObj={};
@@ -67,7 +69,7 @@ export class ProjectBatchHostComponent implements OnInit {
 
 
     // MODAL RELATED
-    modalTitle = 'Project Batch Host';
+    modalTitle = 'Project Batch Host Participant';
     modalConfig: any = { class: 'gray modal-lg', backdrop: 'static' };
     modalRef: BsModalRef;
 
@@ -116,6 +118,7 @@ export class ProjectBatchHostComponent implements OnInit {
             Id: [null],
             AcademicProjectId: [null, [Validators.required]],
             AcademicBatchId: [null, [Validators.required]],
+            HostId: [null, [Validators.required]],
         });
 
         // PAGE ON LOAD RELATED
@@ -143,12 +146,13 @@ export class ProjectBatchHostComponent implements OnInit {
     changeProject(e) {
         if(e)       {
             this.entryForm.controls['AcademicBatchId'].setValue(null);
+            this.entryForm.controls['HostId'].setValue(null);
         }
 
         this.projectId = this.entryForm.value.AcademicProjectId;
         this.getBatchList(this.projectId);
-        this.MergeableHostList = []
-        this.AlreadyMergedHostList = []
+        this.MergeableParticipantList = []
+        this.AlreadyMergedParticipantList = []
         
     }
 
@@ -162,26 +166,16 @@ export class ProjectBatchHostComponent implements OnInit {
 
     }
 
-    changeBatch(){
-        this.batchId = this.entryForm.value.AcademicBatchId;
-        this.getMergeableHostList();
+    changeBatch(e){
+        if(e)       {
+            this.entryForm.controls['HostId'].setValue(null);
+        }
+        this.batchId = this.entryForm.value.AcademicBatchId;       
         this.getAlreadyMergedHostList();
-    }
-
-    getMergeableHostList(){
-
-        const obj = {
-        size: this.page.size,
-        pageNumber: this.page.pageNumber
-        };
-
         
-        this._service.get('api/mastersetting/GetMergeableHostList/' + this.projectId + "/"+ this.batchId, obj).subscribe(res => {
-            this.MergeableHostList = res.Records;
-            console.log(this.MergeableHostList)
-        }, err => { }
-        );
     }
+
+    
 
     getAlreadyMergedHostList(){
 
@@ -198,7 +192,47 @@ export class ProjectBatchHostComponent implements OnInit {
         );
     }
 
-    mergeProjectBatchHost(){
+    changeHost(){
+        this.projectId = this.entryForm.value.AcademicProjectId; 
+        this.batchId = this.entryForm.value.AcademicBatchId; 
+        this.hostId = this.entryForm.value.HostId; 
+        this.getMergeableParticipantList();
+        this.getAlreadyMergedParticipantList();
+
+    }
+
+
+    getMergeableParticipantList(){
+
+        const obj = {
+        size: this.page.size,
+        pageNumber: this.page.pageNumber
+        };
+
+        
+        this._service.get('api/mastersetting/GetMergeableParticipantList/' + this.projectId + "/"+ this.batchId + "/"+ this.hostId, obj).subscribe(res => {
+            this.MergeableParticipantList = res.Records;
+            console.log(this.MergeableParticipantList)
+        }, err => { }
+        );
+    }
+
+    getAlreadyMergedParticipantList(){
+
+        const obj = {
+        size: this.page.size,
+        pageNumber: this.page.pageNumber
+        };
+
+        
+        this._service.get('api/mastersetting/GetAlreadyMergedParticipantList/' + this.projectId + "/"+ this.batchId + "/"+ this.hostId, obj).subscribe(res => {
+            this.AlreadyMergedParticipantList = res.Records;
+            console.log(this.AlreadyMergedParticipantList)
+        }, err => { }
+        );
+    }
+
+    mergeProjectBatchHostParticipant(){
         // this.blockUI.start('Starting...');
         console.log(this.entryForm.value.AcademicProjectId)
         console.log(this.entryForm.value.AcademicBatchId)
@@ -206,34 +240,40 @@ export class ProjectBatchHostComponent implements OnInit {
 
         const projectId = this.entryForm.value.AcademicProjectId;
         const batchId = this.entryForm.value.AcademicBatchId;
-        const allHost = this.selected;
+        const hostId = this.entryForm.value.HostId;
+        const allParticipant = this.selected;
 
+        
         const obj = [];
-
-        if (allHost.length > 0 ) {
-            allHost.forEach(function (value) {
+        if (allParticipant.length > 0 ) {
+            allParticipant.forEach(function (value) {
                 obj.push({
-                    HostId: value.Id,
-                    ProjectId: projectId,
-                    BatchId: batchId,
+                    Id: value.Id
 
                 });
             });
         }
 
-        console.log(obj);
+        const mergingObj = {
+            "projectId":projectId,
+            "batchId":batchId,
+            "hostId":hostId,
+            "participantList": allParticipant
+        }
+
+        console.log(mergingObj);
 
 
         if (obj.length > 0 ) {
-            const request = this._service.post('api/mastersetting/MergeProjectBatchHost', obj);
+            const request = this._service.post('api/mastersetting/MergeProjectBatchHostParticipant', mergingObj);
             request.subscribe(
                 data => {
                     this.blockUI.stop();
                     if (data.Success) {
                         this.toastr.success(data.Message, 'Success!', { timeOut: 2000 });
                         this.selected = [];
-                        this.getMergeableHostList();
-                        this.getAlreadyMergedHostList();
+                        this.getMergeableParticipantList();
+                        this.getAlreadyMergedParticipantList();
                         
                         } 
                         else 

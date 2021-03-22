@@ -1,0 +1,184 @@
+<block-ui>
+   <div class="row">
+      <div class="col-lg-12">
+         <div class="row">
+            <div class="col-lg-12">
+               <div class="card card-border-primary">
+                  <div class="card-header">
+                     <h5>Select The Followings </h5>
+                  </div>
+                  <div class="card-block ">
+                     <div class="row ">
+                        <div class="col-lg-12 ">
+                           <form [formGroup]="entryForm">
+                              <div class="row">
+                                 <div class="col-sm-4">
+                                    <div class="form-group row">
+                                       <label class="col-sm-4 col-form-label required">Project / Organization</label>
+                                       <div class="col-sm-8">
+                                          <ng-select placeholder="Select Project or Organization Name" formControlName="AcademicProjectId"
+                                          (change)="changeProject($event)" [items]="ProjectList" [clearable]='false'
+                                          [clearOnBackspace]='false' bindLabel="ProjectName" bindValue="Id"
+                                          [ngClass]="{ 'is-invalid': submitted && f.AcademicProjectId.errors }">
+                                          <ng-template ng-option-tmp let-item="item">
+                                             <div [title]="item.ProjectName">{{item.ProjectName}}</div>
+                                          </ng-template>
+                                          </ng-select>
+                                          <div *ngIf="submitted && f.AcademicProjectId.errors" class="error-text">
+                                             <span *ngIf="f.AcademicProjectId.errors.required" class="text-danger"> Project / Organization Name is required</span>
+                                          </div>
+                                       </div>
+                                    </div>
+                                 </div>
+                                 <!-- <div class="col-sm-4">
+                                    <div class="form-group row">
+                                       <label class="col-sm-4 col-form-label required">Select Batch</label>
+                                       <div class="col-sm-8">
+                                          <ng-select placeholder="Select Batch" formControlName="AcademicBatchId"
+                                          (change)="changeBatch($event)" [items]="BatchList" [clearable]='false'
+                                          [clearOnBackspace]='false' bindLabel="BatchName" bindValue="Id"
+                                          [ngClass]="{ 'is-invalid': submitted && f.AcademicBatchId.errors }">
+                                          <ng-template ng-option-tmp let-item="item">
+                                             <div [title]="item.BatchName">{{item.BatchName}}</div>
+                                          </ng-template>
+                                          </ng-select>
+                                          <div *ngIf="submitted && f.AcademicBatchId.errors" class="error-text">
+                                             <span *ngIf="f.AcademicBatchId.errors.required" class="text-danger"> Batch Name is required</span>
+                                          </div>
+                                       </div>
+                                    </div>
+                                    </div> -->
+                                 <div class="col-sm-4">
+                                    <div class="form-group row">
+                                       <label class="col-sm-4 col-form-label required">Select Date Range</label>
+                                       <div class="col-sm-8">
+                                          <input type="text" (bsValueChange)="onValueChange($event)"  class="form-control" bsDaterangepicker [bsConfig]="bsrConfig" [(ngModel)]="bsRangeValue" [ngModelOptions]="{standalone: true}" placeholder="Select a date range">
+                                       </div>
+                                    </div>
+                                    </div>
+                                 <div class="col-sm-4">
+                                    <div class="form-group row">
+                                       <label class="col-sm-3 col-form-label required">Select Teacher</label>
+                                       <div class="col-sm-9">
+                                          <ng-select placeholder="Select Teacher" formControlName="HostId"
+                                          (change)="changeHost()" [items]="AlreadyMergedHostList" [clearable]='false'
+                                          [clearOnBackspace]='false' bindLabel="FirstName" bindValue="Id"
+                                          [ngClass]="{ 'is-invalid': submitted && f.HostId.errors }">
+                                          <ng-template ng-option-tmp let-item="item">
+                                             <div [title]="item.FirstName">{{item.FirstName}} {{item.LastName}}</div>
+                                          </ng-template>
+                                          </ng-select>
+                                          <div *ngIf="submitted && f.HostId.errors" class="error-text">
+                                             <span *ngIf="f.HostId.errors.required" class="text-danger"> Teacher is required</span>
+                                          </div>
+                                       </div>
+                                    </div>
+                                 </div>
+                              </div>
+                           </form>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <div class="row" *ngIf="hostId !=''">
+      <div class="col-lg-12">
+         <div class="row">
+            <div class="col-lg-12">
+               <div class="card card-border-primary">
+                  <div class="card-header">
+                     <h5>Call Records </h5>
+                     <br>
+                     <div>
+                        <button class="btn btn-primary btn-sm float-right" (click)="search()"><i
+                           class=" icofont icofont-search"></i>Search
+                        </button>
+                     </div>
+                  </div>
+                  <div class="card-header">
+                     <div class="form-group">
+                        <input type="text" (keyup)="updateFilter($event)" class="form-control col-md-4"
+                           placeholder="Type room no ...">
+                     </div>
+                  </div>
+                  <div class="card-block ">
+                     <div class="row ">
+                        <div class="col-lg-12">
+                           <ngx-datatable #table class="material table-bordered" [selected]="selected"
+                           [selectionType]="SelectionType.checkbox" (select)="onSelect($event)"
+                           [rows]="CallRecords" [scrollbarH]="scrollBarHorizontal"
+                           [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
+                           [headerHeight]="40" [footerHeight]="50" [limit]="10" rowHeight="auto">
+                           <ngx-datatable-column [width]="60" name="Room ID" prop="RoomId"
+                           [draggable]="false" [sortable]="false">
+                           <ng-template let-value="value" ngx-datatable-cell-template>
+                              <!-- <span title="{{ value }}" badge badge-info>{{ value }}</span> -->
+                              <span title="{{ value }}"> <strong class="label label-warning">{{ value }} </strong></span> 
+                           </ng-template>
+                           </ngx-datatable-column>
+                           <ngx-datatable-column name="Teacher Call Duration" prop="VirtualClassDetail.HostCallDuration" [draggable]="false" [sortable]="false">
+                           <ng-template let-value="value" ngx-datatable-cell-template>
+                              <span title="{{ value }}">{{ value }}</span> 
+                           </ng-template>
+                           </ngx-datatable-column>
+                           <ngx-datatable-column name="Student(s) Call Duration" prop="VirtualClassDetail.ParticipantsCallDuration" [draggable]="false" [sortable]="false">
+                           <ng-template let-value="value" ngx-datatable-cell-template>
+                              <span title="{{ value }}">{{ value }}</span> 
+                           </ng-template>
+                           </ngx-datatable-column>
+                           <ngx-datatable-column name="Empty Slot" prop="VirtualClassDetail.EmptySlotDuration" [draggable]="false" [sortable]="false">
+                           <ng-template let-value="value" ngx-datatable-cell-template>
+                              <span title="{{ value }}">{{ value }}</span> 
+                           </ng-template>
+                           </ngx-datatable-column>
+                           <ngx-datatable-column name="Actual Call Duration" prop="VirtualClassDetail.ActualCallDuration" [draggable]="false" [sortable]="false">
+                           <ng-template let-value="value" ngx-datatable-cell-template>
+                              <!-- <span title="{{ value }}">{{ value }}</span>  -->
+                              <span title="{{ value }}"> <strong class="label label-primary">{{ value }} </strong></span> 
+                           </ng-template>
+                           </ngx-datatable-column>
+                           <ngx-datatable-column name="Student(s) In-Out Counts" prop="VirtualClassDetail.ParticipantJoined" [draggable]="false" [sortable]="false">
+                           <ng-template let-value="value" ngx-datatable-cell-template>
+                              <!-- <span title="{{ value }}">{{ value }} times</span> -->
+                              <span title="{{ value }}">{{ value }} </span>
+                              <span *ngIf="value >1"> times</span> 
+                              <span *ngIf="value <2"> time</span> 
+                           </ng-template>
+                           </ngx-datatable-column>
+                           <ngx-datatable-column name="Unique Student Counts" prop="VirtualClassDetail.UniqueParticipantCounts" [draggable]="false" [sortable]="false">
+                           <ng-template let-value="value" ngx-datatable-cell-template>
+                              <span title="{{ value }}">{{ value }}</span> 
+                           </ng-template>
+                           </ngx-datatable-column>
+                           <ngx-datatable-column [width]="60" name="Action" prop="Id" [draggable]="false"
+                           [sortable]="false">
+                           <ng-template let-row="row" ngx-datatable-cell-template>
+                              <button class="btn btn-info btn-mini" (click)="getCallDetailById(row.Id)"><i
+                                 class="icofont icofont-edit"></i>Detail</button>
+                           </ng-template>
+                           </ngx-datatable-column>
+                           </ngx-datatable>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="card-footer">
+                     <div class="text-center">
+                        <!-- <button class="btn btn-danger btn-sm mr-2" (click)="btnHangup()">
+                           <i class="icofont-rounded-double-left"></i> End Class</button> -->
+                        <!-- <button class="btn btn-primary btn-md mr-2" (click)="abc()">
+                           <i class="icofont-rounded-double-right"></i> Merge Project Batch Host</button> -->
+                        <!-- <button class="btn btn-primary btn-sm mr-2" [routerLink]="['/enrolled-student-list']">
+                           <i class="icofont-rounded-double-left"></i> Back To List</button> -->                        
+                     </div>
+                  </div>
+                  <!-- end of card-footer -->
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <div #jitsi></div>
+</block-ui>
