@@ -38,7 +38,8 @@ const MENUITEMS = [
         state: 'dashboard',
         name: 'Home',
         type: 'link',
-        icon: 'icofont-dashboard'
+        icon: 'icofont-dashboard',
+        permission: 'Admin,Superuser,Host'
       },
 
 
@@ -52,13 +53,15 @@ const MENUITEMS = [
         state: 'host-vclass',
         name: 'Start Virutal Class',
         type: 'link',
-        icon: 'icofont-host-vclass'
+        icon: 'icofont-host-vclass',
+        permission: 'Host'
       },
       {
-        state: 'bparticipant-vclassatch',
+        state: 'participant-vclass',
         name: 'Join Virtual Class',
         type: 'link',
-        icon: 'icofont-host-vclass'
+        icon: 'icofont-host-vclass',
+        permission: 'Participant'
       },
 
 
@@ -72,25 +75,15 @@ const MENUITEMS = [
         state: 'vclass-history-host',
         name: 'Host Call History',
         type: 'link',
-        icon: 'icofont-host-vclass-history'
-      },
-      {
-        state: 'vclass-history-participant',
-        name: 'Participant Call History',
-        type: 'link',
-        icon: 'icofont-participant-vclass-history'
-      },
+        icon: 'icofont-host-vclass-history',
+        permission: 'Admin,Superuser'
+      },      
       {
         state: 'vclass-history-host-individual',
-        name: 'My Call History (Host)',
+        name: 'My Call History',
         type: 'link',
-        icon: 'icofont-individual-host-vclass-histor'
-      },
-      {
-        state: 'vclass-history-participant-individual',
-        name: 'My Call History (Participant)',
-        type: 'link',
-        icon: 'icofont-indicidual-participant-vclass-history'
+        icon: 'icofont-individual-host-vclass-histor',
+        permission: 'Host'
       },
 
 
@@ -104,31 +97,36 @@ const MENUITEMS = [
         state: 'project',
         name: 'Create Project',
         type: 'link',
-        icon: 'icofont-project'
+        icon: 'icofont-project',
+        permission: 'Superuser'
       },
       {
         state: 'batch',
         name: 'Create Batch',
         type: 'link',
-        icon: 'icofont-batch'
+        icon: 'icofont-batch',
+        permission: 'Superuser'
       },
       {
         state: 'project-batch',
         name: 'Merge Project & Batch',
         type: 'link',
-        icon: 'icofont-project-batch'
+        icon: 'icofont-project-batch',
+        permission: 'Superuser'
       },
       {
         state: 'project-batch-host',
         name: 'Merge Project Host & Batch',
         type: 'link',
-        icon: 'icofont-project-batch-host'
+        icon: 'icofont-project-batch-host',
+        permission: 'Superuser'
       },
       {
         state: 'project-batch-host-participant',
         name: 'Merge Host & Participant',
         type: 'link',
-        icon: 'icofont-project-batch-host-participant'
+        icon: 'icofont-project-batch-host-participant',
+        permission: 'Admin,Superuser'
       },
 
 

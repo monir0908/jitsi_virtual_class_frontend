@@ -16,7 +16,10 @@ export class AuthGuard implements CanActivate {
         // const currentUser = JSON.parse(localStorage.getItem('currentUser'));
         // console.log(currentUser);
         if (this.authenticationService.isAuthenticated()) {
-            if (!this.hasRequiredPermission(route.data['auth'])) {
+            
+            let permissions = route.data['auth']? route.data['auth'].split(',') : null;
+            if (permissions && !this.authorizationService.hasPermissions(permissions)) {
+            // if (!this.hasRequiredPermission(route.data['auth'])) {
                 this.router.navigate(['']);
                 return false;
             }

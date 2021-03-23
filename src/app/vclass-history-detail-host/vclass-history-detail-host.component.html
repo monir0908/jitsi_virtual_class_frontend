@@ -32,6 +32,14 @@
                            <td>{{ CallDetail.HostEmail }}</td>
                          </tr>
                          <tr>                            
+                           <td>Join Time</td>
+                           <td>{{ TeacherVirtualClassDetail[0].value.JoinTime | amFromUtc | amLocal | amDateFormat: 'DD-MM-YYYY hh:mm:ss a'}}</td>
+                         </tr>
+                         <tr>                            
+                           <td>Leave Time</td>
+                           <td>{{ TeacherVirtualClassDetail[0].value.LeaveTime | amFromUtc | amLocal | amDateFormat: 'DD-MM-YYYY hh:mm:ss a'}}</td>
+                         </tr>
+                         <tr>                            
                            <td>Teacher Call Duration</td>
                            <td>{{ CallDetail.HostCallDuration }}</td>
                          </tr>

@@ -20,9 +20,18 @@ export class AuthorizationService {
         return false;
     }
 
-    hasPermissions(roles: Array<string>) {        
+    hasPermissions(roles: Array<string>) {
         if (this.authenticationService.currentUserDetails.value) {
-            return roles.indexOf(this.authenticationService.currentUserDetails.value.role) !== -1;
+            let found = false;
+
+            for (let i = 0; i < roles.length; i++) {
+                const role = roles[i];
+                if (this.authenticationService.currentUserDetails.value.Roles.indexOf(role) !== -1) {
+                    found = true;
+                    break;
+                }
+            }
+            return found;
         }
         return false;
     }

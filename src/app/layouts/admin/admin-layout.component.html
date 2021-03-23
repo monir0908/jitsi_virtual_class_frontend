@@ -66,8 +66,8 @@
                                 <div class="user-details">
                                     <div class="user-details">
                                         <blockquote class="blockquote">
-                                            <h6 *ngIf="currentUser" class="mb-0 pt-2 text-white">{{currentUser.FirstName}}</h6>
-                                            <footer class="pt-2 blockquote-footer text-right">Admin</footer>
+                                            <h6 *ngIf="currentUser" class="mb-0 pt-2 text-white">{{currentUser.FirstName}} {{currentUser.LastName}}</h6>
+                                            <footer class="pt-2 blockquote-footer text-right">{{currentUser.UserType}}</footer>
                                         </blockquote>
                                     </div>
                                 </div>

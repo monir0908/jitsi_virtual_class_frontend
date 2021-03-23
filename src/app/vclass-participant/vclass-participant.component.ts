@@ -307,6 +307,7 @@ export class VClassParticipantComponent implements OnInit {
             RoomId : param.RoomId,
             ParticipantId : this.currentUser.Id,
             BatchId : param.BatchId,
+            ProjectId : param.ProjectId,
             ConnectionId : this.currentSocketId,
             
 

@@ -5,77 +5,21 @@
             <div class="col-lg-12">
                <div class="card card-border-primary">
                   <div class="card-header">
-                     <h5>Select The Followings </h5>
+                     <h5>Select Daterange and Hit Search Button </h5>
                   </div>
                   <div class="card-block ">
                      <div class="row ">
-                        <div class="col-lg-12 ">
+                        <div class="col-lg-4">
                            <form [formGroup]="entryForm">
-                              <div class="row">
-                                 <div class="col-sm-4">
-                                    <div class="form-group row">
-                                       <label class="col-sm-4 col-form-label required">Project / Organization</label>
-                                       <div class="col-sm-8">
-                                          <ng-select placeholder="Select Project or Organization Name" formControlName="AcademicProjectId"
-                                          (change)="changeProject($event)" [items]="ProjectList" [clearable]='false'
-                                          [clearOnBackspace]='false' bindLabel="ProjectName" bindValue="Id"
-                                          [ngClass]="{ 'is-invalid': submitted && f.AcademicProjectId.errors }">
-                                          <ng-template ng-option-tmp let-item="item">
-                                             <div [title]="item.ProjectName">{{item.ProjectName}}</div>
-                                          </ng-template>
-                                          </ng-select>
-                                          <div *ngIf="submitted && f.AcademicProjectId.errors" class="error-text">
-                                             <span *ngIf="f.AcademicProjectId.errors.required" class="text-danger"> Project / Organization Name is required</span>
-                                          </div>
-                                       </div>
-                                    </div>
-                                 </div>
-                                 <!-- <div class="col-sm-4">
-                                    <div class="form-group row">
-                                       <label class="col-sm-4 col-form-label required">Select Batch</label>
-                                       <div class="col-sm-8">
-                                          <ng-select placeholder="Select Batch" formControlName="AcademicBatchId"
-                                          (change)="changeBatch($event)" [items]="BatchList" [clearable]='false'
-                                          [clearOnBackspace]='false' bindLabel="BatchName" bindValue="Id"
-                                          [ngClass]="{ 'is-invalid': submitted && f.AcademicBatchId.errors }">
-                                          <ng-template ng-option-tmp let-item="item">
-                                             <div [title]="item.BatchName">{{item.BatchName}}</div>
-                                          </ng-template>
-                                          </ng-select>
-                                          <div *ngIf="submitted && f.AcademicBatchId.errors" class="error-text">
-                                             <span *ngIf="f.AcademicBatchId.errors.required" class="text-danger"> Batch Name is required</span>
-                                          </div>
-                                       </div>
-                                    </div>
-                                    </div> -->
-                                 <div class="col-sm-4">
-                                    <div class="form-group row">
-                                       <label class="col-sm-4 col-form-label required">Select Date Range</label>
-                                       <div class="col-sm-8">
-                                          <input type="text" (bsValueChange)="onValueChange($event)"  class="form-control" bsDaterangepicker [bsConfig]="bsrConfig" [(ngModel)]="bsRangeValue" [ngModelOptions]="{standalone: true}" placeholder="Select a date range">
-                                       </div>
-                                    </div>
-                                    </div>
-                                 <div class="col-sm-4">
-                                    <div class="form-group row">
-                                       <label class="col-sm-3 col-form-label required">Select Teacher</label>
-                                       <div class="col-sm-9">
-                                          <ng-select placeholder="Select Teacher" formControlName="HostId"
-                                          (change)="changeHost()" [items]="AlreadyMergedHostList" [clearable]='false'
-                                          [clearOnBackspace]='false' bindLabel="FirstName" bindValue="Id"
-                                          [ngClass]="{ 'is-invalid': submitted && f.HostId.errors }">
-                                          <ng-template ng-option-tmp let-item="item">
-                                             <div [title]="item.FirstName">{{item.FirstName}} {{item.LastName}}</div>
-                                          </ng-template>
-                                          </ng-select>
-                                          <div *ngIf="submitted && f.HostId.errors" class="error-text">
-                                             <span *ngIf="f.HostId.errors.required" class="text-danger"> Teacher is required</span>
-                                          </div>
-                                       </div>
-                                    </div>
-                                 </div>
-                              </div>
-                           </form>
+                                <div class="form-group">
+                                    <label class="col-form-label required">Select Date Range </label> 
+                                    <input type="text" (bsValueChange)="onValueChange($event)"  class="form-control" bsDaterangepicker [bsConfig]="bsrConfig" [(ngModel)]="bsRangeValue" [ngModelOptions]="{standalone: true}" placeholder="Select a date range">
+                                </div>
+
+                                <button class="btn btn-success btn-sm" (click)="search()"><i
+                                        class="icofont icofont-check-circled"></i> {{btnSaveText}}
+                                 </button>
+                            </form>
                         </div>
                      </div>
                   </div>
@@ -84,24 +28,18 @@
          </div>
       </div>
    </div>
-   <div class="row" *ngIf="hostId !=''">
+   <div class="row">
       <div class="col-lg-12">
          <div class="row">
             <div class="col-lg-12">
                <div class="card card-border-primary">
                   <div class="card-header">
-                     <h5>Call Records </h5>
-                     <br>
-                     <div>
-                        <button class="btn btn-primary btn-sm float-right" (click)="search()"><i
-                           class=" icofont icofont-search"></i>Search
-                        </button>
-                     </div>
+                     <h5>Call Records </h5>                     
                   </div>
                   <div class="card-header">
                      <div class="form-group" *ngIf="CallRecords">
-                        <span> <strong>T. stands for Teacher </strong></span>
-                        <span> <strong>S. stands for Student </strong></span>
+                        <span> <strong>Y. stands for "Your" </strong></span>
+                        <span> <strong>S. stands for "Student" </strong></span>
                      </div>
                      <!-- <div class="form-group">
                         <input type="text" (keyup)="updateFilter($event)" class="form-control col-md-4"
@@ -123,7 +61,7 @@
                               <span title="{{ value }}"> <strong class="label label-warning">{{ value }} </strong></span> 
                            </ng-template>
                            </ngx-datatable-column>
-                           <ngx-datatable-column name="T. Call Duration" prop="VirtualClassDetail.HostCallDuration" [draggable]="false" [sortable]="false">
+                           <ngx-datatable-column name="Y. Call Duration" prop="VirtualClassDetail.HostCallDuration" [draggable]="false" [sortable]="false">
                            <ng-template let-value="value" ngx-datatable-cell-template>
                               <span title="{{ value }}">{{ value }}</span> 
                            </ng-template>

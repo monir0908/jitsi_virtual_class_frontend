@@ -50,6 +50,7 @@ export class VclassHistoryDetailHostComponent implements OnInit {
     public CallRecords= [];
     public CallDetail;
     public StudentVirtualClassDetail= [];
+    public TeacherVirtualClassDetail;
     public currentUser: any;
     vclassId = '';
     currentSocketId = null;
@@ -129,11 +130,19 @@ export class VclassHistoryDetailHostComponent implements OnInit {
             console.log(this.CallDetail)
 
             this.StudentVirtualClassDetail = [];
+            this.TeacherVirtualClassDetail = [];
             res.Records.VirtualClassDetail.forEach((value, key) => {
-                if(value.HostId == null)
+                if(value.HostId == null){
                     this.StudentVirtualClassDetail.push({value});
+                }
+                    
+                else{
+                    this.TeacherVirtualClassDetail.push({value});
+
+                }
             });
             console.log(this.StudentVirtualClassDetail);
+            console.log(this.TeacherVirtualClassDetail);
         }, err => { }
         );
 

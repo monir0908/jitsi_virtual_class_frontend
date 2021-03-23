@@ -44,6 +44,12 @@ export class AuthenticationService {
           Email: data.Email,
           PhoneNumber: data.PhoneNumber,
           UserType: data.UserType,
+          IsAdmin: data.IsAdmin,
+          IsSuperUser: data.IsSuperUser,
+          IsActive: data.IsActive,
+
+          
+          Roles: data.Roles? JSON.parse(data.Roles) : null,
 
           access_token: data.token,
 

@@ -279,11 +279,13 @@ export class VClassHostComponent implements OnInit {
         const participantList = [];
         const createConfObj = {
             HostId: this.currentUser.Id,
+            ProjectId: this.projectId,
             BatchId: this.batchId,
             ConnectionId : this.currentSocketId,
         }
 
         console.log("HostId: " + createConfObj.HostId);
+        console.log("ParojectId: " + createConfObj.ProjectId);
         console.log("BatchId: " + createConfObj.BatchId);
         console.log("ConnectionId: " + createConfObj.ConnectionId);
 
@@ -312,6 +314,7 @@ export class VClassHostComponent implements OnInit {
                             "vClassDetail":{
                                 "VClassId":result.Id,
                                 "RoomId":result.RoomId,
+                                "ProjectId":result.ProjectId,
                                 "HostId":result.HostId,
                                 "BatchId":result.BatchId,
                                 "ConnectionId":this.currentSocketId
