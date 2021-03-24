@@ -11,6 +11,7 @@ import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Page } from '../_models/page';
 import { trigger, transition, style, animate } from '@angular/animations';
 import * as moment from 'moment';
+import { Console } from 'console';
 
 @Component({
     selector: 'app-vclass-history-host',
@@ -242,8 +243,10 @@ export class VclassHistoryHostComponent implements OnInit {
         }
 
         console.log(qObj);
-
-        if(this.hostId != null){
+        if(this.projectId == null){
+            this.toastr.warning('Select Project / Organization !' , 'Warning!', { timeOut: 2000 });
+        }
+        else if(this.hostId != null){
             this._service.get('api/conference/GetVirtualClassCallingDetail/', qObj).subscribe(res => {
                 // alert(this.hostId);
                 this.CallRecords = res.Records;
@@ -287,6 +290,18 @@ export class VclassHistoryHostComponent implements OnInit {
         window.open(url, '_blank');      
         
 
+    }
+
+    clear(e){
+        if(e){
+            this.BatchList = [];
+            this.AlreadyMergedHostList = [];
+            this.CallRecords = [];
+            this.entryForm.controls['AcademicBatchId'].setValue(null);
+            this.entryForm.controls['AcademicProjectId'].setValue(null);
+            this.entryForm.controls['HostId'].setValue(null);
+            
+        } 
     }
 
 
