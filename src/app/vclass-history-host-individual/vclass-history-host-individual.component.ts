@@ -213,33 +213,58 @@ export class VclassHistoryHostIndividualComponent implements OnInit {
 
     getVirtualClassCallingDetailByHostId(){
 
-        const obj = {
-        size: this.page.size,
-        pageNumber: this.page.pageNumber
-        };
+        // const obj = {
+        // size: this.page.size,
+        // pageNumber: this.page.pageNumber
+        // };
 
-        const qObj = {
-            hostId: this.currentUser.Id,
-            startDate : moment(this.bsRangeValue[0]).format('DD-MMM-YYYY')  , 
-            endDate: moment(this.bsRangeValue[1]).format('DD-MMM-YYYY')
-        }
+        // const qObj = {
+        //     hostId: this.currentUser.Id,
+        //     startDate : moment(this.bsRangeValue[0]).format('DD-MMM-YYYY')  , 
+        //     endDate: moment(this.bsRangeValue[1]).format('DD-MMM-YYYY')
+        // }
 
-        console.log(qObj);
+        // console.log(qObj);
 
-        this._service.get('api/conference/GetVirtualClassCallingDetailByHostIdAndDateRange/', qObj).subscribe(res => {
-            // alert(this.hostId);
-            this.CallRecords = res.Records;
-            console.log(this.CallRecords)
-        }, err => { }
-        );
-
-        
-        // this._service.get('api/conference/GetVirtualClassCallingDetailByHostId/' + this.hostId).subscribe(res => {
+        // this._service.get('api/conference/GetVirtualClassCallingDetail/', qObj).subscribe(res => {
         //     // alert(this.hostId);
         //     this.CallRecords = res.Records;
         //     console.log(this.CallRecords)
         // }, err => { }
         // );
+
+        
+        // // this._service.get('api/conference/GetVirtualClassCallingDetailByHostId/' + this.hostId).subscribe(res => {
+        // //     // alert(this.hostId);
+        // //     this.CallRecords = res.Records;
+        // //     console.log(this.CallRecords)
+        // // }, err => { }
+        // // );
+
+        const obj = {
+            size: this.page.size,
+            pageNumber: this.page.pageNumber
+            };
+    
+            const qObj = {
+                projectId: this.projectId??0,
+                batchId: this.batchId??0,
+                hostId: this.currentUser.Id,
+                startDate : moment(this.bsRangeValue[0]).format('DD-MMM-YYYY')  , 
+                endDate: moment(this.bsRangeValue[1]).format('DD-MMM-YYYY')
+            }
+    
+            console.log(qObj);
+    
+            this._service.get('api/conference/GetVirtualClassCallingDetail/', qObj).subscribe(res => {
+                // alert(this.hostId);
+                this.CallRecords = res.Records;
+                console.log(this.CallRecords)
+                if (res.Total == 0) {
+                    this.toastr.warning('No record found !', 'Warning!', { timeOut: 2000 });
+                  }
+            }, err => { }
+            );
     }
 
     

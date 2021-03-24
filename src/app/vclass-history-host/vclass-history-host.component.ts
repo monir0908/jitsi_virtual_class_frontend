@@ -157,9 +157,26 @@ export class VclassHistoryHostComponent implements OnInit {
 
         this.projectId = this.entryForm.value.AcademicProjectId;
        
+        
+        this.getBatchList(this.projectId);
         this.getHostListByProjectId();
         this.CallRecords = []
         this.AlreadyMergedParticipantList = []
+    }
+
+
+    getBatchList(projectId){
+        
+        this._service.get('api/conference/GetBatchListByProjectId/' + projectId).subscribe(res => {
+            this.BatchList = res.Records;
+            console.log(this.BatchList)
+        }, err => { }
+        );
+
+    }
+
+    changeBatch(e){
+        this.batchId = this.entryForm.value.AcademicBatchId;
     }
 
 
@@ -217,19 +234,40 @@ export class VclassHistoryHostComponent implements OnInit {
         };
 
         const qObj = {
-            hostId: this.hostId,
+            projectId: this.projectId??0,
+            batchId: this.batchId??0,
+            hostId: this.hostId??'',
             startDate : moment(this.bsRangeValue[0]).format('DD-MMM-YYYY')  , 
             endDate: moment(this.bsRangeValue[1]).format('DD-MMM-YYYY')
         }
 
         console.log(qObj);
 
-        this._service.get('api/conference/GetVirtualClassCallingDetailByHostIdAndDateRange/', qObj).subscribe(res => {
-            // alert(this.hostId);
-            this.CallRecords = res.Records;
-            console.log(this.CallRecords)
-        }, err => { }
-        );
+        if(this.hostId != null){
+            this._service.get('api/conference/GetVirtualClassCallingDetail/', qObj).subscribe(res => {
+                // alert(this.hostId);
+                this.CallRecords = res.Records;
+                console.log(this.CallRecords)
+                if (res.Total == 0) {
+                    this.toastr.warning('No record found !', 'Warning!', { timeOut: 2000 });
+                  }
+            }, err => { }
+            );
+        }
+        else{
+            
+            this.toastr.warning('Teacher should be selected !' , 'Warning!', { timeOut: 2000 });
+            
+        }
+
+        
+
+        // this._service.get('api/conference/TestApi/', qObj).subscribe(res => {
+        //     // alert(this.hostId);
+        //     this.CallRecords = res.Records;
+        //     console.log(this.CallRecords)
+        // }, err => { }
+        // );
 
         
         // this._service.get('api/conference/GetVirtualClassCallingDetailByHostId/' + this.hostId).subscribe(res => {

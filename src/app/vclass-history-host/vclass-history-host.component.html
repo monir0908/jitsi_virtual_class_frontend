@@ -30,9 +30,9 @@
                                        </div>
                                     </div>
                                  </div>
-                                 <!-- <div class="col-sm-4">
+                                 <div class="col-sm-4">
                                     <div class="form-group row">
-                                       <label class="col-sm-4 col-form-label required">Select Batch</label>
+                                       <label class="col-sm-4 col-form-label">Select Batch</label>
                                        <div class="col-sm-8">
                                           <ng-select placeholder="Select Batch" formControlName="AcademicBatchId"
                                           (change)="changeBatch($event)" [items]="BatchList" [clearable]='false'
@@ -47,10 +47,10 @@
                                           </div>
                                        </div>
                                     </div>
-                                    </div> -->
+                                    </div>
                                  <div class="col-sm-4">
                                     <div class="form-group row">
-                                       <label class="col-sm-4 col-form-label required">Select Date Range</label>
+                                       <label class="col-sm-4 col-form-label">Select Date Range</label>
                                        <div class="col-sm-8">
                                           <input type="text" (bsValueChange)="onValueChange($event)"  class="form-control" bsDaterangepicker [bsConfig]="bsrConfig" [(ngModel)]="bsRangeValue" [ngModelOptions]="{standalone: true}" placeholder="Select a date range">
                                        </div>
@@ -58,8 +58,8 @@
                                     </div>
                                  <div class="col-sm-4">
                                     <div class="form-group row">
-                                       <label class="col-sm-3 col-form-label required">Select Teacher</label>
-                                       <div class="col-sm-9">
+                                       <label class="col-sm-4 col-form-label required">Select Teacher</label>
+                                       <div class="col-sm-8">
                                           <ng-select placeholder="Select Teacher" formControlName="HostId"
                                           (change)="changeHost()" [items]="AlreadyMergedHostList" [clearable]='false'
                                           [clearOnBackspace]='false' bindLabel="FirstName" bindValue="Id"
@@ -84,7 +84,7 @@
          </div>
       </div>
    </div>
-   <div class="row" *ngIf="hostId !=''">
+   <div class="row">
       <div class="col-lg-12">
          <div class="row">
             <div class="col-lg-12">
