@@ -132,6 +132,27 @@ const MENUITEMS = [
 
     ]
   },
+  {
+    label: 'Master Settings',
+    main: [
+      {
+        state: 'user-create',
+        name: 'Create User',
+        type: 'link',
+        icon: 'icofont-project',
+        permission: 'Superuser'
+      },
+      {
+        state: 'user',
+        name: 'User List',
+        type: 'link',
+        icon: 'icofont-project',
+        permission: 'Superuser'
+      },
+
+
+    ]
+  }
   
 ];
 

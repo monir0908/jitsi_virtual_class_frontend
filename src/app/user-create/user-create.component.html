@@ -1,0 +1,677 @@
+<block-ui>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="card card-border-default">
+                        <div class="card-header" [innerHtml]="formTitle"> </div>
+                        <div class="card-body">
+                            <form [formGroup]="entryForm" class="col-sm-12">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="form-group row">
+                                            <label class="col-sm-4 col-form-label required">BP ID </label>
+                                            <div class="col-sm-8">
+                                                <input type="number" formControlName="bp_id"
+                                                    [ngClass]="{ 'is-invalid': submitted && f.bp_id.errors }"
+                                                    class="form-control" />
+
+                                                <div *ngIf="submitted && f.bp_id.errors" class="error-text">
+                                                    <span *ngIf="f.bp_id.errors.required" class="text-secondary"> BP ID is required</span>
+                                                    <span *ngIf="f.bp_id.errors.pattern" class="text-secondary">Please, enter valid BP ID</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-4 col-form-label required">First Name </label>
+                                            <div class="col-sm-8">
+                                                <input type="text" formControlName="first_name"
+                                                    [ngClass]="{ 'is-invalid': submitted && f.first_name.errors }"
+                                                    class="form-control" />
+
+                                                <div *ngIf="submitted && f.first_name.errors" class="error-text">
+                                                    <span *ngIf="f.first_name.errors.required" class="text-secondary"> First name is required</span>
+                                                    <span *ngIf="f.first_name.errors.maxlength" class="text-secondary">First name must be not then 250 characters</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-4 col-form-label required">Last Name </label>
+                                            <div class="col-sm-8">
+                                                <input type="text" formControlName="last_name"
+                                                    [ngClass]="{ 'is-invalid': submitted && f.last_name.errors }"
+                                                    class="form-control" />
+
+                                                <div *ngIf="submitted && f.last_name.errors" class="error-text">
+                                                    <span *ngIf="f.last_name.errors.required" class="text-secondary"> Last name is required</span>
+                                                    <span *ngIf="f.last_name.errors.maxlength" class="text-secondary">Last name must be not then 250 characters</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-4 col-form-label required">Email </label>
+                                            <div class="col-sm-8">
+                                                <input type="email" formControlName="email"
+                                                    [ngClass]="{ 'is-invalid': submitted && f.email.errors }"
+                                                    class="form-control" />
+
+                                                <div *ngIf="submitted && f.email.errors" class="error-text">
+                                                    <span *ngIf="f.email.errors.required" class="text-secondary"> Email is required</span>
+                                                    <span *ngIf="f.email.errors.maxlength" class="text-secondary">Email must be not then 250 characters</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            <label class="col-sm-4 col-form-label required">Designation </label>
+                                            <div class="col-sm-8">
+                                                <div class="d-flex flex-row">
+                                                    <ng-select placeholder="Select Designation" formControlName="designation" [items]="designationDropDownList" [clearable]='true' [clearOnBackspace]='false'
+                                                        bindLabel="Name"  bindValue="Id"  [ngClass]="{ 'is-invalid': submitted && f.designation.errors }">
+                                                        <ng-template ng-option-tmp let-item="item">
+                                                            <div [title]="item.Name">{{item.Name}}</div>
+                                                        </ng-template>
+                                                    </ng-select>
+                                                    <button type="button" class="btn btn-secondary btn-mini"
+                                                        title="Add Designation"
+                                                        (click)="openDesignationModal(designationTemplate)">
+                                                        <i class="icofont-plus"></i>
+                                                    </button>
+                                                </div>
+                                                <div *ngIf="submitted && f.designation.errors" class="error-text">
+                                                    <span *ngIf="f.designation.errors.required" class="text-secondary"> Designation is required</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            <label class="col-sm-4 col-form-label">Section </label>
+                                            <div class="col-sm-8">
+                                                <div class="d-flex flex-row">
+                                                    <ng-select placeholder="Select Section" formControlName="department" [items]="sectionDropDownList" [clearable]='true' [clearOnBackspace]='false'
+                                                        bindLabel="Name"   bindValue="Id"  [ngClass]="{ 'is-invalid': submitted && f.department.errors }">
+                                                        <ng-template ng-option-tmp let-item="item">
+                                                            <div [title]="item.Name">{{item.Name}}</div>
+                                                        </ng-template>
+                                                    </ng-select>
+                                                    <button type="button" class="btn btn-secondary btn-mini"
+                                                        title="Add Section"
+                                                        (click)="openSectionModal(sectionTemplate)">
+                                                        <i class="icofont-plus"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--inventoryStoreDropDownList-->
+                                        <div class="form-group row">
+                                            <label class="col-sm-4 col-form-label required"> Role </label>
+                                            <div class="col-sm-8">
+                                                <ng-select placeholder="Select a role" formControlName="userRoleId" [items]="userRoleList" [clearable]='false' [clearOnBackspace]='false' (change)="onChangeUserRole($event)"
+                                                    bindLabel="Name"   bindValue="Id"  [ngClass]="{ 'is-invalid': submitted && f.userRoleId.errors }">
+                                                </ng-select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-4 col-form-label required"> Store </label>
+                                            <div class="col-sm-8">
+                                                <ng-select placeholder="Select a Store" formControlName="StoreId" [items]="inventoryStoreDropDownList" [clearable]='false' [clearOnBackspace]='false'
+                                                    bindLabel="Name"   bindValue="Id"  [ngClass]="{ 'is-invalid': submitted && f.StoreId.errors }">
+                                                </ng-select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group row">
+                                            <label class="col-sm-4 col-form-label">Present Address </label>
+                                            <div class="col-sm-8">
+                                                <textarea rows="2" type="text" formControlName="present_address" type="text"
+                                                    class="form-control"> </textarea>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-4 col-form-label">Permanent Address </label>
+                                            <div class="col-sm-8">
+                                                <textarea rows="2" type="text" formControlName="permanent_address" type="text"
+                                                    class="form-control"> </textarea>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-4 col-form-label">Posting Area </label>
+                                            <div class="col-sm-8">
+                                                <input type="text" formControlName="posting_area" class="form-control" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-4 col-form-label">Mobile </label>
+                                            <div class="col-sm-8">
+                                                <input type="text" formControlName="mobile" class="form-control" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-4 col-form-label">Intercom No </label>
+                                            <div class="col-sm-8">
+                                                <input type="text" formControlName="extension_no" class="form-control" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-4 col-form-label">Transferred </label>
+                                            <div class="col-sm-2 mt-2">
+                                                <div class="checkbox-fade fade-in-default">
+                                                    <label>
+                                                        <input type="checkbox" formControlName="transferred">
+                                                        <span class="cr"><i
+                                                                class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </form>
+                            <div class="col-md-12" *ngIf="permissionList.length > 0">
+                                <h5 class="mb-3">Permissions </h5>
+                                  <div class="row">
+                                      <div class="col-md-3" *ngFor="let permission of permissionList; let i = index">
+                                          <div class="checkbox-fade fade-in-default">
+                                          <label>
+                                          <input type="checkbox" [ngModelOptions]="{standalone: true}" [(ngModel)]="permission.IsSelected" >
+                                          <span class="cr"><i class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
+                                          <span class="text-inverse">{{permission.Name}}</span>
+                                        </label>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+                        </div>
+                    </div>
+                    <div class="card card-border-default">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-12 text-center">
+                                    <button class="btn btn-secondary btn-sm" (click)="onFormSubmit()">
+                                        <i class="icofont-save"></i> {{btnSaveText}}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <ng-template #designationTemplate>
+        <div class="modal-header ">
+            <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
+            <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+                <i class="icofont icofont-close"></i>
+            </button>
+        </div>
+        <div class="modal-body pb-0">
+            <app-card>
+                <form [formGroup]="designationForm">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label class="col-form-label required">Name </label>
+                                <input type="text" formControlName="Name"
+                                    [ngClass]="{ 'is-invalid': designationSubmitted && df.Name.errors }" type="text"
+                                    class="form-control" />
+
+                                <div *ngIf="designationSubmitted && df.Name.errors" class="error-text">
+                                    <span *ngIf="df.Name.errors.required" class="text-danger">
+                                        Designation name is required
+                                    </span>
+                                    <span *ngIf="df.Name.errors.maxlength" class="text-danger">
+                                        Designation name must be not then 250 characters
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label class="col-form-label">Description </label>
+                                <textarea rows="2" type="text" formControlName="Description" type="text"
+                                    class="form-control"> </textarea>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="form-group text-left">
+                                <div class="checkbox-fade fade-in-default">
+                                    <label>
+                                        <input type="checkbox" formControlName="IsActive">
+                                        <span class="cr">
+                                            <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
+                                        </span> IsActive
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+            </app-card>
+        </div>
+        <div class="modal-footer">
+            <div class="pr-4">
+                <button class="btn btn-outline-secondary btn-sm mr-2" (click)="modalHide()"> <i
+                        class="icofont icofont-close"></i> Close</button>
+
+                <button class="btn btn-secondary btn-sm" (click)="onDesignationFormSubmit()"><i
+                        class="icofont icofont-check-circled"></i> {{btnSaveText}}</button>
+            </div>
+
+        </div>
+    </ng-template>
+
+    <ng-template #sectionTemplate>
+        <div class="modal-header ">
+            <h4 class="modal-title pull-left " [innerHtml]="sectionModalTitle" id="sectionModalTitle"></h4>
+            <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+                <i class="icofont icofont-close"></i>
+            </button>
+        </div>
+        <div class="modal-body pb-0">
+            <app-card>
+                <form [formGroup]="sectionForm">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label class="col-form-label required">Name </label>
+                                <input type="text" formControlName="Name"
+                                    [ngClass]="{ 'is-invalid': sectionSubmitted && sf.Name.errors }" type="text"
+                                    class="form-control" />
+
+                                <div *ngIf="sectionSubmitted && sf.Name.errors" class="error-text">
+                                    <span *ngIf="sf.Name.errors.required" class="text-danger">
+                                        Section name is required
+                                    </span>
+                                    <span *ngIf="sf.Name.errors.maxlength" class="text-danger">
+                                        Section name must be not then 250 characters
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label class="col-form-label">Description </label>
+                                <textarea rows="2" type="text" formControlName="Description" type="text"
+                                    class="form-control"> </textarea>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="form-group text-left">
+                                <div class="checkbox-fade fade-in-default">
+                                    <label>
+                                        <input type="checkbox" formControlName="IsActive">
+                                        <span class="cr">
+                                            <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
+                                        </span> IsActive
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+            </app-card>
+        </div>
+        <div class="modal-footer">
+            <div class="pr-4">
+                <button class="btn btn-outline-secondary btn-sm mr-2" (click)="modalHide()"> <i
+                        class="icofont icofont-close"></i> Close</button>
+
+                <button class="btn btn-secondary btn-sm" (click)="onSectionFormSubmit()"><i
+                        class="icofont icofont-check-circled"></i> {{btnSaveText}}</button>
+            </div>
+
+        </div>
+    </ng-template>
+
+    <!-- <ng-template #serial_template>
+        <div class="modal-header">
+            <h4 class="modal-title pull-left "> {{pf.product.value.name}} - Serials</h4>
+            <button type="button " class="close pull-right " aria-label="Close " (click)="modalSerialHide()">
+                <i class="icofont icofont-close"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <app-card>
+                <ul class="list-group">
+                    <li class="list-group-item p-0" *ngFor="let item of serialList;let i=index">
+                        <input type="text" class="form-control" [(ngModel)]="item.serial"
+                            placeholder="Enter serial {{i+1}}">
+                    </li>
+                </ul>
+            </app-card>
+        </div>
+        <div class="modal-footer">
+            <div class="pr-4">
+                <button class="btn btn-outline-secondary btn-sm mr-2" (click)="modalSerialHide()"> <i
+                        class="icofont icofont-close"></i> Close</button>
+
+                <button class="btn btn-secondary btn-sm" (click)="onSerialFormSubmit()"><i
+                        class="icofont icofont-check-circled"></i> Done </button>
+            </div>
+        </div>
+    </ng-template> -->
+
+    <!-- <ng-template #supplier_template>
+        <div class="modal-header ">
+            <h4 class="modal-title pull-left " [innerHtml]="supplierModalText"> Create Supplier</h4>
+            <button type="button " class="close pull-right " aria-label="Close " (click)="modalSupplierHide()">
+                <i class="icofont icofont-close"></i>
+            </button>
+        </div>
+        <div class="modal-body ">
+            <app-card>
+                <form [formGroup]="supplierEntryForm" class="col-sm-12">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label required">Name </label>
+                                <div class="col-sm-8">
+                                    <input type="text" formControlName="name"
+                                        [ngClass]="{ 'is-invalid': supplier_submitted && sf.errors }" type="text"
+                                        class="form-control" />
+
+                                    <div *ngIf="supplier_submitted && sf.errors" class="error-text">
+                                        <span *ngIf="sf.errors.required" class="text-secondary"> Vendor/Service
+                                            Provider
+                                            name is
+                                            required</span>
+                                        <span *ngIf="sf.errors.maxlength" class="text-secondary">Vendor/Service
+                                            Provider
+                                            name must be not then
+                                            250 characters</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label required">Contact No </label>
+                                <div class="col-sm-8">
+                                    <input type="text" formControlName="contact_no"
+                                        [ngClass]="{ 'is-invalid': supplier_submitted && sf.contact_no.errors }" type="text"
+                                        class="form-control" />
+
+                                    <div *ngIf="supplier_submitted && sf.contact_no.errors" class="error-text">
+                                        <span *ngIf="sf.contact_no.errors.required" class="text-secondary"> Contact no is
+                                            required</span>
+                                        <span *ngIf="sf.contact_no.errors.maxlength" class="text-secondary">Contact no
+                                            must be
+                                            not then
+                                            250 characters</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label required">Supplier Type </label>
+                                <div class="col-sm-8">
+                                    <div class="form-radio pt-1">
+                                        <div class="radio radio-inverse radio-inline"
+                                            *ngFor="let item of supplierTypeList">
+                                            <label class="pt-1">
+                                                <input formControlName="supplier_type" type="radio" name="supplier_type"
+                                                    checked="checked" value="{{item.id}}">
+                                                <i class="helper"></i>{{item.name}}
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div *ngIf="supplier_submitted && sf.supplier_type.errors" class="error-text">
+                                        <span *ngIf="sf.supplier_type.errors.required" class="text-secondary"> Supplier
+                                            type is
+                                            required</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label">Is Active? </label>
+                                <div class="col-sm-8 mt-2">
+                                    <div class="checkbox-fade fade-in-default">
+                                        <label>
+                                            <input type="checkbox" formControlName="is_active">
+                                            <span class="cr"><i
+                                                    class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label">Email </label>
+                                <div class="col-sm-8">
+                                    <input type="email" formControlName="email"
+                                        [ngClass]="{ 'is-invalid': supplier_submitted && sf.email.errors }" type="text"
+                                        class="form-control" />
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label">Contact Person </label>
+                                <div class="col-sm-8">
+                                    <input type="email" formControlName="contact_person"
+                                        [ngClass]="{ 'is-invalid': supplier_submitted && sf.email.errors }" type="text"
+                                        class="form-control" />
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label">Address </label>
+                                <div class="col-sm-8">
+                                    <textarea rows="2" type="text" formControlName="address" type="text"
+                                        class="form-control"> </textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+            </app-card>
+        </div>
+        <div class="modal-footer">
+            <div class="pr-4">
+
+                <button class="btn btn-outline-secondary btn-sm mr-2" (click)="modalSupplierHide()"> <i
+                        class="icofont icofont-close"></i> Close</button>
+
+                <button class="btn btn-secondary btn-sm" (click)="onSupplierFormSubmit()"><i
+                        class="icofont icofont-check-circled"></i> Save </button>
+
+            </div>
+
+        </div>
+    </ng-template> -->
+
+    <!-- <ng-template #person_template>
+        <div class="modal-header ">
+            <h4 class="modal-title pull-left " id="modalPersonTitle">Add new person</h4>
+            <button type="button " class="close pull-right " aria-label="Close " (click)="personModalHide()">
+                <i class="icofont icofont-close"></i>
+            </button>
+        </div>
+        <div class="modal-body pb-0">
+            <app-card>
+                <form [formGroup]="personEntryForm" class="col-sm-12">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label required">BP ID </label>
+                                <div class="col-sm-8">
+                                    <input type="number" formControlName="bp_id"
+                                        [ngClass]="{ 'is-invalid': person_submitted && prf.bp_id.errors }"
+                                        class="form-control" />
+
+                                    <div *ngIf="person_submitted && prf.bp_id.errors" class="error-text">
+                                        <span *ngIf="prf.bp_id.errors.required" class="text-secondary"> BP ID is
+                                            required</span>
+                                            <span *ngIf="prf.bp_id.errors.pattern" class="text-secondary">Please, enter valid BP ID</span>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label required">First Name </label>
+                                <div class="col-sm-8">
+                                    <input type="text" formControlName="first_name"
+                                        [ngClass]="{ 'is-invalid': person_submitted && prf.first_name.errors }"
+                                        class="form-control" />
+
+                                    <div *ngIf="person_submitted && prf.first_name.errors" class="error-text">
+                                        <span *ngIf="prf.first_name.errors.required" class="text-secondary"> First name is
+                                            required</span>
+                                        <span *ngIf="prf.first_name.errors.maxlength" class="text-secondary">First name
+                                            must be
+                                            not then
+                                            250 characters</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label required">Last Name </label>
+                                <div class="col-sm-8">
+                                    <input type="text" formControlName="last_name"
+                                        [ngClass]="{ 'is-invalid': person_submitted && prf.last_name.errors }"
+                                        class="form-control" />
+
+                                    <div *ngIf="person_submitted && prf.last_name.errors" class="error-text">
+                                        <span *ngIf="prf.last_name.errors.required" class="text-secondary"> Last name is
+                                            required</span>
+                                        <span *ngIf="prf.last_name.errors.maxlength" class="text-secondary">Last name must
+                                            be
+                                            not then
+                                            250 characters</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label required">Email </label>
+                                <div class="col-sm-8">
+                                    <input type="email" formControlName="email"
+                                        [ngClass]="{ 'is-invalid': person_submitted && prf.email.errors }"
+                                        class="form-control" />
+
+                                    <div *ngIf="person_submitted && prf.email.errors" class="error-text">
+                                        <span *ngIf="prf.email.errors.required" class="text-secondary"> Email is
+                                            required</span>
+                                        <span *ngIf="prf.email.errors.maxlength" class="text-secondary">Email must be
+                                            not then
+                                            250 characters</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label">Mobile </label>
+                                <div class="col-sm-8">
+                                    <input type="text" formControlName="mobile" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label">InterCom No </label>
+                                <div class="col-sm-8">
+                                    <input type="text" formControlName="extension_no" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label">Already Transferred? </label>
+                                <div class="col-sm-2 mt-2">
+                                    <div class="checkbox-fade fade-in-default">
+                                        <label>
+                                            <input type="checkbox" formControlName="transferred">
+                                            <span class="cr"><i
+                                                    class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <label class="col-sm-4 col-form-label text-right">Is Active? </label>
+                                <div class="col-sm-2 mt-2">
+                                    <div class="checkbox-fade fade-in-default mr-0 float-right">
+                                        <label>
+                                            <input type="checkbox" formControlName="is_active">
+                                            <span class="cr"><i
+                                                    class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label">Present Address </label>
+                                <div class="col-sm-8">
+                                    <textarea rows="2" type="text" formControlName="present_address" type="text"
+                                        class="form-control"> </textarea>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label">Permanent Address </label>
+                                <div class="col-sm-8">
+                                    <textarea rows="2" type="text" formControlName="permanent_address" type="text"
+                                        class="form-control"> </textarea>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label required">Section </label>
+                                <div class="col-sm-8">
+                                    <ng-select placeholder="Select Section" formControlName="department" [items]="sectionDropDownList" [clearable]='true' [clearOnBackspace]='false'
+                                    bindLabel="Name"   bindValue="Id"   [ngClass]="{ 'is-invalid': person_submitted && prf.department.errors }">
+                                    <ng-template ng-option-tmp let-item="item">
+                                        <div [title]="item.Name">{{item.Name}}</div>
+                                    </ng-template>
+                                </ng-select>
+                                <div *ngIf="person_submitted && prf.department.errors" class="error-text">
+                                    <span *ngIf="prf.department.errors.required" class="text-secondary"> Section is
+                                        required</span>
+                                </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label required">Designation </label>
+                                <div class="col-sm-8">
+                                    <ng-select placeholder="Select Designation" formControlName="designation" [items]="designationDropDownList" [clearable]='true' [clearOnBackspace]='false'
+                                    bindLabel="Name"   bindValue="Id"  [ngClass]="{ 'is-invalid': person_submitted && prf.designation.errors }">
+                                    <ng-template ng-option-tmp let-item="item">
+                                        <div [title]="item.Name">{{item.Name}}</div>
+                                    </ng-template>
+                                    </ng-select>
+                                    <div *ngIf="person_submitted && prf.designation.errors" class="error-text">
+                                        <span *ngIf="prf.designation.errors.required" class="text-secondary"> Designation is
+                                            required</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label">Posting Area </label>
+                                <div class="col-sm-8">
+                                    <input type="text" formControlName="posting_area" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+            </app-card>
+        </div>
+        <div class="modal-footer">
+            <div class="pr-4">
+
+                <button class="btn btn-outline-secondary btn-sm mr-2" (click)="personModalHide()"> <i
+                        class="icofont icofont-close"></i> Close</button>
+
+                <button class="btn btn-secondary btn-sm" (click)="onFormPersonSubmit()"><i
+                        class="icofont icofont-check-circled"></i> Save</button>
+
+            </div>
+
+        </div>
+    </ng-template> -->
+
+</block-ui>

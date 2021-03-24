@@ -1,0 +1,292 @@
+<block-ui>
+    <div class="row">
+
+        <div class="col-lg-12">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card card-border-default">
+                        <div class="card-header">
+                            <h5>BP User List </h5>
+                            <button class="btn btn-secondary btn-sm float-right" [routerLink]="[ '/user-create']"><i
+                                    class=" icofont icofont-plus "></i> Register User</button>
+                        </div>
+                        <div class="card-block ">
+                            <div class="row ">
+                                <div class="col-lg-12 ">
+                                    <ngx-datatable class="material table-bordered" [rows]="rows"
+                                        [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
+                                        [headerHeight]="40" [footerHeight]="50" rowHeight="auto" [limit]="10">
+
+                                        <ngx-datatable-column [width]="30" name="BP ID" prop="BPID" [draggable]="false"
+                                            [sortable]="false">
+                                            <ng-template let-value="value" ngx-datatable-cell-template>
+                                                <span title="{{ value }}"> {{ value }} </span>
+                                            </ng-template>
+                                        </ngx-datatable-column>
+
+                                        <ngx-datatable-column name="Name" [draggable]="false" [sortable]="false">
+                                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                                <span title=" {{ row.FirstName + ' ' + row.LastName }}">
+                                                    {{ row.FirstName + ' ' + row.LastName }}
+                                                </span>
+                                            </ng-template>
+                                        </ngx-datatable-column>
+
+                                        <ngx-datatable-column [width]="70" name="Designation" prop="Designation"
+                                            [draggable]="false" [sortable]="false">
+                                            <ng-template let-value="value" ngx-datatable-cell-template>
+                                                <span title="{{ value }}"> {{ value }} </span>
+                                            </ng-template>
+                                        </ngx-datatable-column>
+
+                                        <ngx-datatable-column [width]="70" name="Store" prop="Store"
+                                            [draggable]="false" [sortable]="false">
+                                            <ng-template let-value="value" ngx-datatable-cell-template>
+                                                <span title="{{ value }}"> {{ value }} </span>
+                                            </ng-template>
+                                        </ngx-datatable-column>
+
+                                        <!--<ngx-datatable-column [width]="70" name="Section" prop="Section"
+                                            [draggable]="false" [sortable]="false">
+                                            <ng-template let-value="value" ngx-datatable-cell-template>
+                                                <span title="{{ value }}"> {{ value }} </span>
+                                            </ng-template>
+                                        </ngx-datatable-column>-->
+
+                                        <ngx-datatable-column [width]="100" name="Email" prop="Email"
+                                            [draggable]="false" [sortable]="false">
+                                            <ng-template let-value="value" ngx-datatable-cell-template>
+                                                <span title="{{ value }}"> {{ value }} </span>
+                                            </ng-template>
+                                        </ngx-datatable-column>
+
+                                        <ngx-datatable-column [width]="70" name="Mobile" prop="PhoneNo"
+                                            [draggable]="false" [sortable]="false">
+                                            <ng-template let-value="value" ngx-datatable-cell-template>
+                                                <span title="{{ value }}"> {{ value }} </span>
+                                            </ng-template>
+                                        </ngx-datatable-column>
+
+                                        <!--<ngx-datatable-column [width]="50" name="Intercom No" prop="InterComNo"
+                                            [draggable]="false" [sortable]="false">
+                                            <ng-template let-value="value" ngx-datatable-cell-template>
+                                                <span title="{{ value }}"> {{ value }} </span>
+                                            </ng-template>
+                                        </ngx-datatable-column>-->
+
+                                        <ngx-datatable-column [width]="50" name="Post. Area" prop="PostingArea"
+                                            [draggable]="false" [sortable]="false">
+                                            <ng-template let-value="value" ngx-datatable-cell-template>
+                                                <span title="{{ value }}"> {{ value }} </span>
+                                            </ng-template>
+                                        </ngx-datatable-column>
+
+                                        <ngx-datatable-column [width]="30" name="Type" prop="UserType"
+                                            [draggable]="false" [sortable]="false">
+                                            <ng-template let-value="value" ngx-datatable-cell-template>
+                                                <span title="{{ value }}"> {{ value }} </span>
+                                            </ng-template>
+                                        </ngx-datatable-column>
+
+                                        <ngx-datatable-column [width]="30" name="Action" prop="Id" [draggable]="false"
+                                            [sortable]="false">
+                                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                                <button class="btn btn-secondary btn-mini"
+                                                    [routerLink]="[ '/person-entry', row.Id ]"><i
+                                                        class="icofont icofont-edit"></i>Edit</button>
+                                            </ng-template>
+                                        </ngx-datatable-column>
+                                    </ngx-datatable>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- <ng-template #template>
+        <div class="modal-header ">
+            <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
+            <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+                <i class="icofont icofont-close"></i>
+            </button>
+        </div>
+        <div class="modal-body pb-0">
+            <app-card>
+                <form [formGroup]="entryForm" class="col-sm-12">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label required">BP ID </label>
+                                <div class="col-sm-8">
+                                    <input type="number" formControlName="bp_id"
+                                        [ngClass]="{ 'is-invalid': submitted && f.bp_id.errors }"
+                                        class="form-control" />
+
+                                    <div *ngIf="submitted && f.bp_id.errors" class="error-text">
+                                        <span *ngIf="f.bp_id.errors.required" class="text-secondary"> BP ID is
+                                            required</span>
+                                        <span *ngIf="f.bp_id.errors.pattern" class="text-secondary">Please, enter valid
+                                            BP ID</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label required">First Name </label>
+                                <div class="col-sm-8">
+                                    <input type="text" formControlName="first_name"
+                                        [ngClass]="{ 'is-invalid': submitted && f.first_name.errors }"
+                                        class="form-control" />
+
+                                    <div *ngIf="submitted && f.first_name.errors" class="error-text">
+                                        <span *ngIf="f.first_name.errors.required" class="text-secondary"> First name is
+                                            required</span>
+                                        <span *ngIf="f.first_name.errors.maxlength" class="text-secondary">First name
+                                            must be not then 250 characters</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label required">Last Name </label>
+                                <div class="col-sm-8">
+                                    <input type="text" formControlName="last_name"
+                                        [ngClass]="{ 'is-invalid': submitted && f.last_name.errors }"
+                                        class="form-control" />
+
+                                    <div *ngIf="submitted && f.last_name.errors" class="error-text">
+                                        <span *ngIf="f.last_name.errors.required" class="text-secondary"> Last name is
+                                            required</span>
+                                        <span *ngIf="f.last_name.errors.maxlength" class="text-secondary">Last name must
+                                            be not then 250 characters</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label required">Email </label>
+                                <div class="col-sm-8">
+                                    <input type="email" formControlName="email"
+                                        [ngClass]="{ 'is-invalid': submitted && f.email.errors }"
+                                        class="form-control" />
+
+                                    <div *ngIf="submitted && f.email.errors" class="error-text">
+                                        <span *ngIf="f.email.errors.required" class="text-secondary"> Email is
+                                            required</span>
+                                        <span *ngIf="f.email.errors.maxlength" class="text-secondary">Email must be not
+                                            then 250 characters</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label">Mobile </label>
+                                <div class="col-sm-8">
+                                    <input type="text" formControlName="mobile" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label">Intercom No </label>
+                                <div class="col-sm-8">
+                                    <input type="text" formControlName="extension_no" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label">Already Transferred? </label>
+                                <div class="col-sm-2 mt-2">
+                                    <div class="checkbox-fade fade-in-default">
+                                        <label>
+                                            <input type="checkbox" formControlName="transferred">
+                                            <span class="cr"><i
+                                                    class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <label class="col-sm-4 col-form-label text-right">Is Active? </label>
+                                <div class="col-sm-2 mt-2">
+                                    <div class="checkbox-fade fade-in-default mr-0 float-right">
+                                        <label>
+                                            <input type="checkbox" formControlName="is_active">
+                                            <span class="cr"><i
+                                                    class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label">Present Address </label>
+                                <div class="col-sm-8">
+                                    <textarea rows="2" type="text" formControlName="present_address" type="text"
+                                        class="form-control"> </textarea>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label">Permanent Address </label>
+                                <div class="col-sm-8">
+                                    <textarea rows="2" type="text" formControlName="permanent_address" type="text"
+                                        class="form-control"> </textarea>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label required">Section </label>
+                                <div class="col-sm-8">
+                                    <ng-select placeholder="Select Section" formControlName="department"
+                                        [items]="sectionDropDownList" [clearable]='true' [clearOnBackspace]='false'
+                                        bindLabel="Name" bindValue="Id"
+                                        [ngClass]="{ 'is-invalid': submitted && f.department.errors }">
+                                        <ng-template ng-option-tmp let-item="item">
+                                            <div [title]="item.Name">{{item.Name}}</div>
+                                        </ng-template>
+                                    </ng-select>
+                                    <div *ngIf="submitted && f.department.errors" class="error-text">
+                                      <span *ngIf="f.department.errors.required" class="text-secondary"> Section is
+                                          required</span>
+                                      </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label">Designation </label>
+                                <div class="col-sm-8">
+                                    <ng-select placeholder="Select Designation" formControlName="designation"
+                                        [items]="designationDropDownList" [clearable]='true' [clearOnBackspace]='false'
+                                        bindLabel="Name" bindValue="Id"
+                                        [ngClass]="{ 'is-invalid': submitted && f.designation.errors }">
+                                        <ng-template ng-option-tmp let-item="item">
+                                            <div [title]="item.Name">{{item.Name}}</div>
+                                        </ng-template>
+                                    </ng-select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label">Posting Area </label>
+                                <div class="col-sm-8">
+                                    <input type="text" formControlName="posting_area" class="form-control" />
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                </form>
+            </app-card>
+        </div>
+        <div class="modal-footer">
+            <div class="pr-4">
+
+                <button class="btn btn-outline-secondary btn-sm mr-2" (click)="modalHide()"> <i
+                        class="icofont icofont-close"></i> Close</button>
+
+                <button class="btn btn-secondary btn-sm" (click)="onFormSubmit()"><i
+                        class="icofont icofont-check-circled"></i> {{btnSaveText}}</button>
+
+            </div>
+
+        </div>
+    </ng-template> -->
+
+
+</block-ui>

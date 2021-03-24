@@ -48,6 +48,18 @@ export const AppRoutes: Routes = [
         data: {auth: 'Admin,Superuser,Host'}
       },
       {
+        path: 'user',
+        loadChildren: () => import('./user/user.module').then(m => m.UserModule),
+        canActivate: [AuthGuard],
+        data: {auth: 'Superuser'}
+      },
+      {
+        path: 'user-create',
+        loadChildren: () => import('./user-create/user-create.module').then(m => m.UserCreateModule),
+        canActivate: [AuthGuard],
+        data: {auth: 'Superuser'}
+      },
+      {
         path: 'project',
         loadChildren: () => import('./project/project.module').then(m => m.ProjectModule),
         canActivate: [AuthGuard],
