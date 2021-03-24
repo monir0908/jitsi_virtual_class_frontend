@@ -5,24 +5,66 @@
             <div class="col-lg-12">
                <div class="card card-border-primary">
                   <div class="card-header">
-                     <h5>Select Daterange and Hit Search Button </h5>
-                  </div>
-                  <div class="card-block ">
-                     <div class="row ">
-                        <div class="col-lg-4">
-                           <form [formGroup]="entryForm">
-                                <div class="form-group">
-                                    <label class="col-form-label required">Select Date Range </label> 
-                                    <input type="text" (bsValueChange)="onValueChange($event)"  class="form-control" bsDaterangepicker [bsConfig]="bsrConfig" [(ngModel)]="bsRangeValue" [ngModelOptions]="{standalone: true}" placeholder="Select a date range">
-                                </div>
-
-                                <button class="btn btn-success btn-sm" (click)="search()"><i
-                                        class="icofont icofont-check-circled"></i> {{btnSaveText}}
-                                 </button>
-                            </form>
+                     <h5>Select The Followings </h5>
+                  </div>                  
+                  <form [formGroup]="entryForm">
+                     <div class="card-block ">
+                        <div class="row">
+                           <div class="col-lg-6">
+                              <div class="row">
+                                 <div class="col-sm-12">
+                                    <div class="form-group row">
+                                       <label class="col-sm-4 col-form-label">Date Range</label>
+                                       <div class="col-sm-8">
+                                          <input type="text" (bsValueChange)="onValueChange($event)"  class="form-control" bsDaterangepicker [bsConfig]="bsrConfig" [(ngModel)]="bsRangeValue" [ngModelOptions]="{standalone: true}" placeholder="Select a date range">
+                                       </div>
+                                    </div>
+                                 </div>                                 
+                              </div>
+                           </div>
+                           <div class="col-lg-6">
+                              <div class="row">                                 
+                                 <div class="col-sm-12">
+                                    <div class="form-group row">
+                                       <label class="col-sm-4 col-form-label">Filter By Project / Organization</label>
+                                       <div class="col-sm-8">
+                                          <ng-select placeholder="Select Project or Organization Name" formControlName="AcademicProjectId"
+                                          (change)="changeProject($event)" [items]="ProjectList" [clearable]='false'
+                                          [clearOnBackspace]='false' bindLabel="ProjectName" bindValue="Id"
+                                          [ngClass]="{ 'is-invalid': submitted && f.AcademicProjectId.errors }">
+                                          <ng-template ng-option-tmp let-item="item">
+                                             <div [title]="item.ProjectName">{{item.ProjectName}}</div>
+                                          </ng-template>
+                                          </ng-select>
+                                          <div *ngIf="submitted && f.AcademicProjectId.errors" class="error-text">
+                                             <span *ngIf="f.AcademicProjectId.errors.required" class="text-danger"> Project / Organization Name is required</span>
+                                          </div>
+                                       </div>
+                                    </div>
+                                 </div>
+                                 <div class="col-sm-12">
+                                    <div class="form-group row">
+                                       <label class="col-sm-4 col-form-label">Filter By Batch</label>
+                                       <div class="col-sm-8">
+                                          <ng-select placeholder="Select Batch" formControlName="AcademicBatchId"
+                                          (change)="changeBatch($event)" [items]="BatchList" [clearable]='false'
+                                          [clearOnBackspace]='false' bindLabel="BatchName" bindValue="Id"
+                                          [ngClass]="{ 'is-invalid': submitted && f.AcademicBatchId.errors }">
+                                          <ng-template ng-option-tmp let-item="item">
+                                             <div [title]="item.BatchName">{{item.BatchName}}</div>
+                                          </ng-template>
+                                          </ng-select>
+                                          <div *ngIf="submitted && f.AcademicBatchId.errors" class="error-text">
+                                             <span *ngIf="f.AcademicBatchId.errors.required" class="text-danger"> Batch Name is required</span>
+                                          </div>
+                                       </div>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
                         </div>
-                     </div>
-                  </div>
+                     </div>                     
+                  </form>
                </div>
             </div>
          </div>
@@ -34,17 +76,28 @@
             <div class="col-lg-12">
                <div class="card card-border-primary">
                   <div class="card-header">
-                     <h5>Call Records </h5>                     
+                     <h5 class="">Call Records </h5>
+                     <br>
+                     <div>                     
+                        <button class="btn btn-default btn-sm mr-2 float-right" (click)="clear($event)"><i
+                           class=" icofont icofont-refresh"></i>Clear Everything
+                        </button> 
+                        <button class="btn btn-primary btn-sm mr-2 float-right" (click)="search()">
+                           <i class="icofont-search"></i> Search Your Call Records
+                        </button>  
+                        <!-- <button class="btn btn-primary btn-sm mr-2" [routerLink]="['/enrolled-student-list']" (click)="search()">
+                           <i class="icofont-search"></i> Search Call Records
+                        </button> -->
+                     </div>
                   </div>
                   <div class="card-header">
-                     <div class="form-group" *ngIf="CallRecords">
-                        <span> <strong>Y. stands for "Your" </strong></span>
-                        <span> <strong>S. stands for "Student" </strong></span>
+                     <div class="form-group float-right" *ngIf="CallRecords">
+                        <span> <strong>S. stands for Student </strong></span>
                      </div>
                      <!-- <div class="form-group">
                         <input type="text" (keyup)="updateFilter($event)" class="form-control col-md-4"
                            placeholder="Type room no ...">
-                     </div> -->
+                        </div> -->
                   </div>
                   <div class="card-block ">
                      <div class="row ">
@@ -61,22 +114,27 @@
                               <span title="{{ value }}"> <strong class="label label-warning">{{ value }} </strong></span> 
                            </ng-template>
                            </ngx-datatable-column>
-                           <ngx-datatable-column name="Y. Call Duration" prop="VirtualClassDetail.HostCallDuration" [draggable]="false" [sortable]="false">
-                           <ng-template let-value="value" ngx-datatable-cell-template>
-                              <span title="{{ value }}">{{ value }}</span> 
-                           </ng-template>
+                           <ngx-datatable-column name="Project/Organization" prop="ProjectName" [draggable]="false" [sortable]="false">
+                              <ng-template let-value="value" ngx-datatable-cell-template>
+                                 <span title="{{ value }}">{{ value }}</span> 
+                              </ng-template>
                            </ngx-datatable-column>
-                           <ngx-datatable-column name="S. Call Duration" prop="VirtualClassDetail.ParticipantsCallDuration" [draggable]="false" [sortable]="false">
-                           <ng-template let-value="value" ngx-datatable-cell-template>
-                              <span title="{{ value }}">{{ value }}</span> 
-                           </ng-template>
+                           <ngx-datatable-column name="Batch" prop="BatchName" [draggable]="false" [sortable]="false">
+                              <ng-template let-value="value" ngx-datatable-cell-template>
+                                 <span title="{{ value }}">{{ value }}</span> 
+                              </ng-template>
                            </ngx-datatable-column>
-                           <ngx-datatable-column name="Empty Slot" prop="VirtualClassDetail.EmptySlotDuration" [draggable]="false" [sortable]="false">
-                           <ng-template let-value="value" ngx-datatable-cell-template>
-                              <span title="{{ value }}">{{ value }}</span> 
-                           </ng-template>
+                           <ngx-datatable-column name="You Joined At" prop="JoinTime" [draggable]="false" [sortable]="false">
+                              <ng-template let-value="value" ngx-datatable-cell-template>
+                                 <span title="{{ value }}">{{ value  | amFromUtc | amLocal | amDateFormat: 'DD-MM-YYYY hh:mm:ss a'}}</span> 
+                              </ng-template>
                            </ngx-datatable-column>
-                           <ngx-datatable-column name="Actual Duration" prop="VirtualClassDetail.ActualCallDuration" [draggable]="false" [sortable]="false">
+                           <ngx-datatable-column name="You Left At" prop="LeaveTime" [draggable]="false" [sortable]="false">
+                              <ng-template let-value="value" ngx-datatable-cell-template>
+                                 <span title="{{ value }}">{{ value  | amFromUtc | amLocal | amDateFormat: 'DD-MM-YYYY hh:mm:ss a'}}</span> 
+                              </ng-template>
+                           </ngx-datatable-column>                           
+                           <ngx-datatable-column name="Actual Call Duration" prop="VirtualClassDetail.ActualCallDuration" [draggable]="false" [sortable]="false">
                            <ng-template let-value="value" ngx-datatable-cell-template>
                               <!-- <span title="{{ value }}">{{ value }}</span>  -->
                               <span title="{{ value }}"> <strong class="label label-primary">{{ value }} </strong></span> 
@@ -84,7 +142,6 @@
                            </ngx-datatable-column>
                            <ngx-datatable-column name="S. In-Out Counts" prop="VirtualClassDetail.ParticipantJoined" [draggable]="false" [sortable]="false">
                            <ng-template let-value="value" ngx-datatable-cell-template>
-                              <!-- <span title="{{ value }}">{{ value }} times</span> -->
                               <span title="{{ value }}">{{ value }} </span>
                               <span *ngIf="value >1"> times</span> 
                               <span *ngIf="value <2"> time</span> 
@@ -94,24 +151,14 @@
                            <ng-template let-value="value" ngx-datatable-cell-template>
                               <span title="{{ value }}">{{ value }}</span> 
                            </ng-template>
-                           </ngx-datatable-column>
-                           <ngx-datatable-column name="Joined At" prop="JoinTime" [draggable]="false" [sortable]="false">
-                           <ng-template let-value="value" ngx-datatable-cell-template>
-                              <span title="{{ value }}">{{ value  | amFromUtc | amLocal | amDateFormat: 'DD-MM-YYYY hh:mm:ss a'}}</span> 
-                           </ng-template>
-                           </ngx-datatable-column>
-                           <ngx-datatable-column name="Left At" prop="LeaveTime" [draggable]="false" [sortable]="false">
-                           <ng-template let-value="value" ngx-datatable-cell-template>
-                              <span title="{{ value }}">{{ value  | amFromUtc | amLocal | amDateFormat: 'DD-MM-YYYY hh:mm:ss a'}}</span> 
-                           </ng-template>
-                           </ngx-datatable-column>
+                           </ngx-datatable-column>                           
                            <ngx-datatable-column [width]="60" name="Action" prop="Id" [draggable]="false"
                            [sortable]="false">
                            <ng-template let-row="row" ngx-datatable-cell-template>
                               <button class="btn btn-info btn-mini" (click)="getCallDetailById(row.Id)"><i
                                  class="icofont icofont-edit"></i>Detail</button>
                            </ng-template>
-                           </ngx-datatable-column>
+                           </ngx-datatable-column>                           
                            </ngx-datatable>
                         </div>
                      </div>
@@ -132,5 +179,4 @@
          </div>
       </div>
    </div>
-   <div #jitsi></div>
 </block-ui>

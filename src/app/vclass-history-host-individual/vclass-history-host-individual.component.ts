@@ -159,9 +159,34 @@ export class VclassHistoryHostIndividualComponent implements OnInit {
 
         this.projectId = this.entryForm.value.AcademicProjectId;
        
-        this.getHostListByProjectId();
         this.CallRecords = []
         this.AlreadyMergedParticipantList = []
+        this.getBatchList(this.projectId);
+    }
+
+
+    getBatchList(projectId){
+        
+        this._service.get('api/conference/GetBatchListByProjectId/' + projectId).subscribe(res => {
+            this.BatchList = res.Records;
+            console.log(this.BatchList)
+        }, err => { }
+        );
+
+    }
+
+    changeBatch(e){
+        this.batchId = this.entryForm.value.AcademicBatchId;
+    }
+
+    clear(e){
+        if(e){
+            this.BatchList = [];
+            this.CallRecords = [];
+            this.entryForm.controls['AcademicBatchId'].setValue(null);
+            this.entryForm.controls['AcademicProjectId'].setValue(null);
+            
+        } 
     }
 
 
@@ -173,25 +198,11 @@ export class VclassHistoryHostIndividualComponent implements OnInit {
         console.log(this.bsRangeValue[0]);
         console.log(this.bsRangeValue[1]);
     }
-
     
 
     
 
-    getHostListByProjectId(){
-
-        const obj = {
-        size: this.page.size,
-        pageNumber: this.page.pageNumber
-        };
-
-        
-        this._service.get('api/mastersetting/GetHostListByProjectId/' + this.projectId).subscribe(res => {
-            this.AlreadyMergedHostList = res.Records;
-            console.log(this.AlreadyMergedHostList)
-        }, err => { }
-        );
-    }
+    
 
     changeHost(){
         this.projectId = this.entryForm.value.AcademicProjectId; 
@@ -212,34 +223,6 @@ export class VclassHistoryHostIndividualComponent implements OnInit {
 
 
     getVirtualClassCallingDetailByHostId(){
-
-        // const obj = {
-        // size: this.page.size,
-        // pageNumber: this.page.pageNumber
-        // };
-
-        // const qObj = {
-        //     hostId: this.currentUser.Id,
-        //     startDate : moment(this.bsRangeValue[0]).format('DD-MMM-YYYY')  , 
-        //     endDate: moment(this.bsRangeValue[1]).format('DD-MMM-YYYY')
-        // }
-
-        // console.log(qObj);
-
-        // this._service.get('api/conference/GetVirtualClassCallingDetail/', qObj).subscribe(res => {
-        //     // alert(this.hostId);
-        //     this.CallRecords = res.Records;
-        //     console.log(this.CallRecords)
-        // }, err => { }
-        // );
-
-        
-        // // this._service.get('api/conference/GetVirtualClassCallingDetailByHostId/' + this.hostId).subscribe(res => {
-        // //     // alert(this.hostId);
-        // //     this.CallRecords = res.Records;
-        // //     console.log(this.CallRecords)
-        // // }, err => { }
-        // // );
 
         const obj = {
             size: this.page.size,

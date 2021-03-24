@@ -55,6 +55,8 @@ export class VclassHistoryDetailHostComponent implements OnInit {
     vclassId = '';
     currentSocketId = null;
 
+    identity;
+
 
     entryForm: FormGroup;
     submitted = false;
@@ -105,7 +107,9 @@ export class VclassHistoryDetailHostComponent implements OnInit {
         this.vclassId = this.route.snapshot.paramMap.get("vclassId");
     }
 
-    ngOnInit() {        
+    ngOnInit() {
+        
+        
 
         // FORM RELATED
         this.entryForm = this.formBuilder.group({
@@ -137,12 +141,14 @@ export class VclassHistoryDetailHostComponent implements OnInit {
                 }
                     
                 else{
-                    this.TeacherVirtualClassDetail.push({value});
+                    this.TeacherVirtualClassDetail.push({value});                    
 
                 }
             });
-            console.log(this.StudentVirtualClassDetail);
-            console.log(this.TeacherVirtualClassDetail);
+
+            //Dynamicall Setting if user is watching his own calling history
+            this.identity = this.currentUser.Id == this.TeacherVirtualClassDetail[0].value.HostId?"Your": "Teacher"
+            
         }, err => { }
         );
 
