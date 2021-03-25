@@ -33,79 +33,91 @@ export const AppRoutes: Routes = [
         path: 'host-vclass',
         loadChildren: () => import('./vclass-host/vclass-host.module').then(m => m.VClassHostModule),
         canActivate: [AuthGuard],
-        data: {auth: 'Host'}
+        // data: {auth: 'Host'}
       },
       {
         path: 'participant-vclass',
         loadChildren: () => import('./vclass-participant/vclass-participant.module').then(m => m.VClassParticipantModule),
         canActivate: [AuthGuard],
-        data: {auth: 'Participant'}
+        // data: {auth: 'Participant'}
       },      
       {
         path: 'dashboard',
         loadChildren: () => import('./home/home.module').then(m => m.HomeModule),
         canActivate: [AuthGuard],
-        data: {auth: 'Admin,Superuser,Host'}
+        // data: {auth: 'Admin,Superuser,Host'}
       },
       {
         path: 'user',
         loadChildren: () => import('./user/user.module').then(m => m.UserModule),
         canActivate: [AuthGuard],
-        data: {auth: 'Superuser'}
+        // data: {auth: 'Superuser'}
       },
       {
         path: 'user-create',
         loadChildren: () => import('./user-create/user-create.module').then(m => m.UserCreateModule),
         canActivate: [AuthGuard],
-        data: {auth: 'Superuser'}
+        // data: {auth: 'Superuser'}
+      },
+      {
+        path: 'user-role-list',
+        loadChildren: () => import('./user-role-list/user-role-list.module').then(m => m.UserRoleListModule),
+        canActivate: [AuthGuard],
+        // data: {auth: 'Superuser'}
+      },
+      {
+        path: 'user-role-create',
+        loadChildren: () => import('./user-role-create/user-role-create.module').then(m => m.UserRoleCreateModule),
+        canActivate: [AuthGuard],
+        // data: {auth: 'Superuser'}
       },
       {
         path: 'project',
         loadChildren: () => import('./project/project.module').then(m => m.ProjectModule),
         canActivate: [AuthGuard],
-        data: {auth: 'Superuser'}
+        // data: {auth: 'Superuser'}
       },
       {
         path: 'batch',
         loadChildren: () => import('./batch/batch.module').then(m => m.BatchModule),
         canActivate: [AuthGuard],
-        data: {auth: 'Superuser'}
+        // data: {auth: 'Superuser'}
       },
       {
         path: 'project-batch',
         loadChildren: () => import('./project-batch/project-batch.module').then(m => m.ProjectBatchModule),
         canActivate: [AuthGuard],
-        data: {auth: 'Superuser'}
+        // data: {auth: 'Superuser'}
       },
       {
         path: 'project-batch-host',
         loadChildren: () => import('./project-batch-host/project-batch-host.module').then(m => m.ProjectBatchHostModule),
         canActivate: [AuthGuard],
-        data: {auth: 'Superuser'}
+        // data: {auth: 'Superuser'}
       },
       {
         path: 'project-batch-host-participant',
         loadChildren: () => import('./project-batch-host-participant/project-batch-host-participant.module').then(m => m.ProjectBatchHostParticipantModule),
         canActivate: [AuthGuard],
-        data: {auth: 'Admin,Superuser'}
+        // data: {auth: 'Admin,Superuser'}
       },
       {
         path: 'vclass-history-host',
         loadChildren: () => import('./vclass-history-host/vclass-history-host.module').then(m => m.VclassHistoryHostModule),
         canActivate: [AuthGuard],
-        data: {auth: 'Admin,Superuser'}
+        // data: {auth: 'Admin,Superuser'}
       },
       {
         path: 'vclass-history-detail-host/:vclassId',
         loadChildren: () => import('./vclass-history-detail-host/vclass-history-detail-host.module').then(m => m.VclassHistoryDetailHostModule),
         canActivate: [AuthGuard],
-        data: {auth: 'Admin,Superuser'}
+        // data: {auth: 'Admin,Superuser'}
       },
       {
         path: 'vclass-history-host-individual',
         loadChildren: () => import('./vclass-history-host-individual/vclass-history-host-individual.module').then(m => m.VclassHistoryHostIndividualModule),
         canActivate: [AuthGuard],
-        data: {auth: 'Host'}
+        // data: {auth: 'Host'}
       },
       
     ]

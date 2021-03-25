@@ -149,6 +149,20 @@ const MENUITEMS = [
         icon: 'icofont-project',
         permission: 'Superuser'
       },
+      {
+        state: 'user-role-list',
+        name: 'User Role List',
+        type: 'link',
+        icon: 'icofont-project',
+        permission: 'Superuser'
+      },
+      {
+        state: 'user-role-create',
+        name: 'Create User Role',
+        type: 'link',
+        icon: 'icofont-project',
+        permission: 'Superuser'
+      },
 
 
     ]
