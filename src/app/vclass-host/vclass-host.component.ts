@@ -245,9 +245,9 @@ export class VClassHostComponent implements OnInit {
     }
 
     getParticipantListByProjectIdBatchIdAndHostId(projectId, batchId, hostId){
-        console.log(projectId);
-        console.log(batchId);
-        console.log(hostId);
+        // console.log(projectId);
+        // console.log(batchId);
+        // console.log(hostId);
 
         
         this._service.get('api/conference/GetParticipantListByProjectIdBatchIdAndHostId/' + projectId + "/" + batchId + '/' + hostId ).subscribe(res => {
