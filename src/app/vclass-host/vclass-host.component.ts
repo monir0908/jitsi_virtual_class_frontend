@@ -269,8 +269,8 @@ export class VClassHostComponent implements OnInit {
 
     createVirtualClass(){
         // this.blockUI.start('Starting...');
-        console.log(this.entryForm.value.AcademicProjectId)
-        console.log(this.entryForm.value.AcademicBatchId)
+        // console.log(this.entryForm.value.AcademicProjectId)
+        // console.log(this.entryForm.value.AcademicBatchId)
         //console.log(this.selected)
         const allStudent = this.selected;
 
