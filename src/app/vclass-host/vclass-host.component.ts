@@ -226,8 +226,7 @@ export class VClassHostComponent implements OnInit {
         }
         this.projectId = this.entryForm.value.AcademicProjectId;
         this.getBatchList(this.projectId);
-        this.ParticipantList = []
-        
+        this.ParticipantList = []        
     }
 
     getBatchList(projectId){
