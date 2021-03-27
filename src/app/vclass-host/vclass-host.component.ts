@@ -374,7 +374,6 @@ export class VClassHostComponent implements OnInit {
                         this.apiObj.dispose();
                         this.iframeOpened = false;
                     }
-
                     // RE-CALLING ONGOING CLASS LIST
                     this.getCurrentOnGoingVirtualClassListByHostId();
     
