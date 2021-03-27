@@ -86,8 +86,7 @@ export class UserRoleListComponent implements OnInit {
     }
 
     toggleExpandRow(row) {
-        console.log(row)
-    
+        console.log(row)    
       if(!row.details) row.details = row.Roles.map(element => {
        return element = element.split('_').join(' ');
       });
