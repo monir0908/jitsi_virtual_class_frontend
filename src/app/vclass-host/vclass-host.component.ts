@@ -224,7 +224,6 @@ export class VClassHostComponent implements OnInit {
         if(e)       {
             this.entryForm.controls['AcademicBatchId'].setValue(null);
         }
-
         this.projectId = this.entryForm.value.AcademicProjectId;
         this.getBatchList(this.projectId);
         this.ParticipantList = []
