@@ -91,7 +91,6 @@ export class UserRoleListComponent implements OnInit {
        return element = element.split('_').join(' ');
       });
       this.table.rowDetail.toggleExpandRow(row);
-
     }
 
     getItem(item){
