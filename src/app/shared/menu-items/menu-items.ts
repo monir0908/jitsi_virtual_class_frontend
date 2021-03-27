@@ -128,12 +128,10 @@ const MENUITEMS = [
         icon: 'icofont-project-batch-host-participant',
         permission: 'Admin,Superuser'
       },
-
-
     ]
   },
   {
-    label: 'Master Settings',
+    label: 'User Management',
     main: [
       {
         state: 'user-create',
@@ -148,24 +146,42 @@ const MENUITEMS = [
         type: 'link',
         icon: 'icofont-project',
         permission: 'Superuser'
-      },
-      {
-        state: 'user-role-list',
-        name: 'User Role List',
-        type: 'link',
-        icon: 'icofont-project',
-        permission: 'Superuser'
-      },
-      {
-        state: 'user-role-create',
-        name: 'Create User Role',
-        type: 'link',
-        icon: 'icofont-project',
-        permission: 'Superuser'
-      },
-
-
+      }, 
+  
     ]
+  },     
+  {
+    label: 'Role Settings',
+    main: [
+      {
+        state: 'head-role-create',
+        name: 'Create Head Role',
+        type: 'link',
+        icon: 'icofont-project',
+        // permission: 'Superuser'
+      },
+      {
+        state: 'head-role-list',
+        name: 'Head Role List',
+        type: 'link',
+        icon: 'icofont-project',
+        // permission: 'Superuser'
+      },
+      {
+        state: 'role-create',
+        name: 'Create Role',
+        type: 'link',
+        icon: 'icofont-project',
+        // permission: 'Superuser'
+      },
+      {
+        state: 'role-list',
+        name: 'Role List',
+        type: 'link',
+        icon: 'icofont-project',
+        // permission: 'Superuser'
+      },
+  ]
   }
   
 ];

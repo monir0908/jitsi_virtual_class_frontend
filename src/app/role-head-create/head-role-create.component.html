@@ -1,0 +1,90 @@
+<block-ui>
+    <div class="row">
+
+        <div class="col-lg-12">
+            <div class="row">
+                <div class="col-lg-4 col-md-4 col-sm-12">
+                    <div class="card">
+                        <div class="card-header" [innerHtml]="formTitle"> </div>
+                        <div class="card-body">
+                            <form [formGroup]="entryForm">
+                                <div class="form-group">
+                                    <label class="col-form-label required">Head Role Name </label> 
+                                    <input type="text" formControlName="Name" [ngClass]="{ 'is-invalid': submitted && f.Name.errors }" type="text" class="form-control" />
+                                    <div *ngIf="submitted && f.Name.errors" class="error-text">
+                                        <span *ngIf="f.Name.errors.required" class="text-danger"> Head Role name is required</span>
+                                        <span *ngIf="f.Name.errors.maxlength" class="text-danger">Head Role name must be not then 250 characters</span>  
+                                    </div>
+                                </div>
+
+                                <button class="btn btn-success btn-sm" (click)="onFormSubmit()"><i
+                                        class="icofont icofont-check-circled"></i> {{btnSaveText}}</button>
+
+                                <button class="btn btn-danger btn-sm btn-outline-danger ml-2" (click)="clearForm()"> <i
+                                        class="icofont icofont-refresh"></i> Clear</button>
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-lg-8 col-md-8 col-sm-12">
+                    <div class="card card-border-primary">
+                        <div class="card-header">
+                            <h5>Head Role List </h5>
+                        </div>
+                        <div class="card-block ">
+                            <div class="row ">
+                                <div class="col-lg-12 ">
+                                    <ngx-datatable class="material table-bordered" [rows]="rows"
+                                        [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
+                                        [headerHeight]="40" [footerHeight]="50" rowHeight="auto" [limit]="10"
+                                        (page)="setPage($event)">
+
+                                        <ngx-datatable-column [width]="10" name="Sl" prop="id" [draggable]="false"
+                                            [sortable]="false">
+                                            <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
+                                                <span > {{ rowIndex + 1 }} </span>
+                                            </ng-template>
+                                        </ngx-datatable-column>
+
+                                        <ngx-datatable-column name="Head Role Name" prop="Name" [draggable]="false"
+                                            [sortable]="false">
+                                            <ng-template let-value="value" ngx-datatable-cell-template>
+                                                <span title="{{ value }}"> {{ value }} </span>
+                                            </ng-template>
+                                        </ngx-datatable-column>
+                                       
+                                        <!-- <ngx-datatable-column name="Address" prop="Address" [draggable]="false"
+                                            [sortable]="false">
+                                            <ng-template let-value="value" ngx-datatable-cell-template>
+                                                <span title="{{ value }}"> {{ value }} </span>
+                                            </ng-template>
+                                        </ngx-datatable-column>
+
+                                        <ngx-datatable-column [width]="30" name="Is Active?" prop="IsActive"
+                                            [draggable]="false" [sortable]="false">
+                                            <ng-template let-value="value" ngx-datatable-cell-template>
+                                                <span title="{{value === true? 'Yes':'No'}}">
+                                                    {{value === true? 'Yes':'No'}} </span>
+                                            </ng-template>
+                                        </ngx-datatable-column> -->
+
+                                        <ngx-datatable-column [width]="50" name="Action" prop="Id" [draggable]="false"
+                                            [sortable]="false">
+                                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                                <button class="btn btn-info btn-mini" (click)="getItem(row.Id)"><i
+                                                        class="icofont icofont-edit"></i>Edit</button>
+                                            </ng-template>
+                                        </ngx-datatable-column>
+                                    </ngx-datatable>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</block-ui>

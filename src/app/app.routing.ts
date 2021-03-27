@@ -72,6 +72,36 @@ export const AppRoutes: Routes = [
         // data: {auth: 'Superuser'}
       },
       {
+        path: 'head-role-list',
+        loadChildren: () => import('./role-head-list/head-role-list.module').then(m => m.HeadRoleListModule),
+        canActivate: [AuthGuard],
+        // data: {auth: 'Superuser'}
+      },
+      {
+        path: 'head-role-create',
+        loadChildren: () => import('./role-head-create/head-role-create.module').then(m => m.HeadRoleCreateModule),
+        canActivate: [AuthGuard],
+        // data: {auth: 'Superuser'}
+      },
+      {
+        path: 'role-list',
+        loadChildren: () => import('./role-list/role-list.module').then(m => m.RoleListModule),
+        canActivate: [AuthGuard],
+        // data: {auth: 'Superuser'}
+      },
+      {
+        path: 'role-create',
+        loadChildren: () => import('./role-create/role-create.module').then(m => m.RoleCreateModule),
+        canActivate: [AuthGuard],
+        // data: {auth: 'Superuser'}
+      },
+      {
+        path: 'merge-role-and-head-role',
+        loadChildren: () => import('./role-and-head-role-merge/merge-role-and-head-role.module').then(m => m.RoleAndHeadRoleMergeModule),
+        canActivate: [AuthGuard],
+        // data: {auth: 'Superuser'}
+      },
+      {
         path: 'project',
         loadChildren: () => import('./project/project.module').then(m => m.ProjectModule),
         canActivate: [AuthGuard],
