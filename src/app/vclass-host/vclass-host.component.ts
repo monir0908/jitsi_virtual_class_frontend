@@ -282,10 +282,10 @@ export class VClassHostComponent implements OnInit {
             ConnectionId : this.currentSocketId,
         }
 
-        console.log("HostId: " + createConfObj.HostId);
-        console.log("ParojectId: " + createConfObj.ProjectId);
-        console.log("BatchId: " + createConfObj.BatchId);
-        console.log("ConnectionId: " + createConfObj.ConnectionId);
+        // console.log("HostId: " + createConfObj.HostId);
+        // console.log("ParojectId: " + createConfObj.ProjectId);
+        // console.log("BatchId: " + createConfObj.BatchId);
+        // console.log("ConnectionId: " + createConfObj.ConnectionId);
 
         if (allStudent.length > 0 ) {
             allStudent.forEach(function (value) {
