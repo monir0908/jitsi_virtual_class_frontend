@@ -87,7 +87,7 @@
                   <div class="card-header">
                      <div class="form-group">
                         <input type="text" (keyup)="updateFilter($event)" class="form-control col-md-4"
-                           placeholder="Type host name ...">
+                           placeholder="type student name ...">
                      </div>
                   </div>
                   <div class="card-block ">
@@ -122,18 +122,18 @@
                               </div>
                            </ng-template>
                            </ngx-datatable-column>
-                           <ngx-datatable-column [width]="250" name="Teacher First Name" prop="FirstName"
+                           <ngx-datatable-column [width]="250" name="Student First Name" prop="FirstName"
                            [draggable]="false" [sortable]="false">
                            <ng-template let-value="value" ngx-datatable-cell-template>
                               <span title="{{ value }}">{{ value }}</span> 
                            </ng-template>
                            </ngx-datatable-column>
-                           <ngx-datatable-column name="Teacher Last Name" prop="LastName" [draggable]="false" [sortable]="false">
+                           <ngx-datatable-column name="Student Last Name" prop="LastName" [draggable]="false" [sortable]="false">
                            <ng-template let-value="value" ngx-datatable-cell-template>
                               <span title="{{ value }}">{{ value }}</span> 
                            </ng-template>
                            </ngx-datatable-column>
-                           <ngx-datatable-column name="Teacher Email" prop="Email" [draggable]="false" [sortable]="false">
+                           <ngx-datatable-column name="Student Email" prop="Email" [draggable]="false" [sortable]="false">
                            <ng-template let-value="value" ngx-datatable-cell-template>
                               <span title="{{ value }}">{{ value }}</span> 
                            </ng-template>
@@ -170,7 +170,7 @@
                   <div class="card-header">
                      <div class="form-group">
                         <input type="text" (keyup)="updateFilter($event)" class="form-control col-md-4"
-                           placeholder="Type host name ...">
+                           placeholder="type student name ...">
                      </div>
                   </div>
                   <div class="card-block ">
@@ -182,18 +182,18 @@
                            [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
                            [headerHeight]="40" [footerHeight]="50" [limit]="10" rowHeight="auto">
                            
-                           <ngx-datatable-column [width]="250" name="Teacher First Name" prop="FirstName"
+                           <ngx-datatable-column [width]="250" name="Student First Name" prop="FirstName"
                            [draggable]="false" [sortable]="false">
                            <ng-template let-value="value" ngx-datatable-cell-template>
                               <span title="{{ value }}">{{ value }}</span> 
                            </ng-template>
                            </ngx-datatable-column>
-                           <ngx-datatable-column name="Teacher Last Name" prop="LastName" [draggable]="false" [sortable]="false">
+                           <ngx-datatable-column name="Student Last Name" prop="LastName" [draggable]="false" [sortable]="false">
                            <ng-template let-value="value" ngx-datatable-cell-template>
                               <span title="{{ value }}">{{ value }}</span> 
                            </ng-template>
                            </ngx-datatable-column>
-                           <ngx-datatable-column name="Teacher Email" prop="Email" [draggable]="false" [sortable]="false">
+                           <ngx-datatable-column name="Student Email" prop="Email" [draggable]="false" [sortable]="false">
                            <ng-template let-value="value" ngx-datatable-cell-template>
                               <span title="{{ value }}">{{ value }}</span> 
                            </ng-template>
