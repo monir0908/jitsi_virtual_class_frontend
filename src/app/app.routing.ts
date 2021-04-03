@@ -58,13 +58,7 @@ export const AppRoutes: Routes = [
         loadChildren: () => import('./user-create/user-create.module').then(m => m.UserCreateModule),
         canActivate: [AuthGuard],
         // data: {auth: 'Superuser'}
-      },
-      {
-        path: 'user-role-list',
-        loadChildren: () => import('./user-role-list/user-role-list.module').then(m => m.UserRoleListModule),
-        canActivate: [AuthGuard],
-        // data: {auth: 'Superuser'}
-      },
+      },      
       {
         path: 'user-role-create',
         loadChildren: () => import('./user-role-create/user-role-create.module').then(m => m.UserRoleCreateModule),
@@ -72,20 +66,8 @@ export const AppRoutes: Routes = [
         // data: {auth: 'Superuser'}
       },
       {
-        path: 'head-role-list',
-        loadChildren: () => import('./role-head-list/head-role-list.module').then(m => m.HeadRoleListModule),
-        canActivate: [AuthGuard],
-        // data: {auth: 'Superuser'}
-      },
-      {
         path: 'head-role-create',
         loadChildren: () => import('./role-head-create/head-role-create.module').then(m => m.HeadRoleCreateModule),
-        canActivate: [AuthGuard],
-        // data: {auth: 'Superuser'}
-      },
-      {
-        path: 'role-list',
-        loadChildren: () => import('./role-list/role-list.module').then(m => m.RoleListModule),
         canActivate: [AuthGuard],
         // data: {auth: 'Superuser'}
       },

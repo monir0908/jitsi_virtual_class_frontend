@@ -159,14 +159,7 @@ const MENUITEMS = [
         type: 'link',
         icon: 'icofont-project',
         // permission: 'Superuser'
-      },
-      {
-        state: 'head-role-list',
-        name: 'Head Role List',
-        type: 'link',
-        icon: 'icofont-project',
-        // permission: 'Superuser'
-      },
+      },      
       {
         state: 'role-create',
         name: 'Create Role',
@@ -175,12 +168,13 @@ const MENUITEMS = [
         // permission: 'Superuser'
       },
       {
-        state: 'role-list',
-        name: 'Role List',
+        state: 'merge-role-and-head-role',
+        name: 'Merge Head Role & Role',
         type: 'link',
         icon: 'icofont-project',
         // permission: 'Superuser'
       },
+      
   ]
   }
   

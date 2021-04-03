@@ -1,114 +1,71 @@
 <block-ui>
-    <div class="row">
-
-        <div class="col-lg-12">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="card card-border-default">
-                        <div class="card-header">
-                            <h5>User Role List </h5>
-                            <button class="btn btn-secondary btn-sm float-right"
-                            [routerLink]="[ '/user-role' ]"><i class=" icofont icofont-plus "></i> Create User Role</button>
-                        </div>
-                        <div class="card-block">
-                            <div class="row">
-                                <div class="col-lg-12">
-
-                                  <ngx-datatable class="material table-bordered" #dataTable [rows]="rows"
-                                  [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
-                                  [headerHeight]="40" [footerHeight]="50" [rowHeight]="'100%'"
-                                   [externalPaging]="true" [count]="page.totalElements" [offset]="page.pageNumber" [limit]="page.size"
-                                  (page)="setPage($event)">
-
-                                  <!-- Row Detail Template -->
-                                  <ngx-datatable-row-detail [rowHeight]="'100%'">
-                                      <ng-template let-row="row" let-expanded="expanded"
-                                          ngx-datatable-row-detail-template>
-                                          <div class="w-100">
-
-                                            <div class="card">
-                                              <div class="card-header"><h5 class="card-title">Permissions</h5></div>
-                                              <div class="card-body">
-                                               <div class="row"><div class="col-sm-3" *ngFor="let item of row.details"><i class="icofont icofont-checked text-success"></i> {{item}}</div></div>
-                                              </div>
+   <div class="row">
+      <div class="col-lg-12">
+         <div class="row">
+            <div class="col-lg-12">
+               <div class="card card-border-default">
+                  <div class="card-header">
+                     <h5>Merge Head Role with Roles </h5>
+                  </div>
+                  <div class="card-block">
+                     <div class="row">
+                        <div class="col-lg-12">
+                           <form [formGroup]="entryForm" autocomplete="off">
+                              <div class="row">
+                                <div class="col-sm-6">
+                                        <div class="form-group row">
+                                        <label class="col-sm-6 col-form-label required">Select Head Role</label>
+                                        <div class="col-sm-6">
+                                            <ng-select placeholder="Select Head Role" formControlName="HeadRoleId"
+                                            (change)="changeHeadRole()" [items]="rows" [clearable]='false'
+                                            [clearOnBackspace]='false' bindLabel="Name" bindValue="Id"
+                                            [ngClass]="{ 'is-invalid': submitted && f.HeadRoleId.errors }">
+                                            <ng-template ng-option-tmp let-item="item">
+                                                <div [title]="item.Name">{{item.Name}}</div>
+                                            </ng-template>
+                                            </ng-select>
+                                            <div *ngIf="submitted && f.HeadRoleId.errors" class="error-text">
+                                                <span *ngIf="f.HeadRoleId.errors.required" class="text-danger"> Head Role Name is required</span>
                                             </div>
-
-                                              <!-- <table
-                                                  class="table table-xs table-hover table-bordered table-striped">
-                                                  <thead>
-                                                      <tr>
-                                                          <th scope="col">Permissions</th>
-                                                      </tr>
-                                                  </thead>
-                                                  <tbody>
-                                                      <tr>
-                                                          <th>{{row.details.join(", ")}}</th>
-                                                      </tr>
-                                                  </tbody>
-                                              </table> -->
+                                        </div>
+                                        </div>
+                                    </div>
+                              </div>
+                              <hr>
+                              <div class="row">
+                                 <div class="col-md-12">
+                                    <h5 class="mb-4">Roles </h5>
+                                    <div class="row">
+                                       <div class="col-md-3" *ngFor="let permission of permissionList; let i = index">
+                                          <div class="checkbox-fade fade-in-default">
+                                             <label>
+                                             <input type="checkbox" [ngModelOptions]="{standalone: true}" [(ngModel)]="permission.IsSelected" >
+                                             <span class="cr"><i class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
+                                             <span class="text-inverse">{{permission.Name}}</span>
+                                             </label>
                                           </div>
-                                      </ng-template>
-                                  </ngx-datatable-row-detail>
-                                  <!-- Column Templates -->
-
-                                  <ngx-datatable-column [width]="30" name="#" [resizeable]="false"
-                                      [sortable]="false" [draggable]="false" [canAutoResize]="false">
-                                      <ng-template let-row="row" let-expanded="expanded"
-                                          ngx-datatable-cell-template>
-                                          <a href="javascript:void(0)" [class.datatable-icon-right]="!expanded"
-                                              [class.datatable-icon-down]="expanded" title="Expand/Collapse Row"
-                                              (click)="toggleExpandRow(row)">
-                                          </a>
-                                      </ng-template>
-                                  </ngx-datatable-column>
-
-                                  <ngx-datatable-column [width]="50" name="Role Name" prop="Name"
-                                      [draggable]="false" [sortable]="false">
-                                      <ng-template let-value="value" ngx-datatable-cell-template>
-                                          <span title="{{ value }}"> {{ value }} </span>
-                                      </ng-template>
-                                  </ngx-datatable-column>
-
-                                  <ngx-datatable-column [width]="300"
-                                      prop="Description" [draggable]="false" [sortable]="false">
-                                      <ng-template let-value="value" ngx-datatable-cell-template>
-                                          <span *ngIf="value" title="{{ value }}">
-                                              {{ value  }} </span>
-                                      </ng-template>
-                                  </ngx-datatable-column>
-
-                                  <ngx-datatable-column [width]="30" name="No of Roles" prop="NoOfRoles"
-                                      [draggable]="false" [sortable]="false">
-                                      <ng-template let-value="value" ngx-datatable-cell-template>
-                                          <span title="{{ value }}"> {{ value }} </span>
-                                      </ng-template>
-                                  </ngx-datatable-column>
-
-
-
-                                  <ngx-datatable-column [width]="40" name="Action" prop="Id" [draggable]="false"
-                                      [sortable]="false">
-                                      <ng-template let-row="row" ngx-datatable-cell-template>
-                                          <button class="btn btn-mini btn-outline-secondary p-1 mr-2" title="Edit"
-                                              (click)="getItem(row)" ><i class="icofont icofont-ui-edit f-20"></i>
-                                          </button>
-                                      </ng-template>
-                                  </ngx-datatable-column>
-                              </ngx-datatable>
-
-                                </div>
-
-                            </div>
+                                       </div>
+                                    </div>
+                                 </div>
+                                 <div class="col-md-12">
+                                    <button 
+                                        
+                                        class="btn btn-secondary btn-sm col-md-2 float-right" 
+                                        (click)="onFormSubmit()">
+                                        <i class=" icofont icofont-check "></i> 
+                                        Merge Now
+                                    </button>
+                                 </div>
+                              </div>
+                           </form>
                         </div>
-                        <div class="card-footer ">
-
-                        </div>
-                        <!-- end of card-footer -->
-                    </div>
-                </div>
+                     </div>
+                  </div>
+                  <div class="card-footer ">
+                  </div>
+               </div>
             </div>
-        </div>
-
-    </div>
-
+         </div>
+      </div>
+   </div>
 </block-ui>
