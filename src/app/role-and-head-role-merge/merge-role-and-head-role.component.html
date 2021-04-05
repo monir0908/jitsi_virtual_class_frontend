@@ -17,7 +17,7 @@
                                         <label class="col-sm-6 col-form-label required">Select Head Role</label>
                                         <div class="col-sm-6">
                                             <ng-select placeholder="Select Head Role" formControlName="HeadRoleId"
-                                            (change)="changeHeadRole()" [items]="rows" [clearable]='false'
+                                            (change)="changeHeadRole($event)" [items]="rows" [clearable]='false'
                                             [clearOnBackspace]='false' bindLabel="Name" bindValue="Id"
                                             [ngClass]="{ 'is-invalid': submitted && f.HeadRoleId.errors }">
                                             <ng-template ng-option-tmp let-item="item">
@@ -32,7 +32,7 @@
                                     </div>
                               </div>
                               <hr>
-                              <div class="row">
+                              <div class="row" *ngIf="headRoleId !=null" >
                                  <div class="col-md-12">
                                     <h5 class="mb-4">Roles </h5>
                                     <div class="row">

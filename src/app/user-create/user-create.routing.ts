@@ -6,7 +6,7 @@ export const UserCreateRoutes: Routes = [{
   path: '',
   component: UserCreateComponent,
   data: {
-    breadcrumb: 'UserCreate List | Create UserCreate',
+    breadcrumb: 'Create User',
     icon: 'icofont-home bg-c-blue',
     status: false
   }

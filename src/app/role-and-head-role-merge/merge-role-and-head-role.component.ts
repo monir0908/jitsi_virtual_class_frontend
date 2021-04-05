@@ -141,19 +141,30 @@ export class RoleAndHeadRoleMergeComponent implements OnInit {
         let permissions = [];
         permissions = this.permissionList.filter(x => x.IsSelected == true).map((x) => x.Id);
 
+
+        const headRoleId = this.entryForm.value.HeadRoleId;
+        const obj = [];
+
+        if (permissions.length > 0 ) {
+            permissions.forEach(function (value) {
+                obj.push({
+                    HeadRoleId: headRoleId,
+                    RoleId: value
+
+                });
+            });
+        }
+
+        console.log(obj);
+
         if (permissions.length === 0) {
-            this.toastr.warning('No Permission Selected!!', 'WARNING!', { timeOut: 3000 });
+            this.toastr.warning('No role selected!!', 'WARNING!', { timeOut: 3000 });
             return;
         }
         this.blockUI.start('Saving data...');
-        const obj = {
-            Id: this.entryForm.value.id ? this.entryForm.value.id : 0,
-            Name: this.entryForm.value.name.trim(),
-            Description: this.entryForm.value.description ? this.entryForm.value.description.trim() : null,
-            Roles: permissions
-        };
+        
 
-        const request = this._service.post('user-role/create-or-update', obj);
+        const request = this._service.post('api/role/MergeHeadRoleWithRoles', obj);
 
         request.subscribe(
             res => {
@@ -162,8 +173,8 @@ export class RoleAndHeadRoleMergeComponent implements OnInit {
                     this.toastr.error(res, 'Error!', { closeButton: true, disableTimeOut: false });
                     return;
                 }
-                this.router.navigate(['/user-role-list']);
-                this.toastr.success('Successfully Created', 'Success!', { timeOut: 2000 });
+                // this.router.navigate(['/user-role-list']);
+                this.toastr.success(res.Message, 'Success!', { timeOut: 2000 });
 
             },
             error => {

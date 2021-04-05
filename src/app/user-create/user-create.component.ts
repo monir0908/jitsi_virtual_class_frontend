@@ -48,7 +48,7 @@ export class UserCreateComponent implements OnInit {
     sectionSubmitted = false;
     designationSubmitted = false;
     @BlockUI() blockUI: NgBlockUI;
-    formTitle = 'BP User Entry';
+    formTitle = 'User Creation';
     btnSaveText = 'Save';
     id: string;
     isEdit: boolean = false;
@@ -65,6 +65,9 @@ export class UserCreateComponent implements OnInit {
     userRoleList: Array<any> = [];
     permissionList: Array<any> = [];
 
+    HeadRoleList;
+    headRoleId;
+    checked_permission_list: any =[];
     constructor(
         private modalService: BsModalService,
         public formBuilder: FormBuilder,
@@ -83,44 +86,18 @@ export class UserCreateComponent implements OnInit {
     ngOnInit() {
         this.entryForm = this.formBuilder.group({
             id: [null],
-            first_name: [null, [Validators.required, Validators.maxLength(250)]],
-            last_name: [null, [Validators.required, Validators.maxLength(250)]],
-            bp_id: ['', [Validators.required, Validators.pattern("^[0-9]{10}$")]],
-            email: [null, [Validators.required, Validators.maxLength(250)]],
-            present_address: [null, [Validators.maxLength(1000)]],
-            permanent_address: [null, [Validators.maxLength(1000)]],
-            mobile: [null, [Validators.maxLength(250)]],
-            extension_no: [null, [Validators.maxLength(250)]],
-            userRoleId: [null, [Validators.required]],
-            designation: [null, [Validators.required]],
-            department: [null],
-            StoreId: [null],
-            posting_area: [null, [Validators.maxLength(250)]],
-            transferred: [false],
-            is_active: [true]
+            email: ['', [Validators.required, Validators.email, Validators.maxLength(50)]],
+            first_name: [null, [Validators.required, Validators.maxLength(50)]],
+            last_name: [null, [Validators.required, Validators.maxLength(50)]],
+            // bp_id: ['', [Validators.required, Validators.pattern("^[0-9]{10}$")]],th(1000)]],
+            phone: [null, [Validators.maxLength(250)]],
+            
+            HeadRoleId: [null, [Validators.required]]
         });
 
-        this.designationForm = this.formBuilder.group({
-            Id: [null],
-            Name: [null, [Validators.required, Validators.maxLength(250)]],
-            Description: [null, [Validators.maxLength(500)]],
-            IsActive: [true]
 
-        });
 
-        this.sectionForm = this.formBuilder.group({
-            Id: [null],
-            Name: [null, [Validators.required, Validators.maxLength(250)]],
-            Description: [null, [Validators.maxLength(500)]],
-            IsActive: [true]
-
-        });
-
-        this.getSectionDropdownList();
-        this.getDesignationDropdownList();
-        this.getUserRoleList();
-        this.getPermisstionList();
-        this.getInventoryStoreList();
+        this.getHeadRoleList();
     }
 
     get f() {
@@ -129,72 +106,24 @@ export class UserCreateComponent implements OnInit {
 
     get df() {
         return this.designationForm.controls;
-    }
-
-    openDesignationModal(template: TemplateRef<any>) {
-        this.designationForm.controls['IsActive'].setValue(true);
-        this.modalRef = this.modalService.show(template, this.modalConfig);
-    }
+    }    
 
     get sf() {
         return this.sectionForm.controls;
     }
 
-    openSectionModal(template: TemplateRef<any>) {
-        this.sectionForm.controls['IsActive'].setValue(true);
-        this.modalRef = this.modalService.show(template, this.modalConfig);
-    }
+    
 
-    getInventoryStoreList() {
-        this._service.get('inventory-store/dropdown-list').subscribe(res => {
-            this.inventoryStoreDropDownList = res.Records;
+    getHeadRoleList() {
+        this._service.get('api/role/GetHeadRoleList').subscribe(res => {
+            this.HeadRoleList = res.Records;
         }, () => { }
         );
     }
 
-    getSectionDropdownList() {
-        this._service.get('section/dropdown-list').subscribe(res => {
-            this.sectionDropDownList = res.Records;
-        }, () => { }
-        );
-    }
-
-    getDesignationDropdownList() {
-        this._service.get('designation/dropdown-list').subscribe(res => {
-            this.designationDropDownList = res.Records;
-        }, () => { }
-        );
-    }
-
-    getUserRoleList() {
-        this._service.get('user-role/dropdown-list').subscribe(res => {
-            this.userRoleList = res.Records;
-        }, () => { }
-        );
-    }
-
-    onChangeUserRole(event) {
-        console.log(event);
+    getRoleList() {
         this.blockUI.start('Getting data. Please wait ...');
-        this._service.get('user-role/' + event.Id + '/permissions').subscribe(res => {
-            this.blockUI.stop();
-            if (!res.Success) {
-                this.toastr.error(res.Message, 'Error!', { timeOut: 2000 });
-                return;
-            }
-            this.permissionList.forEach(element => {
-                element.IsSelected = res.Records.indexOf(element.Id) !== -1;
-            });
-        }, err => {
-            this.blockUI.stop();
-            this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
-        }
-        );
-    }
-
-    getPermisstionList() {
-        this.blockUI.start('Getting data. Please wait ...');
-        this._service.get('user-role/permission/list').subscribe(res => {
+        this._service.get('api/role/GetRoleList').subscribe(res => {
             if (!res.Success) {
                 this.toastr.error(res.Message, 'Error!', { timeOut: 2000 });
                 return;
@@ -207,8 +136,14 @@ export class UserCreateComponent implements OnInit {
                     IsSelected: false
                 })
             });
-            if (this.id)
-                this.getItem(this.id);
+
+            console.log(this.permissionList)
+            console.log(this.headRoleId);
+
+            if (this.headRoleId)
+                this.getUserRoles(this.headRoleId);
+
+
             this.blockUI.stop();
         }, err => {
             this.blockUI.stop();
@@ -216,6 +151,37 @@ export class UserCreateComponent implements OnInit {
         }
         );
     }
+
+    
+
+    getUserRoles(id) {
+        this._service.get('api/role/GetRolesByHeadId/' + id).subscribe(res => {
+
+            console.log(res.Records)
+            if (res.Success) {
+                // this.entryForm.controls['Id'].setValue(res.Record.Id);
+                // this.entryForm.controls['Name'].setValue(res.Record.Name);
+
+                this.permissionList.forEach(x => {
+                    const found = res.Records.find(y => y.Id == x.Id);
+                    x.IsSelected = found ? true : false;
+                });
+
+
+            }
+        });
+
+    }
+
+    changeHeadRole(event) {
+        this.headRoleId = this.entryForm.value.HeadRoleId;
+        // alert(this.headRoleId);
+
+
+        this.getRoleList();
+    }
+
+    
 
     getItem(id) {
         this.blockUI.start('Getting data...');
@@ -225,7 +191,7 @@ export class UserCreateComponent implements OnInit {
                 this.toastr.error(res.Message, 'Error!', { closeButton: true, disableTimeOut: false });
                 return;
             }
-            this.formTitle = 'Update BP User';
+            this.formTitle = 'Update User';
             this.btnSaveText = 'Update';
             this.entryForm.controls['id'].setValue(res.Record.BPUser.Id);
             this.entryForm.controls['first_name'].setValue(res.Record.BPUser.FirstName);
@@ -253,75 +219,7 @@ export class UserCreateComponent implements OnInit {
         });
     }
 
-    onSectionFormSubmit() {
-        this.sectionSubmitted = true;
-        if (this.sectionForm.invalid) {
-            return;
-        }
-
-        this.blockUI.start('Saving...');
-
-        const obj = {
-            Id: this.sectionForm.value.Id ? this.sectionForm.value.Id : 0,
-            Name: this.sectionForm.value.Name.trim(),
-            Description: this.sectionForm.value.Description ? this.sectionForm.value.Description.trim() : this.sectionForm.value.Description,
-            IsActive: this.sectionForm.value.IsActive
-        };
-
-        const request = this._service.post('section/create-or-update', obj);
-
-        request.subscribe(
-            data => {
-                this.blockUI.stop();
-                if (data.Success) {
-                    this.toastr.success(data.Message, 'Success!', { timeOut: 2000 });
-                    this.getSectionDropdownList();
-                    this.modalHide();
-                    this.entryForm.controls['department'].setValue(data.Id);
-                } else {
-                    this.toastr.error(data.Message, 'Error!', { closeButton: true, disableTimeOut: false });
-                }
-            },
-            err => {
-                this.blockUI.stop();
-                this.toastr.error(err.Message || err, 'Error!', { closeButton: true, disableTimeOut: false });
-            }
-        );
-    }
-
-    onDesignationFormSubmit() {
-        this.designationSubmitted = true;
-        if (this.designationForm.invalid) {
-            return;
-        }
-
-        const obj = {
-            Id: this.designationForm.value.Id ? this.designationForm.value.Id : 0,
-            Name: this.designationForm.value.Name.trim(),
-            Description: this.designationForm.value.Description ? this.designationForm.value.Description.trim() : this.designationForm.value.Description,
-            IsActive: this.designationForm.value.IsActive
-        };
-
-        const request = this._service.post('designation/create-or-update', obj);
-
-        request.subscribe(
-            data => {
-                this.blockUI.stop();
-                if (data.Success) {
-                    this.toastr.success(data.Message, 'Success!', { timeOut: 2000 });
-                    this.getDesignationDropdownList();
-                    this.modalHide();
-                    this.entryForm.controls['designation'].setValue(data.Id);
-                } else {
-                    this.toastr.error(data.Message, 'Error!', { closeButton: true, disableTimeOut: false });
-                }
-            },
-            err => {
-                this.blockUI.stop();
-                this.toastr.error(err.Message || err, 'Error!', { closeButton: true, disableTimeOut: false });
-            }
-        );
-    }
+   
 
     onFormSubmit() {
         this.submitted = true;
@@ -329,29 +227,46 @@ export class UserCreateComponent implements OnInit {
             return;
         }
         
-        this.entryForm.controls['bp_id'].enable();
+        
 
-        this.blockUI.start('Saving...');
-        const obj = {
-            Id: this.entryForm.value.id ? this.entryForm.value.id : 0,
-            FirstName: this.entryForm.value.first_name.trim(),
-            LastName: this.entryForm.value.last_name.trim(),
-            BPID: this.entryForm.value.bp_id,
-            Email: this.entryForm.value.email ? this.entryForm.value.email.trim().toLowerCase() : this.entryForm.value.email,
-            PresentAddress: this.entryForm.value.present_address ? this.entryForm.value.present_address.trim() : this.entryForm.value.present_address,
-            PermanentAddress: this.entryForm.value.permanent_address ? this.entryForm.value.permanent_address.trim() : this.entryForm.value.permanent_address,
-            PhoneNo: this.entryForm.value.mobile ? this.entryForm.value.mobile.trim() : this.entryForm.value.mobile,
-            InterComNo: this.entryForm.value.extension_no ? this.entryForm.value.extension_no.trim() : this.entryForm.value.extension_no,
-            DesignationId: this.entryForm.value.designation,
-            SectionId: this.entryForm.value.department,
-            StoreId: this.entryForm.value.StoreId,
-            PostingArea: this.entryForm.value.posting_area ? this.entryForm.value.posting_area.trim() : this.entryForm.value.posting_area,
-            Transferred: this.entryForm.value.transferred,
-            RoleGroupId: this.entryForm.value.userRoleId,
-            Roles: this.permissionList.filter(x => x.IsSelected === true).map(x => x.Id)
-        };
+        //this.blockUI.start('Saving...');
 
-        const request = this._service.post('bp-user/create-or-update', obj);
+        
+
+        const roleList = [];
+
+        
+        this.checked_permission_list = this.permissionList.filter(x => x.IsSelected === true).map(x => x.Name)
+        if (this.checked_permission_list.length > 0 ) {
+            this.checked_permission_list.forEach(function (value) {
+                roleList.push({
+                    Name: value
+                });
+            });
+        }
+        console.log(roleList)
+
+        const createUserObj = {
+            "userObj":{
+                Id: this.entryForm.value.id ? this.entryForm.value.id : null,
+                FirstName: this.entryForm.value.first_name.trim(),
+                LastName: this.entryForm.value.last_name.trim(),            
+                Email: this.entryForm.value.email ? this.entryForm.value.email.trim().toLowerCase() : this.entryForm.value.email,            
+                PhoneNumber: this.entryForm.value.phone ? this.entryForm.value.phone.trim() : this.entryForm.value.phone,
+                UserType: "Participant" 
+
+            },
+            "roleList":roleList
+        }
+
+        console.log(createUserObj);
+
+        if (this.checked_permission_list.length === 0) {
+            this.toastr.warning('No role selected!!', 'WARNING!', { timeOut: 3000 });
+            return;
+        }
+
+        const request = this._service.post('api/user/CreateUser', createUserObj);
 
         request.subscribe(
             data => {
@@ -379,7 +294,7 @@ export class UserCreateComponent implements OnInit {
         this.designationSubmitted = false;
         this.modalTitle = 'Add Designation';
         this.sectionModalTitle = 'Add Section';
-        this.btnSaveText = 'Save';
+        this.btnSaveText = 'Create User Now';
     }
 
 }

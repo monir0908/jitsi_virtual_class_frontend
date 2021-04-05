@@ -127,7 +127,7 @@ export class RoleCreateComponent implements OnInit {
     this.blockUI.start('Saving...');
 
     const obj = {
-      Id: this.entryForm.value.Id ? this.entryForm.value.Id : 0,
+      Id: this.entryForm.value.Id ? this.entryForm.value.Id : null,
       Name: this.entryForm.value.Name.trim(),
       Description: "This role is set for " + this.entryForm.value.Name.trim() + " ." ,
       NoOfRoles : 0,
