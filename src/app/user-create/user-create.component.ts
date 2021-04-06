@@ -64,7 +64,8 @@ export class UserCreateComponent implements OnInit {
     inventoryStoreDropDownList: Array<any> = [];
     userRoleList: Array<any> = [];
     permissionList: Array<any> = [];
-
+    UserTypeList: Array<any> = [];
+    UserType;
     HeadRoleList;
     headRoleId;
     checked_permission_list: any =[];
@@ -92,13 +93,32 @@ export class UserCreateComponent implements OnInit {
             // bp_id: ['', [Validators.required, Validators.pattern("^[0-9]{10}$")]],th(1000)]],
             phone: [null, [Validators.maxLength(250)]],
             
-            HeadRoleId: [null, [Validators.required]]
+            HeadRoleId: [null, [Validators.required]],
+            UserType: [null, [Validators.required]]
         });
+
+        this.UserTypeList = [
+            {
+            "Id":1,
+            "Name": "Host"
+            },
+            {
+            "Id":2,
+            "Name": "Participant"
+            },
+            {
+            "Id":3,
+            "Name": "General User"
+            },
+        ]
 
 
 
         this.getHeadRoleList();
+        this.getRoleList();
     }
+
+    
 
     get f() {
         return this.entryForm.controls;
@@ -140,8 +160,8 @@ export class UserCreateComponent implements OnInit {
             console.log(this.permissionList)
             console.log(this.headRoleId);
 
-            if (this.headRoleId)
-                this.getUserRoles(this.headRoleId);
+            if (this.id)
+                this.getItem(this.id);
 
 
             this.blockUI.stop();
@@ -178,14 +198,18 @@ export class UserCreateComponent implements OnInit {
         // alert(this.headRoleId);
 
 
-        this.getRoleList();
+        this.getUserRoles(event.Id);
+    }
+    changeUserType(event) {
+        this.UserType = this.entryForm.value.UserType;
+        console.log(this.UserType);
     }
 
     
 
     getItem(id) {
         this.blockUI.start('Getting data...');
-        this._service.get('bp-user/get/' + id).subscribe(res => {
+        this._service.get('api/user/GetUserDetailWithRoles/' + id).subscribe(res => {
             this.blockUI.stop();
             if (!res.Success) {
                 this.toastr.error(res.Message, 'Error!', { closeButton: true, disableTimeOut: false });
@@ -193,24 +217,15 @@ export class UserCreateComponent implements OnInit {
             }
             this.formTitle = 'Update User';
             this.btnSaveText = 'Update';
-            this.entryForm.controls['id'].setValue(res.Record.BPUser.Id);
-            this.entryForm.controls['first_name'].setValue(res.Record.BPUser.FirstName);
-            this.entryForm.controls['last_name'].setValue(res.Record.BPUser.LastName);
-            this.entryForm.controls['bp_id'].setValue(res.Record.BPUser.BPID);
-            this.entryForm.controls['email'].setValue(res.Record.BPUser.Email);
-            this.entryForm.controls['present_address'].setValue(res.Record.BPUser.PresentAddress);
-            this.entryForm.controls['permanent_address'].setValue(res.Record.BPUser.PermanentAddress);
-            this.entryForm.controls['mobile'].setValue(res.Record.BPUser.PhoneNo);
-            this.entryForm.controls['extension_no'].setValue(res.Record.BPUser.InterComNo);
-            this.entryForm.controls['designation'].setValue(res.Record.BPUser.DesignationId);
-            this.entryForm.controls['department'].setValue(res.Record.BPUser.SectionId);
-            this.entryForm.controls['posting_area'].setValue(res.Record.BPUser.PostingArea);
-            this.entryForm.controls['transferred'].setValue(res.Record.BPUser.Transferred);
-            this.entryForm.controls['userRoleId'].setValue(res.Record.BPUser.RoleGroupId);
-            this.entryForm.controls['StoreId'].setValue(res.Record.BPUser.StoreId);
-            this.entryForm.controls['bp_id'].disable();
+            this.entryForm.controls['id'].setValue(res.Record.User.Id);
+            this.entryForm.controls['first_name'].setValue(res.Record.User.FirstName);
+            this.entryForm.controls['last_name'].setValue(res.Record.User.LastName);
+            this.entryForm.controls['email'].setValue(res.Record.User.Email);
+            this.entryForm.controls['phone'].setValue(res.Record.User.PhoneNumber);
+            this.entryForm.controls['HeadRoleId'].setValue(res.Record.User.HeadRoleId);
+            this.entryForm.controls['UserType'].setValue(res.Record.User.UserType);
             this.permissionList.forEach(element => {
-                element.IsSelected = res.Record.Roles.indexOf(element.Id) !== -1;
+                element.IsSelected = res.Record.Roles.indexOf(element.Name) !== -1;
             });
 
         }, err => {
@@ -253,7 +268,8 @@ export class UserCreateComponent implements OnInit {
                 LastName: this.entryForm.value.last_name.trim(),            
                 Email: this.entryForm.value.email ? this.entryForm.value.email.trim().toLowerCase() : this.entryForm.value.email,            
                 PhoneNumber: this.entryForm.value.phone ? this.entryForm.value.phone.trim() : this.entryForm.value.phone,
-                UserType: "Participant" 
+                HeadRoleId : this.entryForm.value.HeadRoleId,
+                UserType: this.entryForm.value.UserType, 
 
             },
             "roleList":roleList

@@ -73,7 +73,7 @@ export class HeadRoleCreateComponent implements OnInit {
     };
 
     
-    this._service.get('api/role/GetHeadRoleList', obj).subscribe(res => {
+    this._service.get('api/role/GetHeadRoleList').subscribe(res => {
 
       if (!res.Success) {
         this.toastr.error(res.Message, 'Error!', { closeButton: true, disableTimeOut: true });

@@ -158,6 +158,22 @@
                                             </div>
                                         </div> -->
                                         <div class="form-group row">
+                                            <label class="col-sm-4 col-form-label required"> User Type </label>
+                                            <div class="col-sm-8">
+                                                <ng-select placeholder="Select User Type" formControlName="UserType"
+                                                (change)="changeUserType($event)" [items]="UserTypeList" [clearable]='false'
+                                                [clearOnBackspace]='false' bindLabel="Name" bindValue="Name"
+                                                [ngClass]="{ 'is-invalid': submitted && f.UserType.errors }">
+                                                <ng-template ng-option-tmp let-item="item">
+                                                    <div [title]="item.Name">{{item.Name}}</div>
+                                                </ng-template>
+                                                </ng-select>
+                                                <div *ngIf="submitted && f.UserType.errors" class="error-text">
+                                                    <span *ngIf="f.UserType.errors.required" class="text-danger"> User Type is required</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
                                             <label class="col-sm-4 col-form-label">Phone </label>
                                             <div class="col-sm-8">
                                                 <input type="text" formControlName="phone" class="form-control" />

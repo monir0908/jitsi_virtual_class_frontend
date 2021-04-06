@@ -39,7 +39,7 @@ const MENUITEMS = [
         name: 'Home',
         type: 'link',
         icon: 'icofont-dashboard',
-        permission: 'Admin,Superuser,Host'
+        permission: 'Can See Dashboard'
       },
 
 
@@ -47,6 +47,7 @@ const MENUITEMS = [
   },
   {
     label: 'Virtual Class',
+    permission: 'Can Start Virtual Class,Can Join Virtual Class',
     main: [
 
       {
@@ -54,14 +55,14 @@ const MENUITEMS = [
         name: 'Start Virutal Class',
         type: 'link',
         icon: 'icofont-host-vclass',
-        permission: 'Host'
+        permission: 'Can Start Virtual Class'
       },
       {
         state: 'participant-vclass',
         name: 'Join Virtual Class',
         type: 'link',
         icon: 'icofont-host-vclass',
-        permission: 'Participant'
+        permission: 'Can Join Virtual Class'
       },
 
 
@@ -69,6 +70,7 @@ const MENUITEMS = [
   },
   {
     label: 'Virtual Class History',
+    permission: 'Can See Host Call History',
     main: [
 
       {
@@ -76,14 +78,14 @@ const MENUITEMS = [
         name: 'Host Call History',
         type: 'link',
         icon: 'icofont-host-vclass-history',
-        permission: 'Admin,Superuser'
+        permission: 'Can See Host Call History'
       },      
       {
         state: 'vclass-history-host-individual',
         name: 'My Call History',
         type: 'link',
-        icon: 'icofont-individual-host-vclass-histor',
-        permission: 'Host'
+        icon: 'icofont-individual-host-vclass-history',
+        permission: 'Can See Own Call History'
       },
 
 
@@ -91,6 +93,7 @@ const MENUITEMS = [
   },
   {
     label: 'Master Settings',
+    permission: 'Can Merge Host & Participant',
     main: [
 
       {
@@ -98,81 +101,83 @@ const MENUITEMS = [
         name: 'Create Project',
         type: 'link',
         icon: 'icofont-project',
-        permission: 'Superuser'
+        permission: 'Can Create Project'
       },
       {
         state: 'batch',
         name: 'Create Batch',
         type: 'link',
         icon: 'icofont-batch',
-        permission: 'Superuser'
+        permission: 'Can Create Batch'
       },
       {
         state: 'project-batch',
         name: 'Merge Project & Batch',
         type: 'link',
         icon: 'icofont-project-batch',
-        permission: 'Superuser'
+        permission: 'Can Merge Project & Batch'
       },
       {
         state: 'project-batch-host',
-        name: 'Merge Project Host & Batch',
+        name: 'Merge Project Batch & Host',
         type: 'link',
         icon: 'icofont-project-batch-host',
-        permission: 'Superuser'
+        permission: 'Can Merge Project Batch & Host'
       },
       {
         state: 'project-batch-host-participant',
         name: 'Merge Host & Participant',
         type: 'link',
         icon: 'icofont-project-batch-host-participant',
-        permission: 'Admin,Superuser'
+        permission: 'Can Merge Host & Participant'
       },
     ]
   },
   {
     label: 'User Management',
+    permission: 'Can Create Head Role,Can See User List',
     main: [
       {
         state: 'user-create',
         name: 'Create User',
         type: 'link',
         icon: 'icofont-project',
-        permission: 'Superuser'
+        permission: 'Can Create User'
       },
       {
         state: 'user',
         name: 'User List',
         type: 'link',
         icon: 'icofont-project',
-        permission: 'Superuser'
+        permission: 'Can See User List'
       }, 
   
     ]
   },     
   {
     label: 'Role Settings',
+    permission: 'Can Create Head Role',
     main: [
       {
         state: 'head-role-create',
         name: 'Create Head Role',
         type: 'link',
         icon: 'icofont-project',
-        // permission: 'Superuser'
+        permission: 'Can Create Head Role'
       },      
       {
         state: 'role-create',
         name: 'Create Role',
         type: 'link',
         icon: 'icofont-project',
-        // permission: 'Superuser'
+        permission: 'Can Create Role'
       },
       {
         state: 'merge-role-and-head-role',
         name: 'Merge Head Role & Role',
         type: 'link',
         icon: 'icofont-project',
-        // permission: 'Superuser'
+        permission: 'Can Merge Head Role & Roles'
       },
       
   ]
