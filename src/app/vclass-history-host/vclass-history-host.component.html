@@ -170,14 +170,27 @@
                            <ng-template let-value="value" ngx-datatable-cell-template>
                               <span title="{{ value }}">{{ value }}</span> 
                            </ng-template>
-                           </ngx-datatable-column>                           
-                           <ngx-datatable-column [width]="60" name="Action" prop="Id" [draggable]="false"
+                           </ngx-datatable-column> 
+
+                           <!-- <ngx-datatable-column [width]="60" name="Action" prop="Id" [draggable]="false"
                            [sortable]="false">
                            <ng-template let-row="row" ngx-datatable-cell-template>
                               <button class="btn btn-info btn-mini" (click)="getCallDetailById(row.Id)"><i
                                  class="icofont icofont-edit"></i>Detail</button>
                            </ng-template>
-                           </ngx-datatable-column>                           
+                           </ngx-datatable-column> -->
+
+                           <ngx-datatable-column [width]="60" name="Action" prop="Id" [draggable]="false"
+                           [sortable]="false">
+                           <ng-template let-row="row" ngx-datatable-cell-template>
+                              <a class="btn btn-info btn-mini" role="button" [routerLink]="[ '/vclass-history-detail-host', row.Id ]" target="_blank"><i
+                                 class="icofont icofont-edit">
+                              </i>Detail</a>
+                           </ng-template>
+                           </ngx-datatable-column> 
+
+
+
                            </ngx-datatable>
                         </div>
                      </div>

@@ -10,7 +10,7 @@ import { ToastrService } from 'ngx-toastr';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Page } from '../_models/page';
 import { trigger, transition, style, animate } from '@angular/animations';
-
+import { environment } from '../../environments/environment';
 import {ElementRef} from '@angular/core';
 
 // JISTI RELATED
@@ -134,7 +134,7 @@ export class VClassHostComponent implements OnInit {
 
         // SIGNALR RELATED
         this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl('http://localhost:5000/pushNotification').build();
+      .withUrl(environment.baseUrl + 'pushNotification').build();
 
         this.hubConnection.start().then(() => {
         console.log('connection started');
