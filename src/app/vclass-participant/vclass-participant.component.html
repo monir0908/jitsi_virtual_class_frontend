@@ -5,7 +5,40 @@
             <div class="card-header">
                <h5>Your Current Live Class List</h5>
             </div>
-            <div class="card-block ">
+            <div class="col-sm-12" *ngFor="let x of InvitationList; let i = index">
+               <div class="card">
+                  <div class="card-header">
+                     <span class="ng-tns-c9-7 ng-star-inserted">
+                        <strong class="label label-warning">{{x.RoomId}} </strong>
+                     </span>
+                     <!-- <span *ngIf="x.HasJoinedByHost ==true && x.RoomId !=null">
+                        {{x.Status}}
+                     </span> -->
+                  </div>
+                  <div class="card-body">
+                     <p class="text-bold text-underline">Batch Name</p>
+                     <p class="text-info">{{x.BatchName}}</p>
+                     <p class="text-bold text-underline">Teacher Name</p>
+                     <p class="text-info">{{x.HostFirstName}} {{x.HostLastName}}</p>
+                     <p class="text-bold text-underline" *ngIf="x.HasJoinedByParticipant ==true">Status</p>
+                     <p class="text-success" *ngIf="x.HasJoinedByParticipant ==true">Coference Joined</p>
+                     <button class="btn btn-success btn-mini" *ngIf="x.HasJoinedByParticipant ==false"
+                        (click)="joinConferenceByParticipant(x)">
+                        <i class="icofont icofont-ui-lock"></i  >
+                        Join Class
+                        </button>
+                     
+                     <button class="btn btn-danger btn-mini"
+                        (click)="btnHangupByParticipant(x)"  
+                        *ngIf="x.HasJoinedByParticipant"><i
+                           class="icofont icofont-ui-check"></i  >
+                        Hang Up Call
+                     </button>
+                  </div>
+               </div>
+
+            </div>
+            <!-- <div class="card-block">
                <div class="row ">
                   <div class="col-lg-12 ">
                      <ngx-datatable class="material table-bordered" [rows]="InvitationList"
@@ -55,7 +88,7 @@
                      </ngx-datatable>
                   </div>
                </div>
-            </div>
+            </div> -->
          </div>
       </div>
    </div>
