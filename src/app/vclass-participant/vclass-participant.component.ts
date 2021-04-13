@@ -233,6 +233,20 @@ export class VClassParticipantComponent implements OnInit {
             }
         });
 
+        this.hubConnection.on('InterruptionFromHost', (roomId) => {
+            
+            
+            console.log(roomId);
+            if(this.apiObj != null && this.currentRoomNo == roomId){
+                this.apiObj.executeCommand('hangup');       
+                this.apiObj.dispose();                
+                this.iframeOpened = false;
+                this.getInvitationListByParticipantId(); 
+            }
+            
+            
+        });
+
         this.getInvitationListByParticipantId();
     }
 

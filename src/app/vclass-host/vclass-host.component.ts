@@ -12,6 +12,8 @@ import { Page } from '../_models/page';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { environment } from '../../environments/environment';
 import {ElementRef} from '@angular/core';
+import { Observable, Observer, fromEvent, merge } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 // JISTI RELATED
 import '../../assets/data/external_api.js';
@@ -80,6 +82,7 @@ export class VClassHostComponent implements OnInit {
     currentSocketId = null;
     iframeOpened = false;
     joinConfObj={};
+    currentCoferenceRoomId;
 
 
     entryForm: FormGroup;
@@ -195,6 +198,17 @@ export class VClassHostComponent implements OnInit {
             }
         });
 
+        this.hubConnection.on('LetHostKnowConnectionLost', (hostId) => {
+            this.getCurrentOnGoingVirtualClassListByHostId();            
+            if(hostId == this.currentUser.Id){
+                alert('connection lost')
+                this.apiObj.executeCommand('hangup');       
+                this.apiObj.dispose();                
+                this.iframeOpened = false; 
+                this.getCurrentOnGoingVirtualClassListByHostId();
+            }
+        });
+
         // FORM RELATED
         this.entryForm = this.formBuilder.group({
             Id: [null],
@@ -207,6 +221,16 @@ export class VClassHostComponent implements OnInit {
         this.getCurrentOnGoingVirtualClassListByHostId();
     }
 
+
+    createOnline$() {
+    return merge<boolean>(
+      fromEvent(window, 'offline').pipe(map(() => false)),
+      fromEvent(window, 'online').pipe(map(() => true)),
+      new Observable((sub: Observer<boolean>) => {
+        sub.next(navigator.onLine);
+        sub.complete();
+      }));
+  }
    
 
     // COMPONENTS METHODS
@@ -267,7 +291,31 @@ export class VClassHostComponent implements OnInit {
         );
     }
 
+    
+
     createVirtualClass(){
+
+        this.createOnline$().subscribe(isOnline => {
+            if(!isOnline){
+                this.hubConnection.invoke('GetDataFromClient', 'example@gmail.com', this.currentSocketId).catch(err => console.log(err));
+                this.hubConnection.invoke("Interruption", this.currentCoferenceRoomId);
+       
+
+
+
+                window.location.reload();
+                // //DESTROYING JISI IFRAME
+                // if(this.apiObj != null){
+                //     this.apiObj.executeCommand('hangup');       
+                //     this.apiObj.dispose();
+                //     this.iframeOpened = false;
+                // }
+                // // RE-CALLING ONGOING CLASS LIST
+                // this.getCurrentOnGoingVirtualClassListByHostId();
+                
+            }
+        });
+        
         // this.blockUI.start('Starting...');
         // console.log(this.entryForm.value.AcademicProjectId)
         // console.log(this.entryForm.value.AcademicBatchId)
@@ -380,6 +428,14 @@ export class VClassHostComponent implements OnInit {
                     
                 } else {
                     this.toastr.error(data.Message, 'Error!', { closeButton: true, disableTimeOut: true });
+                    //DESTROYING JISI IFRAME
+                    if(this.apiObj != null){
+                        this.apiObj.executeCommand('hangup');       
+                        this.apiObj.dispose();
+                        this.iframeOpened = false;
+                    }
+                    // RE-CALLING ONGOING CLASS LIST
+                    this.getCurrentOnGoingVirtualClassListByHostId();
                 }
             },
             err => {
@@ -435,6 +491,7 @@ export class VClassHostComponent implements OnInit {
                     
                     //NOW INITIATING JITSI IFRAME
                     this.initiateJitsi(data.Records.RoomId);
+                    this.currentCoferenceRoomId = data.Records.RoomId
 
                     this.getCurrentOnGoingVirtualClassListByHostId();
                 } 
