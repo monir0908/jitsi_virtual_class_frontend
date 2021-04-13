@@ -219,6 +219,32 @@ export class VClassHostComponent implements OnInit {
         // PAGE ON LOAD RELATED
         this.getProjectList(this.currentUser.Id);
         this.getCurrentOnGoingVirtualClassListByHostId();
+
+
+        this.createOnline$().subscribe(isOnline => {
+            if(!isOnline){
+                this.hubConnection.invoke('GetDataFromClient', 'example@gmail.com', this.currentSocketId).catch(err => console.log(err));
+                this.hubConnection.invoke("Interruption", this.currentCoferenceRoomId);
+    
+                setTimeout(() => {
+                    window.location.reload();
+                }, 5000);
+       
+    
+    
+    
+                
+                // //DESTROYING JISI IFRAME
+                // if(this.apiObj != null){
+                //     this.apiObj.executeCommand('hangup');       
+                //     this.apiObj.dispose();
+                //     this.iframeOpened = false;
+                // }
+                // // RE-CALLING ONGOING CLASS LIST
+                // this.getCurrentOnGoingVirtualClassListByHostId();
+                
+            }
+        });
     }
 
 
@@ -295,26 +321,9 @@ export class VClassHostComponent implements OnInit {
 
     createVirtualClass(){
 
-        this.createOnline$().subscribe(isOnline => {
-            if(!isOnline){
-                this.hubConnection.invoke('GetDataFromClient', 'example@gmail.com', this.currentSocketId).catch(err => console.log(err));
-                this.hubConnection.invoke("Interruption", this.currentCoferenceRoomId);
-       
+        
 
-
-
-                window.location.reload();
-                // //DESTROYING JISI IFRAME
-                // if(this.apiObj != null){
-                //     this.apiObj.executeCommand('hangup');       
-                //     this.apiObj.dispose();
-                //     this.iframeOpened = false;
-                // }
-                // // RE-CALLING ONGOING CLASS LIST
-                // this.getCurrentOnGoingVirtualClassListByHostId();
-                
-            }
-        });
+        
         
         // this.blockUI.start('Starting...');
         // console.log(this.entryForm.value.AcademicProjectId)

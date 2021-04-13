@@ -215,10 +215,10 @@ export class VClassParticipantComponent implements OnInit {
 
         this.hubConnection.on('ConnectionLostFromHost', (participantId, roomId, hostName) => {
             
-            console.log("participantId");
-            console.log(participantId);
-            console.log("this.currentRoomNo");
-            console.log(this.currentRoomNo);
+            // console.log("participantId");
+            // console.log(participantId);
+            // console.log("this.currentRoomNo");
+            // console.log(this.currentRoomNo);
             
             if(participantId == this.currentUser.Id){
                 
@@ -236,7 +236,9 @@ export class VClassParticipantComponent implements OnInit {
         this.hubConnection.on('InterruptionFromHost', (roomId) => {
             
             
+            console.log("InterruptionFromHost method fired");
             console.log(roomId);
+            //alert(roomId);
             if(this.apiObj != null && this.currentRoomNo == roomId){
                 this.apiObj.executeCommand('hangup');       
                 this.apiObj.dispose();                
